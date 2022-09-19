@@ -51,7 +51,7 @@ import { Logger } from './utils/logger';
         }
     }
     Logger.log(`ELEMENTS`, `Queried all elements.`)
-    
+
     await page.evaluate(() => {
         const element = document.querySelectorAll(`button.button_button__eJwei.button_primary__mdLFG`)[0]
         if (element.textContent == `Log in`) {
@@ -82,8 +82,10 @@ import { Logger } from './utils/logger';
         bet = Math.round((bet + Number.EPSILON) * 100) / 100
 
         async function sendBet() {
-            await inputBox?.click({ clickCount: 3 })
-            await inputBox?.press(`Backspace`)
+            let inputBoxLength = prevBet?.length || 10
+            for (var i = 0; i < inputBoxLength; i++) {
+                await inputBox?.press(`Backspace`)
+            }
             await inputBox?.type(bet.toString())
 
             let boxValue = await inputBox?.evaluate(element => element.getAttribute(`value`))
