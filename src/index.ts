@@ -60,7 +60,11 @@ import { Logger } from './utils/logger';
     })
 
     const betMulti = (await page.$$(`input.input_input__uGeT_`))[1]
-    betMulti.type(`2`)
+    await betMulti.type(`2`)
+    
+    const inputBox = await page.$(`input.input_input__uGeT_.input_inputWithCurrency__sAiOQ`)
+    await inputBox?.click({ clickCount: 3 })
+    await inputBox?.press(`Backspace`)
 
     let joined, cashed, gameStarted = false
     let gameNumber: number = 0
@@ -82,10 +86,8 @@ import { Logger } from './utils/logger';
         bet = Math.round((bet + Number.EPSILON) * 100) / 100
 
         async function sendBet() {
-            let inputBoxLength = prevBet?.length || 10
-            for (var i = 0; i < inputBoxLength; i++) {
-                await inputBox?.press(`Backspace`)
-            }
+            await inputBox?.click({ clickCount: 3 })
+            await inputBox?.press(`Backspace`)
             await inputBox?.type(bet.toString())
 
             let boxValue = await inputBox?.evaluate(element => element.getAttribute(`value`))
