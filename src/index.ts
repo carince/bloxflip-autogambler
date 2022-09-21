@@ -8,7 +8,7 @@ import { Logger } from './utils/logger';
     const browser: Browser = await launch(
         {
             headless: config.debugging.headless,
-            defaultViewport: null,
+            defaultViewport: { width: 720, height: 1280, isMobile: true },
             args: [`--start-maximized`, `--no-sandbox`, `--disable-extensions`, `--profile-directory=Default`]
         }
     )
@@ -39,12 +39,12 @@ import { Logger } from './utils/logger';
         localStorage.setItem(`_DO_NOT_SHARE_BLOXFLIP_TOKEN`, AuthToken!)
     })
     await authPage.close()
-    Logger.log(`AUTH`, `Auth token set to localStorage`)
+    Logger.log(`TOKEN`, `Auth token set to localStorage`)
 
-    Logger.log(`PAGE`, `Waiting for network idle before starting, this might take a while depending on your internet.`)
+    Logger.log(`BLOXFLIP`, `Waiting for network idle...`)
     await page.goto(`https://bloxflip.com/crash`, { waitUntil: `networkidle2`, timeout: 60000 })
 
-    const elementArr = [`button.button_button__eJwei.button_primary__mdLFG.gameBetSubmit`, `input.input_input__uGeT_.input_inputWithCurrency__sAiOQ`, `div.header_headerUserBalance__UEAJq`, `div.crash_crashGameCoefficient__M8rxs`, `input.input_input__uGeT_`]
+    const elementArr = [`div.gameBlock.gameBet.crash_crashBet__D5Rs_ > button`, `input.input_input__uGeT_.input_inputWithCurrency__sAiOQ`, `div.header_headerUserBalance__UEAJq`, `div.crash_crashGameCoefficient__M8rxs`, `input.input_input__uGeT_`]
     for (let element of elementArr) {
         if (!await page.$(element)) {
             Logger.error(`ELEMENTS`, `Unable to query the element: ${element}`)
@@ -59,96 +59,147 @@ import { Logger } from './utils/logger';
         }
     })
 
+    const inputBox = await page.$(`input.input_input__uGeT_.input_inputWithCurrency__sAiOQ`)
     const betMulti = (await page.$$(`input.input_input__uGeT_`))[1]
     await betMulti.type(`2`)
-    
-    const inputBox = await page.$(`input.input_input__uGeT_.input_inputWithCurrency__sAiOQ`)
-    await inputBox?.click({ clickCount: 3 })
-    await inputBox?.press(`Backspace`)
-
-    let joined, cashed, gameStarted = false
-    let gameNumber: number = 0
-    let lostStreak: number = 0
 
     async function bet(won: boolean) {
-        let wallet = await page.$eval(`div.header_headerUserBalance__UEAJq`, element => element.textContent)
-        const betBtn = await page.$(`button.button_button__eJwei.button_primary__mdLFG.gameBetSubmit`)
-        const inputBox = await page.$(`input.input_input__uGeT_.input_inputWithCurrency__sAiOQ`)
-        const prevBet = await inputBox?.evaluate(element => element.getAttribute(`value`))
-
         let bet: number
+        const balance = await page.$eval(`div.header_headerUserBalance__UEAJq`, e => e.textContent)
+        const prevBet = await inputBox?.evaluate(e => e.getAttribute(`value`))
+
         if (won) {
-            bet = parseFloat(wallet!) / Math.pow(2, config.tries)
+            bet = parseFloat(balance!) / Math.pow(2, config.tries)
         } else {
-            let betBefore = await inputBox?.evaluate(element => element.getAttribute(`value`))
-            bet = parseFloat(betBefore!) * 2
+            bet = parseFloat(prevBet!) * 2
         }
+
         bet = Math.round((bet + Number.EPSILON) * 100) / 100
 
-        async function sendBet() {
-            await inputBox?.click({ clickCount: 3 })
-            await inputBox?.press(`Backspace`)
-            await inputBox?.type(bet.toString())
+        Logger.log(`BET`, `\tCalculated Bet: ${bet} R$, Balance: ${balance} R$`)
 
-            let boxValue = await inputBox?.evaluate(element => element.getAttribute(`value`))
-            if (boxValue == bet.toString()) {
-                await sleep(1500)
-                await betBtn?.click()
-                await sleep(1000)
-
-                wallet = await page.$eval(`div.header_headerUserBalance__UEAJq`, element => element.textContent)
-                Logger.log(`BET`, `Game #${gameNumber} \nWin: ${won} \nBet: ${prevBet} \nLoss Streak: ${lostStreak} \nWallet: ${wallet} \n───────────────────────────`)
-            } else {
-                Logger.warn(`BET`, `Expected "${bet}" inside of bet input box but instead had "${boxValue}."`)
-                await sendBet()
+        await clear()
+        async function clear() {
+            await inputBox?.click()
+            for (var i = 0; i < prevBet!.length; i++) {
+                await inputBox?.press(`Backspace`)
             }
-        } await sendBet()
-    }
 
-    for (var i = 0; i < Infinity; i++) {
-        await sleep(500);
-
-        let gameStatus = await page.$(`div.crash_crashGameCoefficient__M8rxs`)
-        let textContent = await gameStatus?.evaluate(element => {
-            return element.textContent
-        })
-
-        if (textContent?.includes(`Waiting for EOS block to be mined...`)) {
-            gameStarted = true
+            const currentValue = await inputBox?.evaluate(e => e.getAttribute(`value`))
+            if (currentValue?.length) {
+                Logger.warn(`BET`, `\tclear: Unable to clear inputBox, trying again...`)
+                await sleep(500)
+                await clear()
+            }
         }
 
-        if (gameStarted) {
-            let className = await gameStatus?.evaluate(element => {
-                return element.className
-            })
+        await typeBet()
+        async function typeBet() {
+            await inputBox?.type(bet.toString())
 
-            if (className?.includes("isCrashed")) {
-                if (joined) {
-                    gameStarted = false
-                    gameNumber++
-                    lostStreak++
-                    bet(false)
+            const currentValue = await inputBox?.evaluate(e => e.getAttribute(`value`))
+            if (currentValue !== bet.toString()) {
+                Logger.warn(`BET`, `\ttypeBet: Expected "${bet}, got "${currentValue} \nClearing the input box and trying again."`)
+                await sleep(500)
+                await clear()
+                await typeBet()
+            }
+        }
+
+        await join()
+        async function join() {
+            let tries = 1
+
+            await click()
+            async function click() {
+                if (tries <= 5) {
+                    const betBtn = await page.$(`div.gameBlock.gameBet.crash_crashBet__D5Rs_ > button`)
+                    let textContent = await betBtn?.evaluate(e => e.textContent)
+
+                    if (textContent?.includes(`Join`)) {
+                        await betBtn?.type(`\n`)
+                        await sleep(3000)
+
+                        let tries = 1
+                        await check()
+                        async function check() {
+                            if (tries <= 5) {
+                                textContent = await betBtn?.evaluate(e => e.textContent)
+                                if (textContent == `Cashout` || `Cancel bet`) {
+                                    Logger.log(`BET`, `\tSuccesfully joined game.`)
+                                } else {
+                                    Logger.warn(`BET`, `\tUnable to join game: ${textContent}, trying again...`)
+                                    await sleep(1000)
+                                }
+                            } else {
+                                Logger.error(`BET`, `\tUnable to join game after 5 tries.`)
+                            }
+                        }
+                    } else {
+                        if (textContent == `Cashout` || `Cancel bet`) {
+                            Logger.warn(`BET`, `\tAlready joined this game, ignoring...`)
+                        } else {
+                            Logger.warn(`BET`, `\tBet button does not include 'Join': ${textContent}, trying again...`)
+                            tries++
+                            await sleep(1000)
+                            await click()
+                        }
+                    }
                 } else {
-                    Logger.log(`GAME`, `Ignoring this crash and resetting our bet.`)
-                    joined = true
-                    gameStarted = false
-                    gameNumber++
-                    bet(true)
+                    Logger.error(`BET`, `\tUnable to join game after 5 tries.`)
                 }
+            }
+        }
+    }
+
+    await bet(true)
+
+    let cashed = false
+    let gameCount = 1
+    let lossStreak = 0
+    for (var i = 0; i < Infinity; i++) {
+        const textContent = await page.$eval(`div.crash_crashGameCoefficient__M8rxs`, e => e.textContent)
+        const className = await page.$eval(`div.crash_crashGameCoefficient__M8rxs`, e => e.className)
+
+        if (textContent?.includes(`+`)) {
+            if (className.includes(`isCrashed`)) {
+                cashed = false
+                gameCount++
+                lossStreak++
+                Logger.log(`CRASH`, `Status: Lost \n `)
+                Logger.log(`GAME`, `\tGame #${gameCount}`)
+                Logger.log(`GAME`, `\tLoss Streak: ${lossStreak}`)
                 await sleep(3000)
+                bet(false)
             }
 
-            if (className?.includes("isCashed")) {
+            if (className.includes(`isCashed`)) {
                 if (!cashed) {
                     cashed = true
-                    gameStarted = false
-                    gameNumber++
-                    lostStreak = 0
-                    bet(true)
+                    gameCount++
+                    lossStreak = 0
+                    Logger.log(`CRASH`, `Status: Won \n `)
+                    Logger.log(`GAME`, `\tGame #${gameCount}`)
                     await sleep(3000)
+                    bet(true)
                 }
             } else {
                 cashed = false
+            }
+        } else {
+            if (className.includes(`isCrashed`)) {
+                await page.screenshot({ path: `error.png` })
+                Logger.warn(`CRASH`, `Something has definitely gone wrong, but were ignoring it lels.`)
+                if (lossStreak) {
+                    Logger.warn(`CRASH`, `Continuing loss streak, getting wiped is possible.`)
+                    await sleep(3000)
+                    bet(false)
+                } else {
+                    await bet(true)
+                    await sleep(3000)
+                }
+
+
             }
         }
     }
