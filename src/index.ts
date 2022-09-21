@@ -12,7 +12,17 @@ let page: Page
         {
             headless: config.debugging.headless,
             defaultViewport: { width: 720, height: 1280, isMobile: true },
-            args: [`--start-maximized`, `--no-sandbox`, `--disable-extensions`, `--profile-directory=Default`]
+            args: [
+                `--start-maximized`,
+                `--disable-setuid-sandbox`,
+                `--disable-dev-shm-usage`,
+                `--disable-accelerated-2d-canvas`,
+                `--no-first-run`,
+                `--no-zygote`,
+                `--single-process`,
+                `--disable-gpu`,
+                `--disable-extensions`
+            ]
         }
     )
 
@@ -24,13 +34,13 @@ let page: Page
             'x-auth-token': config.auth
         }
     )
-    
+
     const authPage = await browser.newPage()
     await authPage.setRequestInterception(true);
-    authPage.on("request", r => {
+    authPage.on(`request`, r => {
         r.respond({
             status: 200,
-            contentType: "text/plain",
+            contentType: `text/plain`,
             body: config.auth
         });
     });
@@ -108,7 +118,7 @@ let page: Page
 
             const currentValue = await inputBox?.evaluate(e => e.getAttribute(`value`))
             if (currentValue !== bet.toString()) {
-                Logger.warn(`BET`, `\ttypeBet: Expected "${bet}, got "${currentValue} \nClearing the input box and trying again."`)
+                Logger.warn(`BET`, `\ttypeBet: Expected ${bet}, got ${currentValue} \nClearing the input box and trying again.`)
                 await sleep(500)
                 await clear()
                 await typeBet()

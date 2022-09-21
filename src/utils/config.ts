@@ -27,8 +27,8 @@ try {
             Logger.error(`TOKEN`, `Token length is less than 1000, please put a valid token.`)
         }
 
-        if (config.tries < 9) {
-            Logger.warn(`CONFIG`, `It is not recommended to set the tries below 9, exit the script with CTRL+C if you want to make changes.`)
+        if (config.tries < 10) {
+            Logger.warn(`CONFIG`, `It is not recommended to set the tries below 10, exit the script with CTRL+C if you want to make changes.`)
             await sleep(3000)
         }
     })()
