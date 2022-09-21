@@ -13,14 +13,7 @@ let page: Page
             headless: config.debugging.headless,
             defaultViewport: { width: 720, height: 1280, isMobile: true },
             args: [
-                `--start-maximized`,
-                `--disable-setuid-sandbox`,
-                `--disable-dev-shm-usage`,
-                `--disable-accelerated-2d-canvas`,
-                `--no-first-run`,
-                `--single-process`,
-                `--disable-gpu`,
-                `--disable-extensions`
+                `--start-maximized`
             ]
         }
     )
