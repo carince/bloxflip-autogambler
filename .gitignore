@@ -1,3 +1,5 @@
 node_modules
-src/config.json
+config.json
 error.png
+dist
+tsconfig.tsbuildinfo
