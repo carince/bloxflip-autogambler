@@ -10,14 +10,14 @@ async function startRain() {
         new Promise(() => {
             setTimeout(async () => {
                 const res = await page.evaluate(async () => {
-                    return fetch("https://rest-bf.blox.land/chat/history").then(res => res.json());
-                });
+                    return fetch('https://rest-bf.blox.land/chat/history').then(res => res.json());
+                })
 
                 if (res.rain.active) {
                     if (!notified) {
                         notify({
                             title: "AutoCrash Rain Notifier",
-                            message: `Robux: ${res.rain.prize} R$ \nHost: ${res.rain.host} \nTime Remaining: ${res.rain.duration / 60000} minute(s)`,
+                            message: `Robux: ${res.rain.prize} R$ \nHost: ${res.rain.host} \nTime Remaining: ${res.rain.duration / 60000}`,
                             subtitle: "bloxflip-autocrash",
                             sound: true
                         });
@@ -25,7 +25,7 @@ async function startRain() {
                         notified = true;
                     }
                 } else {
-                    notified = false;
+                    notified = false
                 }
                 
                 await start();

@@ -6,11 +6,15 @@ async function bet(won: boolean) {
     const inputBox = await page.$("input.input_input__uGeT_.input_inputWithCurrency__sAiOQ");
 
     let bet = 0.01; 
-    const balance = await page.$eval("div.header_headerUserBalance__UEAJq", e => e.textContent);
+    const balance = await page.evaluate(async () => {
+        return fetch("https://rest-bf.blox.land/user", {
+            "headers": {"x-auth-token": localStorage.getItem("_DO_NOT_SHARE_BLOXFLIP_TOKEN") || ""}
+        }).then(res => res.json()).then(res => Math.round((res.user.wallet + Number.EPSILON) * 100) / 100)
+    });
     const prevBet = await inputBox?.evaluate(e => e.getAttribute("value"));
 
     if (won) {
-        bet = parseFloat(balance!) / Math.pow(2, config.tries);
+        bet = balance / Math.pow(2, config.tries);
         Logger.info("BET", `\tDividing balance to 2^${config.tries}`);
     } else {
         bet = parseFloat(prevBet!) * 2;
@@ -19,8 +23,8 @@ async function bet(won: boolean) {
 
     bet = Math.round((bet + Number.EPSILON) * 100) / 100;
 
-    if (bet > parseFloat(balance!)) {
-        Logger.error("BET", "\tGAME OVER. WIPED");
+    if (bet > balance) {
+        Logger.error("BET", "WIPED.");
         process.exit();
     }
 
@@ -79,8 +83,7 @@ async function bet(won: boolean) {
                         } else {
                             Logger.error("BET", "\tUnable to join game after 5 tries.");
                         }
-                    }
-                    await check();
+                    } await check();
                 } else {
                     if (textContent === "Cashout" || "Cancel bet") {
                         Logger.warn("BET", "\tAlready joined this game, ignoring...");
@@ -94,10 +97,8 @@ async function bet(won: boolean) {
             } else {
                 Logger.error("BET", "\tUnable to join game after 5 tries.");
             }
-        }
-        await click();
-    }
-    await join();
+        } await click();
+    } await join();
 }
 
 function sleep(ms: number) {
