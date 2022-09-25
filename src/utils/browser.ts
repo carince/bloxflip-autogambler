@@ -37,13 +37,12 @@ async function initialize() {
     await authPage.evaluate(() => {
         const AuthToken = document.querySelector("body")?.textContent;
         localStorage.setItem("_DO_NOT_SHARE_BLOXFLIP_TOKEN", AuthToken!);
-        localStorage.setItem("isChatOpened", "opened");
     });
     await authPage.close();
     Logger.info("TOKEN", "Successfully set token to localStorage");
 
     Logger.info("BLOXFLIP", "Waiting for network idle...");
-    await page.goto("https://bloxflip.com/crash", { waitUntil: "networkidle0", timeout: 60000 });
+    await page.goto("https://bloxflip.com/crash", { timeout: 60000 });
 
     return page;
 }

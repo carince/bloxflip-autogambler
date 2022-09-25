@@ -20,7 +20,7 @@ async function bet(won: boolean) {
     bet = Math.round((bet + Number.EPSILON) * 100) / 100;
 
     if (bet > parseFloat(balance!)) {
-        Logger.error("BET", "WIPED.");
+        Logger.error("BET", "\tGAME OVER. WIPED");
         process.exit();
     }
 
@@ -40,7 +40,6 @@ async function bet(won: boolean) {
         Logger.info("CLEAR", "Successfully cleared inputBox");
     } await clear();
 
-    await typeBet();
     async function typeBet() {
         await inputBox?.type(bet.toString());
 
@@ -53,13 +52,11 @@ async function bet(won: boolean) {
         }
 
         Logger.info("TYPEBET", "Successfully typed bet into inputBox");
-    }
+    } await typeBet();
 
-    await join();
     async function join() {
         let tries = 1;
 
-        await click();
         async function click() {
             if (tries <= 5) {
                 const betBtn = await page.$("div.gameBlock.gameBet.crash_crashBet__D5Rs_ > button");
@@ -70,7 +67,6 @@ async function bet(won: boolean) {
                     await sleep(1000);
 
                     const tries = 1;
-                    await check();
                     async function check() {
                         if (tries <= 5) {
                             textContent = await betBtn?.evaluate(e => e.textContent);
@@ -84,6 +80,7 @@ async function bet(won: boolean) {
                             Logger.error("BET", "\tUnable to join game after 5 tries.");
                         }
                     }
+                    await check();
                 } else {
                     if (textContent === "Cashout" || "Cancel bet") {
                         Logger.warn("BET", "\tAlready joined this game, ignoring...");
@@ -98,7 +95,9 @@ async function bet(won: boolean) {
                 Logger.error("BET", "\tUnable to join game after 5 tries.");
             }
         }
+        await click();
     }
+    await join();
 }
 
 function sleep(ms: number) {

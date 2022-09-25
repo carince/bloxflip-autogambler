@@ -1,22 +1,12 @@
 import { page } from "../index";
 import { bet } from "./bet";
 import { Logger } from "../utils/logger";
+import { checkAuth } from "./user";
 
 async function startCrash() {
-    await page.waitForSelector("button.button_button__eJwei.button_primary__mdLFG");
+    await checkAuth();
 
-    const invalidToken = await page.evaluate(() => {
-        const element = document.querySelectorAll("button.button_button__eJwei.button_primary__mdLFG")[0];
-        if (element.textContent == "Log in") {
-            return true;
-        } else {
-            return false;
-        }
-    });
-
-    if (invalidToken) {
-        Logger.error("TOKEN", "Invalid token provided, please put a valid token into the config.", true);
-    }
+    await page.waitForNetworkIdle({ timeout: 60000 });
 
     const elementArr = ["div.gameBlock.gameBet.crash_crashBet__D5Rs_ > button", "input.input_input__uGeT_.input_inputWithCurrency__sAiOQ", "div.header_headerUserBalance__UEAJq", "div.crash_crashGameCoefficient__M8rxs", "input.input_input__uGeT_"];
     for (const element of elementArr) {

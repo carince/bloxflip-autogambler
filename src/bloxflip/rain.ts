@@ -6,33 +6,32 @@ async function startRain() {
     Logger.info("RAIN", "\tStarting rain notifier.");
 
     let notified = false;
-    await start();
     async function start() {
         new Promise(() => {
             setTimeout(async () => {
-                try {
-                    if (!notified) {
-                        const rain = await page.$eval("div.chat_chatBanner__A7TqO", e => e.textContent);
-                        const robux = rain!.split("!").pop()!.split("  ")[0];
-                        const host = rain!.split("by ").pop()!.split("Join For Free")[0];
+                const res = await page.evaluate(async () => {
+                    return fetch("https://rest-bf.blox.land/chat/history").then(res => res.json());
+                });
 
+                if (res.rain.active) {
+                    if (!notified) {
                         notify({
-                            title: "Bloxflip Rain Notifier",
-                            message: `Robux: ${robux} R$, Host: ${host}`,
+                            title: "AutoCrash Rain Notifier",
+                            message: `Robux: ${res.rain.prize} R$ \nHost: ${res.rain.host} \nTime Remaining: ${res.rain.duration / 60000} minute(s)`,
                             subtitle: "bloxflip-autocrash",
                             sound: true
                         });
-
+    
                         notified = true;
                     }
-                } catch (err) {
+                } else {
                     notified = false;
                 }
-
+                
                 await start();
             }, 5000);
         });
-    }
+    } await start();
 }
 
 export { startRain };
