@@ -9,7 +9,8 @@
     "lint": "eslint src --fix",
     "build": "tsc",
     "dev:js": "nodemon dist/index.js -e js",
-    "start:js": "node dist/index.js"
+    "start:js": "node dist/index.js",
+    "test": "ts-node src/utils/webhook.ts"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +27,7 @@
   },
   "dependencies": {
     "chalk": "^4.1.2",
+    "node-fetch": "^2.6.7",
     "node-notifier": "^10.0.1",
     "puppeteer": "^17.1.3"
   }
