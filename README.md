@@ -57,6 +57,12 @@ Run the bot! 🚀
 $ npm run start
 ```
 
+### 🆕 Updating
+You must be in the root folder to be able to pull new commits
+```bash
+$ git pull
+```
+
 ## 💖 Contributing
 If you encounter any issues with the bot, feel free to give feedback on the issues page.
 Feel free to fork the repo and do pull requests to help in maintaining the bot! PR's are always welcome.
