@@ -24,6 +24,10 @@ async function bet(won: boolean) {
 
         bet = Math.round((bet + Number.EPSILON) * 100) / 100;
 
+        if (bet == 0) {
+            Logger.error(`BET`, `\tTries in config is too high causing the bet to be 0.`, true)
+        }
+
         if (bet > balance) {
             Logger.error(`BET`, `WIPED.`);
             process.exit();

@@ -19,7 +19,7 @@ export class Logger {
         type.toUpperCase();
         console.log(chalk.redBright(`${chalk.bold(`[${type}]`)} \t${info}`));
         // if (config.debugging.ssOnError) page.screenshot({ path: `error.png` });
-        if (config.debugging.exitOnError || forceClose) process.exit();
+        if (forceClose || config.debugging.exitOnError) process.exit();
     }
 
     public static warn(type: string, info: string) {
