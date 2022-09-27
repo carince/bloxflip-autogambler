@@ -1,0 +1,14 @@
+{
+    "auth": "Bloxflip token here",
+    "tries": 11,
+    "webhook": {
+        "enabled": true,
+        "link": ""
+    },
+    "debugging": {
+        "headless": true,
+        "verbose": false,
+        "exitOnError": true,
+        "ssOnError": false
+    }
+}
