@@ -1,8 +1,8 @@
 import { page } from '../index';
-import fetch from 'node-fetch'
 import { notify } from 'node-notifier';
 import { Logger } from '../utils/logger';
 import { sendWh } from '../utils/webhook';
+import nfetch from 'node-fetch';
 
 async function startRain() {
     Logger.info(`RAIN`, `\tStarting rain notifier.`);
@@ -17,7 +17,7 @@ async function startRain() {
 
                 if (bfApi.rain.active) {
                     if (!notified) {
-                        const hostId = await fetch(`https://api.roblox.com/users/get-by-username?username=${bfApi.rain.host}`).then(res => res.json()).then(res => res.Id)
+                        const hostId = await nfetch(`https://api.roblox.com/users/get-by-username?username=${bfApi.rain.host}`).then(res => res.json()).then(res => res.Id)
 
                         notify({
                             title: `AutoCrash Rain Notifier`,
