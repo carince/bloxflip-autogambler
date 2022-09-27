@@ -1,0 +1,30 @@
+{
+    "$schema": "https://json.schemastore.org/swcrc",
+    "jsc": {
+        "parser": {
+          "syntax": "ecmascript",
+          "jsx": false,
+          "dynamicImport": true,
+          "privateMethod": true,
+          "functionBind": false,
+          "exportDefaultFrom": true,
+          "exportNamespaceFrom": true,
+          "decorators": false,
+          "decoratorsBeforeExport": false,
+          "topLevelAwait": false,
+          "importMeta": false
+        },
+        "target": "es2022",
+        "loose": true,
+        "externalHelpers": false
+    },
+    "module": {
+        "lazy": true,
+        "strict": true,
+        "noInterop": false,
+        "strictMode": true,
+        "type": "commonjs"
+      },
+      "minify": true,
+      "sourceMaps": "inline"
+}
