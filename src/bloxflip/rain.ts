@@ -1,4 +1,5 @@
 import { page } from '../index';
+import fetch from 'node-fetch'
 import { notify } from 'node-notifier';
 import { Logger } from '../utils/logger';
 import { sendWh } from '../utils/webhook';
@@ -10,15 +11,17 @@ async function startRain() {
     async function start() {
         new Promise(() => {
             setTimeout(async () => {
-                const res = await page.evaluate(async () => {
+                const bfApi = await page.evaluate(async () => {
                     return fetch(`https://rest-bf.blox.land/chat/history`).then(res => res.json());
                 })
 
-                if (res.rain.active) {
+                if (bfApi.rain.active) {
                     if (!notified) {
+                        const hostId = await fetch(`https://api.roblox.com/users/get-by-username?username=${bfApi.rain.host}`).then(res => res.json()).then(res => res.Id)
+
                         notify({
                             title: `AutoCrash Rain Notifier`,
-                            message: `Robux: ${res.rain.prize} R$ \nHost: ${res.rain.host} \nTime Remaining: ${res.rain.duration / 60000} minutes`,
+                            message: `Robux: ${bfApi.rain.prize} R$ \nHost: ${bfApi.rain.host} \nTime Remaining: ${bfApi.rain.duration / 60000} minutes`,
                             subtitle: `bloxflip-autocrash`,
                             sound: true
                         });
@@ -32,17 +35,17 @@ async function startRain() {
                                     'fields': [
                                         {
                                             'name': 'Prize',
-                                            'value': `${res.rain.prize} R$`,
+                                            'value': `${bfApi.rain.prize} R$`,
                                             'inline': true
                                         },
                                         {
                                             'name': 'Host',
-                                            'value': res.rain.host,
+                                            'value': bfApi.rain.host,
                                             'inline': true
                                         },
                                         {
                                             'name': 'Time Remaining',
-                                            'value': `${res.rain.duration / 60000} minutes`,
+                                            'value': `${bfApi.rain.duration / 60000} minutes`,
                                             'inline': true
                                         }
                                     ],
@@ -50,7 +53,7 @@ async function startRain() {
                                         'text': 'bloxflip-autocrash'
                                     },
                                     'thumbnail': {
-                                        'url': 'https://bloxflip.com/favicon.ico'
+                                        'url': `https://www.roblox.com/headshot-thumbnail/image?userId=${hostId}&width=720&height=720`
                                     }
                                 }
                             ]
