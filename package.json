@@ -1,7 +1,7 @@
 {
   "name": "bloxflip-autocrash",
   "version": "1.0.0",
-  "description": "Bloxflip martingale crash bot using Puppeteer.",
+  "description": "Bloxflip crash automation using the martingale strategy.",
   "main": "src/index.ts",
   "scripts": {
     "dev": "nodemon src/index.ts -e ts",
@@ -9,8 +9,7 @@
     "lint": "eslint src --fix",
     "build": "tsc",
     "dev:js": "nodemon dist/index.js -e js",
-    "start:js": "node dist/index.js",
-    "test": "ts-node src/utils/webhook.ts"
+    "start:js": "node dist/index.js"
   },
   "keywords": [],
   "author": "",

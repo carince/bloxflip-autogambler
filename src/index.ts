@@ -8,6 +8,7 @@ let page: Page;
 
 (async () => {
     Logger.log(`STARTUP`, `Starting bloxflip-autocrash`);
+    Logger.log(`SUPPORT`, `Support the developers by starring the repo! https://github.com/Norikiru/bloxflip-autocrash`)
 
     await sleep(1000)
 
