@@ -2,9 +2,16 @@ import { page } from '../index';
 import { bet } from './bet';
 import { Logger } from '../utils/logger';
 import { checkAuth } from './user';
+import { getInfo } from './data'
+
+let gameLoss = 0
+let gameWon = 0
+let gameCount = 0
 
 async function startCrash() {
     await checkAuth();
+
+    await getInfo()
 
     await page.waitForNetworkIdle({ timeout: 60000 });
 
@@ -22,7 +29,6 @@ async function startCrash() {
     Logger.info(`CRASH`, `Starting crash bot`);
 
     let cashed = false;
-    let gameCount = 1;
     let lossStreak = 0;
 
     async function start() {
@@ -34,6 +40,7 @@ async function startCrash() {
                 if (textContent?.includes(`+`)) {
                     if (className.includes(`isCrashed`)) {
                         cashed = false;
+                        gameLoss++;
                         gameCount++;
                         lossStreak++;
                         Logger.log(`CRASH`, `Status: Lost \n `);
@@ -46,6 +53,7 @@ async function startCrash() {
                     if (className.includes(`isCashed`)) {
                         if (!cashed) {
                             cashed = true;
+                            gameWon++;
                             gameCount++;
                             lossStreak = 0;
                             Logger.log(`CRASH`, `Status: Won \n `);
@@ -82,4 +90,4 @@ function sleep(ms: number) {
     });
 }
 
-export { startCrash };
+export { startCrash, gameLoss, gameWon, gameCount };
