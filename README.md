@@ -9,6 +9,7 @@ This automation software is against Bloxflip's [Terms of Service](https://bloxfl
 ## 💥 Features 
 - 🤖 Automated martingale bot
 - ☔ Rain Notifier
+- 📊 Analytics
 - 🏓 Discord Webhook integration
 - 🤑 ITS FREE.
 
@@ -36,7 +37,8 @@ Edit config.json with your desired configuration
     "tries": 11, // How many times your balance will be divided by 2, I recommend 11 tries.
     "webhook": {
         "enabled": true, // Set to false if your not going to use webhooks
-        "link": "" // Discord webhook link
+        "link": "", // Discord webhook link
+        "analytics": true // Toggle hourly analytics
     },
     "debugging": { // For debugging purposes only, dont touch if you dont know what you are doing
         "headless": true, // Make chromium headless
