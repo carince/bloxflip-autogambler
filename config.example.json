@@ -1,0 +1,24 @@
+{
+    "auth": "Bloxflip token here",
+    // How many times your balance will be divided by 2, I recommend 11 tries.
+    "tries": 11, 
+    "webhook": {
+        // Set to false if your not going to use webhooks
+        "enabled": true, 
+        // Discord webhook link
+        "link": "", 
+        // Toggle hourly analytics
+        "analytics": true 
+    },
+    // For debugging purposes only, dont touch if you dont know what you are doing
+    "debugging": { 
+        // Make chromium headless
+        "headless": true, 
+        // Log info on what the code is doing
+        "verbose": false, 
+        // Exit the script on errors
+        "exitOnError": true, 
+        // Screenshot the page on errors
+        "ssOnError": false 
+    }
+}
