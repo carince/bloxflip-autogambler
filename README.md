@@ -31,7 +31,7 @@ copy(localStorage.getItem(`_DO_NOT_SHARE_BLOXFLIP_TOKEN`))
 ```
 
 - Edit config.json with your desired configuration
-```json
+```jsonc
 {
     "auth": "Bloxflip token here",
     // How many times your balance will be divided by 2, I recommend 11.
