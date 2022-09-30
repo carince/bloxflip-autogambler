@@ -30,7 +30,7 @@ git clone https://github.com/Norikiru/bloxflip-autocrash.git
 copy(localStorage.getItem(`_DO_NOT_SHARE_BLOXFLIP_TOKEN`))
 ```
 
-- Edit Edit config.example.json with your desired configuration
+- Edit config.example.json with your desired configuration
 ```jsonc
 {
     "auth": "Paste your Bloxflip token here",
