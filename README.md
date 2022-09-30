@@ -83,7 +83,7 @@ npm run start
 ### 🆕 Updating
 You must be in the root folder to be able to pull new commits
 ```bash
-$ git pull
+git pull
 ```
 
 ## 💖 Contributing

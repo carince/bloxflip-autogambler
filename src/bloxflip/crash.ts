@@ -80,7 +80,7 @@ async function startCrash() {
                             await sleep(3000);
                             await bet(true);
                         }
-                        console.log(`\n `)
+                        console.log(`\n`)
                     }
                 }
 
