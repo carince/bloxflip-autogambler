@@ -22,7 +22,7 @@ This automation software is against Bloxflip's [Terms of Service](https://bloxfl
 ### Installation
 - Open your terminal and clone the repository
 ```bash
-$ git clone https://github.com/Norikiru/bloxflip-autocrash.git
+git clone https://github.com/Norikiru/bloxflip-autocrash.git
 ```
 
 - Go to [Bloxflip](http://bloxflip.com "Bloxflip") and then run this code inside of the Dev Tools console. (it should copy onto your clipboard)
@@ -30,46 +30,54 @@ $ git clone https://github.com/Norikiru/bloxflip-autocrash.git
 copy(localStorage.getItem(`_DO_NOT_SHARE_BLOXFLIP_TOKEN`))
 ```
 
-- Edit config.json with your desired configuration
-```json
+- Edit Edit config.example.json with your desired configuration
+```jsonc
 {
-    "auth": "Bloxflip token here",
-    // How many times your balance will be divided by 2, I recommend 11.
-    "tries": 11, 
+    "auth": "Paste your Bloxflip token here",
+    // How many times your balance will be divided by 2, I recommend 12.
+    "tries": 12,
     "webhook": {
         // Set to false if your not going to use webhooks
-        "enabled": true, 
+        "enabled": false,
         // Discord webhook link
-        "link": "", 
-        // Toggle hourly analytics
-        "analytics": true 
+        "link": "",
+        "modules": {
+            "rain": {
+                // Toggle rain notifications
+                "enabled": true,
+                // Minimum rain prize to notify
+                "minimum": 1000
+            },
+            // Toggle hourly analytics
+            "analytics": true
+        }
     },
     // For debugging purposes only, dont touch if you dont know what you are doing
-    "debugging": { 
+    "debugging": {
         // Make chromium headless
-        "headless": true, 
+        "headless": true,
         // Log info on what the code is doing
-        "verbose": false, 
-        // Exit the script on errors
-        "exitOnError": true, 
+        "verbose": false,
+        // Exit the script on error
+        "exitOnError": true,
         // Screenshot the page on errors
-        "ssOnError": false 
+        "ssOnError": false
     }
 }
 ```
 
-- Remove all comments inside the json file (lines with //)
+- Remove all comments inside the json file ( lines with // )
 
 - Rename `config.example.json` to `config.json`
 
 - Install required dependencies
 ```bash
-$ npm i
+npm i
 ```
 
 - Run the bot! 🚀
 ```bash
-$ npm run start
+npm run start
 ```
 
 ### 🆕 Updating

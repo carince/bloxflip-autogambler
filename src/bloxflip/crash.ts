@@ -3,6 +3,8 @@ import { bet } from './bet';
 import { Logger } from '../utils/logger';
 import { checkAuth } from './user';
 import { getInfo } from './data'
+import { config } from '../utils/config';
+import { startRain } from './rain'
 
 let gameLoss = 0
 let gameWon = 0
@@ -11,9 +13,12 @@ let gameCount = 0
 async function startCrash() {
     await checkAuth();
 
-    await getInfo()
+    if (config.webhook.modules.analytics) getInfo()
+    if (config.webhook.modules.rain.enabled) startRain()
 
+    Logger.info(`BLOXFLIP`, `Waiting for network idle...`);
     await page.waitForNetworkIdle({ timeout: 60000 });
+    Logger.info(`BLOXFLIP`, `Starting autocrash.`);
 
     const elementArr = [`div.gameBlock.gameBet.crash_crashBet__D5Rs_ > button`, `input.input_input__uGeT_.input_inputWithCurrency__sAiOQ`, `div.header_headerUserBalance__UEAJq`, `div.crash_crashGameCoefficient__M8rxs`, `input.input_input__uGeT_`];
     for (const element of elementArr) {
@@ -75,6 +80,7 @@ async function startCrash() {
                             await sleep(3000);
                             await bet(true);
                         }
+                        console.log(`\n `)
                     }
                 }
 

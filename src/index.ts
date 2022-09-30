@@ -2,7 +2,6 @@ import { Page } from 'puppeteer';
 import { Logger } from './utils/logger';
 import { initialize } from './utils/browser';
 import { startCrash } from './bloxflip/crash';
-import { startRain } from './bloxflip/rain';
 
 let page: Page;
 
@@ -14,7 +13,7 @@ let page: Page;
 
     page = await initialize();
 
-    await Promise.all([startCrash(), startRain()]);
+    await startCrash()
 })();
 
 function sleep(ms: number) {

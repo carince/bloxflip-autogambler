@@ -10,7 +10,7 @@ async function sendWh(json: {}) {
             method: 'post',
             headers: {'Content-Type': 'application/json'}, 
             body: content
-        }).catch(() => Logger.warn(`WEBHOOK`, `Failed to send message to webhook.`))
+        }).catch(() => Logger.warn(`WEBHOOK`, `Failed to send message to webhook.`)).then(() => Logger.info(`WEBHOOK`, `Successfully sent webhook.`))
     }
 }
 

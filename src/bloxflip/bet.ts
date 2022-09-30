@@ -28,12 +28,11 @@ async function bet(won: boolean) {
             Logger.error(`BET`, `\tTries in config is too high causing the bet to be 0.`, true)
         }
 
-        if (bet > balance) {
-            Logger.error(`BET`, `WIPED.`);
-            process.exit();
-        }
-
         Logger.log(`BET`, `\tBet: ${bet} R$, Balance: ${balance} R$`);
+
+        if (bet > balance) {
+            Logger.error(`BET`, `Bet is greater than balance, possibly wiped.`);
+        }
 
         async function clear() {
             await inputBox?.click({ clickCount: 3 });
