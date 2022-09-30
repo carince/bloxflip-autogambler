@@ -8,6 +8,13 @@ interface configInt {
     webhook: {
         enabled: boolean;
         link: string;
+        modules: {
+            rain: {
+                enabled: boolean;
+                minimum: number;
+            };
+            analytics: boolean;
+        }
     };
     debugging: {
         headless: boolean,
@@ -21,7 +28,8 @@ let config: configInt;
 
 try {
     (async () => {
-        config = await JSON.parse(readFileSync(join(__dirname, `..`, `..`, `config.json`), `utf-8`));
+        config = await JSON.parse(readFileSync(join(__dirname, `..`, `..`, `config.json`), `utf-8`))
+        Logger.info(`CONFIG`, `Fetched config.json.`)
 
         if (config.auth.length < 1000) {
             Logger.error(`TOKEN`, `Token length is less than 1000, please put a valid token.`);

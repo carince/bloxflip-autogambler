@@ -3,6 +3,7 @@ import { notify } from 'node-notifier';
 import { Logger } from '../utils/logger';
 import { sendWh } from '../utils/webhook';
 import nfetch from 'node-fetch';
+import { config } from '../utils/config';
 
 async function startRain() {
     Logger.info(`RAIN`, `\tStarting rain notifier.`);
@@ -19,45 +20,49 @@ async function startRain() {
                     if (!notified) {
                         const hostId = await nfetch(`https://api.roblox.com/users/get-by-username?username=${bfApi.rain.host}`).then(res => res.json()).then(res => res.Id)
 
-                        notify({
-                            title: `AutoCrash Rain Notifier`,
-                            message: `Robux: ${bfApi.rain.prize} R$ \nHost: ${bfApi.rain.host} \nTime Remaining: ${bfApi.rain.duration / 60000} minutes`,
-                            subtitle: `bloxflip-autocrash`,
-                            sound: true
-                        });
+                        if (bfApi.rain.prize >= config.webhook.modules.rain.minimum) {
+                            notify({
+                                title: `AutoCrash Rain Notifier`,
+                                message: `Robux: ${bfApi.rain.prize} R$ \nHost: ${bfApi.rain.host} \nTime Remaining: ${bfApi.rain.duration / 60000} minutes`,
+                                subtitle: `bloxflip-autocrash`,
+                                sound: true
+                            });
 
-                        sendWh({
-                            'embeds': [
-                                {
-                                    'title': 'Bloxflip Rain Notifier',
-                                    'url': 'https://bloxflip.com',
-                                    'color': 3092790,
-                                    'fields': [
-                                        {
-                                            'name': 'Prize',
-                                            'value': `${bfApi.rain.prize} R$`,
-                                            'inline': true
+                            sendWh({
+                                'embeds': [
+                                    {
+                                        'title': 'Bloxflip Rain Notifier',
+                                        'url': 'https://bloxflip.com',
+                                        'color': 3092790,
+                                        'fields': [
+                                            {
+                                                'name': 'Prize',
+                                                'value': `${bfApi.rain.prize} R$`,
+                                                'inline': true
+                                            },
+                                            {
+                                                'name': 'Host',
+                                                'value': bfApi.rain.host,
+                                                'inline': true
+                                            },
+                                            {
+                                                'name': 'Time Remaining',
+                                                'value': `${bfApi.rain.duration / 60000} minutes`,
+                                                'inline': true
+                                            }
+                                        ],
+                                        'footer': {
+                                            'text': 'bloxflip-autocrash'
                                         },
-                                        {
-                                            'name': 'Host',
-                                            'value': bfApi.rain.host,
-                                            'inline': true
-                                        },
-                                        {
-                                            'name': 'Time Remaining',
-                                            'value': `${bfApi.rain.duration / 60000} minutes`,
-                                            'inline': true
+                                        'thumbnail': {
+                                            'url': `https://www.roblox.com/headshot-thumbnail/image?userId=${hostId}&width=720&height=720`
                                         }
-                                    ],
-                                    'footer': {
-                                        'text': 'bloxflip-autocrash'
-                                    },
-                                    'thumbnail': {
-                                        'url': `https://www.roblox.com/headshot-thumbnail/image?userId=${hostId}&width=720&height=720`
                                     }
-                                }
-                            ]
-                        })
+                                ]
+                            })
+                        } else {
+                            Logger.info(`RAIN`, `\nPrize is not greater or equal than the minimum value set in the config, ignoring...`)
+                        }
 
                         notified = true;
                     }

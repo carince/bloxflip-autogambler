@@ -2,6 +2,7 @@ import { page } from '../index';
 import { gameLoss, gameWon, gameCount } from './crash'
 import { config } from '../utils/config'
 import { sendWh } from '../utils/webhook'
+import { Logger } from '../utils/logger';
 
 let balanceBefore: number, betBefore: number
 async function getInfo() {
@@ -46,7 +47,7 @@ async function compare() {
     sendWh({
         'embeds': [
             {
-                'title': 'Hourly Data Analysis',
+                'title': 'Hourly Analysis',
                 'color': 3092790,
                 'fields': [
                     {
@@ -74,6 +75,8 @@ async function compare() {
             }
         ]
     })
+
+    Logger.info(`DATA`, `\n Successfully calculated data for analysis.`)
 }
 
 export { getInfo }
