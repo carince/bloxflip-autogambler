@@ -16,7 +16,7 @@ async function checkAuth() {
 
         let res;
         if (api.statusCode !== 200) {
-            Logger.warn("USER", `\nFetching user info failed, possibly blocked by cloudflare. Code: ${api.statusCode}`);
+            Logger.warn("USER", `\tFetching user info failed, possibly blocked by cloudflare. Code: ${api.statusCode}`);
             return;
         } else {
             res = api.data;

@@ -20,7 +20,7 @@ async function startRain() {
 
                 let bfRes;
                 if (bfApi.statusCode !== 200) {
-                    Logger.warn("RAIN", `\nFetching chat history failed, possibly blocked by cloudflare. Code: ${bfApi.statusCode}`);
+                    Logger.warn("RAIN", `\tFetching chat history failed, possibly blocked by cloudflare. Code: ${bfApi.statusCode}`);
                     return;
                 } else {
                     bfRes = bfApi.data;
