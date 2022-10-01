@@ -2,7 +2,6 @@ import { Page } from 'puppeteer';
 import { Logger } from './utils/logger';
 import { initialize } from './utils/browser';
 import { startCrash } from './bloxflip/crash';
-
 let page: Page;
 
 (async () => {
