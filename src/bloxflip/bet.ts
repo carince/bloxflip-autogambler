@@ -18,7 +18,7 @@ async function bet(won: boolean) {
         );
 
         if (bfApi.statusCode !== 200) {
-            Logger.warn("DATA", `\nFetching user info failed, possibly blocked by cloudflare. Code: ${bfApi.statusCode}`);
+            Logger.warn("DATA", `\tFetching user info failed, possibly blocked by cloudflare. Code: ${bfApi.statusCode}`);
             return;
         } else {
             balance = Math.round((bfApi.data.user.wallet + Number.EPSILON) * 100) / 100;
