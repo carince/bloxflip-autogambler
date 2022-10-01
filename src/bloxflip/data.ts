@@ -1,5 +1,5 @@
 import { curly as curl } from "node-libcurl";
-import { gameLoss, gameWon, gameCount } from "./crash";
+import { gameLoss, gameWon } from "./crash";
 import { config } from "../utils/config";
 import { sendWh } from "../utils/webhook";
 import { Logger } from "../utils/logger";
@@ -57,6 +57,7 @@ async function compare() {
         return Math.round(((denominator / numerator * 100) + Number.EPSILON) * 100) / 100 + "%";
     }
 
+    const gameCount = gameLoss + gameWon
     sendWh({
         "embeds": [
             {
