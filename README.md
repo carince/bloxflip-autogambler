@@ -66,8 +66,6 @@ copy(localStorage.getItem(`_DO_NOT_SHARE_BLOXFLIP_TOKEN`))
 }
 ```
 
-- Remove all comments inside the json file ( lines with // )
-
 - Rename `config.example.json` to `config.json`
 
 - Install required dependencies
