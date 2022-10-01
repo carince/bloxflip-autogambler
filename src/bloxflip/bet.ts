@@ -1,3 +1,4 @@
+import { curly as curl } from 'node-libcurl'
 import { page } from '../index';
 import { config } from '../utils/config';
 import { Logger } from '../utils/logger';
@@ -6,32 +7,44 @@ async function bet(won: boolean) {
     new Promise(async () => {
         const inputBox = await page.$(`input.input_input__uGeT_.input_inputWithCurrency__sAiOQ`);
 
-        let bet = 0.01;
-        const balance = await page.evaluate(async () => {
-            return fetch(`https://rest-bf.blox.land/user`, {
-                'headers': { 'x-auth-token': localStorage.getItem(`_DO_NOT_SHARE_BLOXFLIP_TOKEN`) || `` }
-            }).then(res => res.json()).then(res => Math.round((res.user.wallet + Number.EPSILON) * 100) / 100)
-        });
+        let calcBet = 0.01;
+        let balance: number
+        const bfApi = await curl.get(`https://rest-bf.blox.land/user`,
+            {
+                userAgent: `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44`,
+                sslVerifyPeer: false,
+                httpHeader: [`x-auth-token: ${config.auth}`]
+            }
+        )
+
+        if (bfApi.statusCode !== 200) {
+            Logger.warn(`DATA`, `\nFetching user info failed, possibly blocked by cloudflare. Code: ${bfApi.statusCode}`)
+            return
+        } else {
+            balance = Math.round((bfApi.data.user.wallet + Number.EPSILON) * 100) / 100
+        }
+
         const prevBet = await inputBox?.evaluate(e => e.getAttribute(`value`));
 
         if (won) {
-            bet = balance / Math.pow(2, config.tries);
+            calcBet = balance / Math.pow(2, config.tries);
             Logger.info(`BET`, `\tDividing balance to 2^${config.tries}`);
         } else {
-            bet = parseFloat(prevBet!) * 2;
+            calcBet = parseFloat(prevBet!) * 2;
             Logger.info(`BET`, `\tMultiplying previous bet to 2`);
         }
 
-        bet = Math.round((bet + Number.EPSILON) * 100) / 100;
+        calcBet = Math.round((calcBet + Number.EPSILON) * 100) / 100;
 
-        if (bet == 0) {
+        if (calcBet == 0) {
             Logger.error(`BET`, `\tTries in config is too high causing the bet to be 0.`, true)
         }
 
-        Logger.log(`BET`, `\tBet: ${bet} R$, Balance: ${balance} R$`);
+        Logger.log(`BET`, `\tBet: ${calcBet} R$, Balance: ${balance} R$`);
 
-        if (bet > balance) {
-            Logger.error(`BET`, `Bet is greater than balance, possibly wiped.`);
+        if (calcBet > balance) {
+            Logger.error(`BET`, `\nBet is greater than balance, wiped.`);
+            return bet(true)
         }
 
         async function clear() {
@@ -49,11 +62,11 @@ async function bet(won: boolean) {
         } await clear();
 
         async function typeBet() {
-            await inputBox?.type(bet.toString());
+            await inputBox?.type(calcBet.toString());
 
             const currentValue = await inputBox?.evaluate(e => e.getAttribute(`value`));
-            if (currentValue !== bet.toString()) {
-                Logger.warn(`BET`, `\ttypeBet: Expected ${bet}, got ${currentValue} \nClearing the input box and trying again.`);
+            if (currentValue !== calcBet.toString()) {
+                Logger.warn(`BET`, `\ttypeBet: Expected ${calcBet}, got ${currentValue} \nClearing the input box and trying again.`);
                 await sleep(500);
                 await clear();
                 await typeBet();
