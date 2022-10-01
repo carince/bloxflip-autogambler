@@ -17,7 +17,7 @@ async function startRain() {
                         sslVerifyPeer: false,
                     }
                 );
-            
+
                 let bfRes;
                 if (bfApi.statusCode !== 200) {
                     Logger.warn("RAIN", `\nFetching chat history failed, possibly blocked by cloudflare. Code: ${bfApi.statusCode}`);
@@ -28,7 +28,12 @@ async function startRain() {
 
                 if (bfRes.rain.active) {
                     if (!notified) {
-                        const hostId = await curl.get(`https://api.roblox.com/users/get-by-username?username=${bfRes.rain.host}`).then(res => res.data.Id);
+                        const hostId = await curl.get(`https://api.roblox.com/users/get-by-username?username=${bfRes.rain.host}`,
+                            { 
+                                userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
+                                sslVerifyPeer: false 
+                            }
+                        ).then(res => res.data.Id);
 
                         if (bfRes.rain.prize >= config.webhook.modules.rain.minimum) {
                             notify({
