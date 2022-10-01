@@ -8,7 +8,7 @@ import { startRain } from './rain'
 
 let gameLoss = 0
 let gameWon = 0
-let gameCount = 0
+let gameCount = gameLoss + gameWon
 
 async function startCrash() {
     await checkAuth();
@@ -46,7 +46,6 @@ async function startCrash() {
                     if (className.includes(`isCrashed`)) {
                         cashed = false;
                         gameLoss++;
-                        gameCount++;
                         lossStreak++;
                         Logger.log(`CRASH`, `Status: Lost \n `);
                         Logger.log(`GAME`, `\tGame #${gameCount}`);
@@ -59,7 +58,6 @@ async function startCrash() {
                         if (!cashed) {
                             cashed = true;
                             gameWon++;
-                            gameCount++;
                             lossStreak = 0;
                             Logger.log(`CRASH`, `Status: Won \n `);
                             Logger.log(`GAME`, `\tGame #${gameCount}`);

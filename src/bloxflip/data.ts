@@ -1,4 +1,4 @@
-import { page } from '../index';
+import { curly as curl } from 'node-libcurl'
 import { gameLoss, gameWon, gameCount } from './crash'
 import { config } from '../utils/config'
 import { sendWh } from '../utils/webhook'
@@ -6,11 +6,22 @@ import { Logger } from '../utils/logger';
 
 let balanceBefore: number, betBefore: number
 async function getInfo() {
-    balanceBefore = await page.evaluate(async () => {
-        return fetch(`https://rest-bf.blox.land/user`, {
-            'headers': { 'x-auth-token': localStorage.getItem(`_DO_NOT_SHARE_BLOXFLIP_TOKEN`) || `` }
-        }).then(res => res.json()).then(res => Math.round((res.user.wallet + Number.EPSILON) * 100) / 100)
-    });
+    Logger.info(`DATA`, `\tStarting analysis module`)
+
+    const bfApi = await curl.get(`https://rest-bf.blox.land/user`,
+        {
+            userAgent: `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44`,
+            sslVerifyPeer: false,
+            httpHeader: [`x-auth-token: ${config.auth}`]
+        }
+    )
+
+    if (bfApi.statusCode !== 200) {
+        Logger.warn(`DATA`, `\nFetching user info failed, possibly blocked by cloudflare. Code: ${bfApi.statusCode}`)
+        return
+    } else {
+        balanceBefore = Math.round((bfApi.data.user.wallet + Number.EPSILON) * 100) / 100
+    }
 
     betBefore = balanceBefore / Math.pow(2, config.tries);
     betBefore = Math.round((betBefore + Number.EPSILON) * 100) / 100
@@ -26,11 +37,13 @@ async function getInfo() {
 }
 
 async function compare() {
-    const balance = await page.evaluate(async () => {
-        return fetch(`https://rest-bf.blox.land/user`, {
-            'headers': { 'x-auth-token': localStorage.getItem(`_DO_NOT_SHARE_BLOXFLIP_TOKEN`) || `` }
-        }).then(res => res.json()).then(res => Math.round((res.user.wallet + Number.EPSILON) * 100) / 100)
-    });
+    const balance = await curl.get(`https://rest-bf.blox.land/user`,
+        {
+            userAgent: `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44`,
+            sslVerifyPeer: false,
+            httpHeader: [`x-auth-token: ${config.auth}`]
+        }
+    ).then(res => Math.round((res.data.user.wallet + Number.EPSILON) * 100) / 100)
 
     let bet = balance / Math.pow(2, config.tries);
     bet = Math.round((bet + Number.EPSILON) * 100) / 100
