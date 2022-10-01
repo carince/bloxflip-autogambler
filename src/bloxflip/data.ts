@@ -57,7 +57,7 @@ async function compare() {
         return Math.round(((denominator / numerator * 100) + Number.EPSILON) * 100) / 100 + "%";
     }
 
-    const gameCount = gameLoss + gameWon
+    const gameCount = gameLoss + gameWon;
     sendWh({
         "embeds": [
             {
