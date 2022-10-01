@@ -1,8 +1,7 @@
-import { page } from '../index';
 import { notify } from 'node-notifier';
+import { curly as curl } from 'node-libcurl';
 import { Logger } from '../utils/logger';
 import { sendWh } from '../utils/webhook';
-import nfetch from 'node-fetch';
 import { config } from '../utils/config';
 
 async function startRain() {
@@ -12,18 +11,29 @@ async function startRain() {
     async function start() {
         new Promise(() => {
             setTimeout(async () => {
-                const bfApi = await page.evaluate(async () => {
-                    return fetch(`https://rest-bf.blox.land/chat/history`).then(res => res.json());
-                })
+                const bfApi = await curl.get(`https://rest-bf.blox.land/chat/history`,
+                    {
+                        userAgent: `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44`,
+                        sslVerifyPeer: false,
+                    }
+                )
+            
+                let bfRes
+                if (bfApi.statusCode !== 200) {
+                    Logger.warn(`RAIN`, `\nFetching chat history failed, possibly blocked by cloudflare. Code: ${bfApi.statusCode}`)
+                    return
+                } else {
+                   bfRes = bfApi.data
+                }
 
-                if (bfApi.rain.active) {
+                if (bfRes.rain.active) {
                     if (!notified) {
-                        const hostId = await nfetch(`https://api.roblox.com/users/get-by-username?username=${bfApi.rain.host}`).then(res => res.json()).then(res => res.Id)
+                        const hostId = await curl.get(`https://api.roblox.com/users/get-by-username?username=${bfRes.rain.host}`).then(res => res.data.Id)
 
-                        if (bfApi.rain.prize >= config.webhook.modules.rain.minimum) {
+                        if (bfRes.rain.prize >= config.webhook.modules.rain.minimum) {
                             notify({
                                 title: `AutoCrash Rain Notifier`,
-                                message: `Robux: ${bfApi.rain.prize} R$ \nHost: ${bfApi.rain.host} \nTime Remaining: ${bfApi.rain.duration / 60000} minutes`,
+                                message: `Robux: ${bfRes.rain.prize} R$ \nHost: ${bfRes.rain.host} \nTime Remaining: ${bfRes.rain.duration / 60000} minutes`,
                                 subtitle: `bloxflip-autocrash`,
                                 sound: true
                             });
@@ -37,17 +47,17 @@ async function startRain() {
                                         'fields': [
                                             {
                                                 'name': 'Prize',
-                                                'value': `${bfApi.rain.prize} R$`,
+                                                'value': `${bfRes.rain.prize} R$`,
                                                 'inline': true
                                             },
                                             {
                                                 'name': 'Host',
-                                                'value': bfApi.rain.host,
+                                                'value': bfRes.rain.host,
                                                 'inline': true
                                             },
                                             {
                                                 'name': 'Time Remaining',
-                                                'value': `${bfApi.rain.duration / 60000} minutes`,
+                                                'value': `${bfRes.rain.duration / 60000} minutes`,
                                                 'inline': true
                                             }
                                         ],

@@ -1,16 +1,13 @@
-import fetch from 'node-fetch'
+import { curly as curl } from 'node-libcurl'
 import { config } from './config';
-import { Logger } from './logger';
 
 async function sendWh(json: {}) {
-    const content = JSON.stringify(json)
-
     if (config.webhook.enabled) {
-        await fetch(config.webhook.link, {
-            method: 'post',
-            headers: {'Content-Type': 'application/json'}, 
-            body: content
-        }).catch(() => Logger.warn(`WEBHOOK`, `Failed to send message to webhook.`)).then(() => Logger.info(`WEBHOOK`, `Successfully sent webhook.`))
+        await curl.post(config.webhook.link, {
+            postFields: JSON.stringify(json),
+            httpHeader: ['Content-Type: application/json', 'Accept: application/json'],
+            sslVerifyPeer: false
+        })
     }
 }
 
