@@ -76,7 +76,7 @@ async function startRain() {
                                 ]
                             });
                         } else {
-                            Logger.info("RAIN", "\nPrize is not greater or equal than the minimum value set in the config, ignoring...");
+                            Logger.info("RAIN", "\tPrize is not greater or equal than the minimum value set in the config, ignoring...");
                         }
 
                         notified = true;

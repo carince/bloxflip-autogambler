@@ -41,7 +41,7 @@ async function initialize() {
         const AuthToken = document.querySelector("body")?.textContent;
         localStorage.setItem("_DO_NOT_SHARE_BLOXFLIP_TOKEN", AuthToken!);
         if (localStorage.getItem("_DO_NOT_SHARE_BLOXFLIP_TOKEN") == AuthToken) {
-            new Error("[AUTH]\n\nUnable to set auth token to localStorage");
+            new Error("[AUTH]\t\tUnable to set auth token to localStorage");
         }
     });
     await authPage.close();

@@ -90,7 +90,7 @@ async function compare() {
         ]
     });
 
-    Logger.info("DATA", "\n Successfully calculated data for analysis.");
+    Logger.info("DATA", "\tSuccessfully calculated data for analysis.");
 }
 
 export { getInfo };
