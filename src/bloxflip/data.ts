@@ -39,7 +39,7 @@ async function getInfo() {
             setTimeout(async () => {
                 compare();
                 loop();
-            }, 5 * 60000);
+            }, 60 * 60000);
         });
     } await loop();
 }
