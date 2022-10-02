@@ -71,13 +71,14 @@ async function startCrash() {
                         Logger.warn("CRASH", "Haven't joined this game, ignoring...");
                         if (lossStreak) {
                             Logger.warn("CRASH", "Continuing loss streak, getting wiped is possible.");
+                            console.log("\n");
                             await sleep(3000);
                             await bet(false);
                         } else {
+                            console.log("\n");
                             await sleep(3000);
                             await bet(true);
                         }
-                        console.log("\n");
                     }
                 }
 

@@ -20,20 +20,47 @@ async function startRain() {
 
                 let bfRes;
                 if (bfApi.statusCode !== 200) {
+<<<<<<< Updated upstream
                     Logger.warn("RAIN", `\tFetching chat history failed, possibly blocked by cloudflare. Code: ${bfApi.statusCode}`);
+=======
+<<<<<<< Updated upstream
+                    Logger.warn("RAIN", `\nFetching chat history failed, possibly blocked by cloudflare. Code: ${bfApi.statusCode}`);
+>>>>>>> Stashed changes
                     return;
+=======
+                    if (bfApi.statusCode == 403) {
+                        Logger.error("RAIN", `\tFetching chat history failed, blocked by cloudflare. Code: ${bfApi.statusCode}`, true);
+                    } else {
+                        Logger.warn("RAIN", `\tFetching chat history failed, Code: ${bfApi.statusCode}. trying again...`);
+                        await sleep(500);
+                        await start();
+                    }
+>>>>>>> Stashed changes
                 } else {
                     bfRes = bfApi.data;
                 }
 
                 if (bfRes.rain.active) {
                     if (!notified) {
-                        const hostId = await curl.get(`https://api.roblox.com/users/get-by-username?username=${bfRes.rain.host}`,
-                            { 
+                        const rbxApi = await curl.get(`https://api.roblox.com/users/get-by-username?username=${bfRes.rain.host}`,
+                            {
                                 userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
-                                sslVerifyPeer: false 
+                                sslVerifyPeer: false
                             }
-                        ).then(res => res.data.Id);
+                        );
+
+                        let hostId;
+                        if (rbxApi.statusCode !== 200) {
+                            if (rbxApi.statusCode == 403) {
+                                Logger.error("RAIN", `\tFetching roblox ID failed, blocked by cloudflare. Code: ${rbxApi.statusCode}`, true);
+                            } else {
+                                Logger.warn("RAIN", `\tFetching roblox ID failed, Code: ${rbxApi.statusCode}. trying again...`);
+                                await sleep(500);
+                                await start();
+                            }
+                        } else {
+                            hostId = bfApi.data.Id;
+                        }
 
                         if (bfRes.rain.prize >= config.webhook.modules.rain.minimum) {
                             notify({
@@ -89,6 +116,12 @@ async function startRain() {
             }, 5000);
         });
     } await start();
+}
+
+function sleep(ms: number) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
 }
 
 export { startRain };

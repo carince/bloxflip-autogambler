@@ -8,18 +8,33 @@ async function checkAuth() {
     Logger.info("USER", "\tFetching user information.");
 
     async function start() {
-        const api = await curl.get("https://rest-bf.blox.land/user", {
+        const bfApi = await curl.get("https://rest-bf.blox.land/user", {
             userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
             httpHeader: [`x-auth-token: ${config.auth}`],
             sslVerifyPeer: false
         });
 
         let res;
+<<<<<<< Updated upstream
         if (api.statusCode !== 200) {
+<<<<<<< Updated upstream
             Logger.warn("USER", `\tFetching user info failed, possibly blocked by cloudflare. Code: ${api.statusCode}`);
+=======
+            Logger.warn("USER", `\nFetching user info failed, possibly blocked by cloudflare. Code: ${api.statusCode}`);
+=======
+        if (bfApi.statusCode !== 200) {
+            if (bfApi.statusCode == 403) {
+                Logger.error("USER", `\tFetching user info failed, blocked by cloudflare. Code: ${bfApi.statusCode}`, true);
+            } else {
+                Logger.warn("USER", `\tFetching user info failed, Code: ${bfApi.statusCode}. trying again...`);
+                await sleep(500);
+                await start();
+            }
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
             return;
         } else {
-            res = api.data;
+            res = bfApi.data;
         }
 
         if (res.success) {
@@ -60,6 +75,12 @@ async function checkAuth() {
         }
 
     } await start();
+}
+
+function sleep(ms: number) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
 }
 
 export { checkAuth };
