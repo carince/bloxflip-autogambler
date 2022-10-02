@@ -43,7 +43,7 @@ async function bet(won: boolean) {
         Logger.log("BET", `\tBet: ${calcBet} R$, Balance: ${balance} R$`);
 
         if (calcBet > balance) {
-            Logger.error("BET", "\nBet is greater than balance, wiped.");
+            Logger.error("BET", "\tBet is greater than balance, wiped.");
             return bet(true);
         }
 
