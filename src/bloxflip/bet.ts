@@ -18,12 +18,7 @@ async function bet(won: boolean) {
         );
 
         if (bfApi.statusCode !== 200) {
-<<<<<<< Updated upstream
-            Logger.warn("DATA", `\tFetching user info failed, possibly blocked by cloudflare. Code: ${bfApi.statusCode}`);
-=======
-<<<<<<< Updated upstream
             Logger.warn("DATA", `\nFetching user info failed, possibly blocked by cloudflare. Code: ${bfApi.statusCode}`);
-=======
             if (bfApi.statusCode == 403) {
                 Logger.error("BET", `\tFetching user info failed, blocked by cloudflare. Code: ${bfApi.statusCode}`, true);
             } else {
@@ -31,8 +26,6 @@ async function bet(won: boolean) {
                 await sleep(500);
                 await calculate();
             }
->>>>>>> Stashed changes
->>>>>>> Stashed changes
             return;
         } else {
             balance = Math.round((bfApi.data.user.wallet + Number.EPSILON) * 100) / 100;

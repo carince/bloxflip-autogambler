@@ -15,13 +15,6 @@ async function checkAuth() {
         });
 
         let res;
-<<<<<<< Updated upstream
-        if (api.statusCode !== 200) {
-<<<<<<< Updated upstream
-            Logger.warn("USER", `\tFetching user info failed, possibly blocked by cloudflare. Code: ${api.statusCode}`);
-=======
-            Logger.warn("USER", `\nFetching user info failed, possibly blocked by cloudflare. Code: ${api.statusCode}`);
-=======
         if (bfApi.statusCode !== 200) {
             if (bfApi.statusCode == 403) {
                 Logger.error("USER", `\tFetching user info failed, blocked by cloudflare. Code: ${bfApi.statusCode}`, true);
@@ -30,8 +23,6 @@ async function checkAuth() {
                 await sleep(500);
                 await start();
             }
->>>>>>> Stashed changes
->>>>>>> Stashed changes
             return;
         } else {
             res = bfApi.data;
