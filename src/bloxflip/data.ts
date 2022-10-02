@@ -17,7 +17,15 @@ async function getInfo() {
     );
 
     if (bfApi.statusCode !== 200) {
-        Logger.warn("DATA", `\tFetching user info failed, possibly blocked by cloudflare. Code: ${bfApi.statusCode}`);
+        Logger.warn("DATA", `\nFetching user info failed, possibly blocked by cloudflare. Code: ${bfApi.statusCode}`);
+
+        if (bfApi.statusCode == 403) {
+            Logger.error("DATA", `\tFetching user info failed, blocked by cloudflare. Code: ${bfApi.statusCode}`, true);
+        } else {
+            Logger.warn("DATA", `\tFetching user info failed, Code: ${bfApi.statusCode}. trying again...`);
+            await sleep(500);
+            await getInfo();
+        }
         return;
     } else {
         balanceBefore = Math.round((bfApi.data.user.wallet + Number.EPSILON) * 100) / 100;
@@ -31,19 +39,33 @@ async function getInfo() {
             setTimeout(async () => {
                 compare();
                 loop();
-            }, 3600000);
+            }, 5 * 60000);
         });
     } await loop();
 }
 
 async function compare() {
-    const balance = await curl.get("https://rest-bf.blox.land/user",
+    const bfApi = await curl.get("https://rest-bf.blox.land/user",
         {
             userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
             sslVerifyPeer: false,
             httpHeader: [`x-auth-token: ${config.auth}`]
         }
-    ).then(res => Math.round((res.data.user.wallet + Number.EPSILON) * 100) / 100);
+    );
+
+    let balance: number;
+    if (bfApi.statusCode !== 200) {
+        if (bfApi.statusCode == 403) {
+            Logger.error("DATA", `\tFetching user info failed, blocked by cloudflare. Code: ${bfApi.statusCode}`, true);
+        } else {
+            Logger.warn("DATA", `\tFetching user info failed, Code: ${bfApi.statusCode}. trying again...`);
+            await sleep(500);
+            await getInfo();
+        }
+        return;
+    } else {
+        balance = Math.round((bfApi.data.user.wallet + Number.EPSILON) * 100) / 100;
+    }
 
     let bet = balance / Math.pow(2, config.tries);
     bet = Math.round((bet + Number.EPSILON) * 100) / 100;
@@ -91,6 +113,12 @@ async function compare() {
     });
 
     Logger.info("DATA", "\tSuccessfully calculated data for analysis.");
+}
+
+function sleep(ms: number) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
 }
 
 export { getInfo };
