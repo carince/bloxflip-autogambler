@@ -20,14 +20,6 @@ async function startRain() {
 
                 let bfRes;
                 if (bfApi.statusCode !== 200) {
-<<<<<<< Updated upstream
-                    Logger.warn("RAIN", `\tFetching chat history failed, possibly blocked by cloudflare. Code: ${bfApi.statusCode}`);
-=======
-<<<<<<< Updated upstream
-                    Logger.warn("RAIN", `\nFetching chat history failed, possibly blocked by cloudflare. Code: ${bfApi.statusCode}`);
->>>>>>> Stashed changes
-                    return;
-=======
                     if (bfApi.statusCode == 403) {
                         Logger.error("RAIN", `\tFetching chat history failed, blocked by cloudflare. Code: ${bfApi.statusCode}`, true);
                     } else {
@@ -35,7 +27,6 @@ async function startRain() {
                         await sleep(500);
                         await start();
                     }
->>>>>>> Stashed changes
                 } else {
                     bfRes = bfApi.data;
                 }
