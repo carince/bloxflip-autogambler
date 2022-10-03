@@ -1,8 +1,8 @@
 import { Page } from "puppeteer";
-import { Logger } from "utils/logger";
-import { sleep } from "utils/sleep";
-import { initialize } from "utils/browser";
-import { startCrash } from "bloxflip/crash";
+import { Logger } from "./utils/logger";
+import { sleep } from "./utils/sleep";
+import { initialize } from "./utils/browser";
+import { startCrash } from "./bloxflip/crash";
 let page: Page;
 
 (async (): Promise<void> => {
