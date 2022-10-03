@@ -5,11 +5,12 @@ import { checkAuth } from "./user";
 import { getInfo } from "./data";
 import { config } from "../utils/config";
 import { startRain } from "./rain";
+import { sleep } from "../utils/sleep";
 
 let gameLoss = 0;
 let gameWon = 0;
 
-async function startCrash() {
+async function startCrash(): Promise<void> {
     await checkAuth();
 
     if (config.webhook.modules.analytics) getInfo();
@@ -19,7 +20,7 @@ async function startCrash() {
     await page.waitForNetworkIdle({ timeout: 60000 });
     Logger.info("BLOXFLIP", "Starting autocrash.");
 
-    const elementArr = ["div.gameBlock.gameBet.crash_crashBet__D5Rs_ > button", "input.input_input__uGeT_.input_inputWithCurrency__sAiOQ", "div.header_headerUserBalance__UEAJq", "div.crash_crashGameCoefficient__M8rxs", "input.input_input__uGeT_"];
+    const elementArr: string[] = ["div.gameBlock.gameBet.crash_crashBet__D5Rs_ > button", "input.input_input__uGeT_.input_inputWithCurrency__sAiOQ", "div.header_headerUserBalance__UEAJq", "div.crash_crashGameCoefficient__M8rxs", "input.input_input__uGeT_"];
     for (const element of elementArr) {
         if (!await page.$(element)) {
             Logger.error("ELEMENTS", `Unable to query the element: ${element}`);
@@ -35,10 +36,10 @@ async function startCrash() {
     let cashed = false;
     let lossStreak = 0;
 
-    async function start() {
-        new Promise(() => {
-            setTimeout(async () => {
-                const textContent = await page.$eval("div.crash_crashGameCoefficient__M8rxs", e => e.textContent);
+    async function start(): Promise<void> {
+        new Promise((): void => {
+            setTimeout(async (): Promise<void> => {
+                const textContent: string = await page.$eval("div.crash_crashGameCoefficient__M8rxs", e => e.textContent) as string;
                 const className = await page.$eval("div.crash_crashGameCoefficient__M8rxs", e => e.className);
 
                 if (textContent?.includes("+")) {
@@ -86,12 +87,6 @@ async function startCrash() {
             }, 500);
         });
     } await start();
-}
-
-function sleep(ms: number) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
 }
 
 export { startCrash, gameLoss, gameWon };
