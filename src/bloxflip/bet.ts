@@ -1,14 +1,16 @@
 import { curly as curl } from "node-libcurl";
+import { ElementHandle } from "puppeteer";
 import { page } from "../index";
 import { config } from "../utils/config";
 import { Logger } from "../utils/logger";
+import { sleep } from "../utils/sleep";
 
-async function bet(won: boolean) {
-    const inputBox = await page.$("input.input_input__uGeT_.input_inputWithCurrency__sAiOQ");
+async function bet(won: boolean): Promise<void> {
+    const inputBox: ElementHandle<Element> = await page.$("input.input_input__uGeT_.input_inputWithCurrency__sAiOQ") as ElementHandle<Element>;
     let calcBet: number;
     let balance: number;
 
-    async function calculate() {
+    async function calculate(): Promise<void> {
         const bfApi = await curl.get("https://rest-bf.blox.land/user",
             {
                 userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
@@ -31,7 +33,7 @@ async function bet(won: boolean) {
             balance = Math.round((bfApi.data.user.wallet + Number.EPSILON) * 100) / 100;
         }
 
-        const prevBet = await inputBox?.evaluate(e => e.getAttribute("value"));
+        const prevBet: string = await inputBox?.evaluate(e => e.getAttribute("value")) as string;
 
         if (won) {
             calcBet = balance / Math.pow(2, config.tries);
@@ -55,11 +57,11 @@ async function bet(won: boolean) {
         }
     } await calculate();
 
-    async function clear() {
+    async function clear(): Promise<void> {
         await inputBox?.click({ clickCount: 3 });
         await inputBox?.press("Backspace");
 
-        const currentValue = await inputBox?.evaluate(e => e.getAttribute("value"));
+        const currentValue: string = await inputBox?.evaluate(e => e.getAttribute("value")) as string;
         if (currentValue?.length) {
             Logger.warn("BET", "\tclear: Unable to clear inputBox, trying again...");
             await sleep(500);
@@ -69,10 +71,10 @@ async function bet(won: boolean) {
         Logger.info("CLEAR", "Successfully cleared inputBox");
     } await clear();
 
-    async function typeBet() {
+    async function typeBet(): Promise<void> {
         await inputBox?.type(calcBet.toString());
 
-        const currentValue = await inputBox?.evaluate(e => e.getAttribute("value"));
+        const currentValue: string = await inputBox?.evaluate(e => e.getAttribute("value")) as string;
         if (currentValue !== calcBet.toString()) {
             Logger.warn("BET", `\ttypeBet: Expected ${calcBet}, got ${currentValue} \nClearing the input box and trying again.`);
             await sleep(500);
@@ -83,19 +85,19 @@ async function bet(won: boolean) {
         Logger.info("TYPEBET", "Successfully typed bet into inputBox");
     } await typeBet();
 
-    async function join() {
+    async function join(): Promise<void> {
         let tries = 1;
 
-        async function click() {
+        async function click(): Promise<void> {
             if (tries <= 5) {
-                const betBtn = await page.$("div.gameBlock.gameBet.crash_crashBet__D5Rs_ > button");
-                let textContent = await betBtn?.evaluate(e => e.textContent);
+                const betBtn: ElementHandle<Element> = await page.$("div.gameBlock.gameBet.crash_crashBet__D5Rs_ > button") as ElementHandle<Element>;
+                let textContent: string = await betBtn?.evaluate(e => e.textContent) as string;
 
                 if (textContent?.includes("Join")) {
                     await betBtn?.type("\n");
                     await sleep(1000);
 
-                    textContent = await betBtn?.evaluate(e => e.textContent);
+                    textContent = await betBtn?.evaluate(e => e.textContent) as string;
                     if (textContent == "Cashout" || textContent == "Cancel bet") {
                         Logger.log("BET", "\tSuccessfully joined game.");
                     } else {
@@ -117,12 +119,6 @@ async function bet(won: boolean) {
             }
         } await click();
     } await join();
-}
-
-function sleep(ms: number) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
 }
 
 export { bet };

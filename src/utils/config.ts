@@ -1,7 +1,8 @@
 import { parse } from "json5";
-import { readFileSync } from "fs";
-import { join } from "path";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { Logger } from "./logger";
+import { sleep } from "./sleep";
 
 interface configInt {
     auth: string;
@@ -28,7 +29,7 @@ interface configInt {
 let config: configInt;
 
 try {
-    (async () => {
+    (async (): Promise<void> => {
         config = await parse(readFileSync(join(__dirname, "..", "..", "config.json"), "utf-8"));
         Logger.info("CONFIG", "Fetched config.json.");
 
@@ -43,12 +44,6 @@ try {
     })();
 } catch (err) {
     Logger.error("CONFIG", `Unable to read config.json\n${err}`, true);
-}
-
-function sleep(ms: number) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
 }
 
 export { config };

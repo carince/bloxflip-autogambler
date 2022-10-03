@@ -1,7 +1,7 @@
 import { curly as curl } from "node-libcurl";
 import { config } from "./config";
 
-async function sendWh(json: any) {
+async function sendWh(json: any): Promise<void> {
     if (config.webhook.enabled) {
         await curl.post(config.webhook.link, {
             postFields: JSON.stringify(json),
