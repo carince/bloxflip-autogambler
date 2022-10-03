@@ -1,10 +1,11 @@
 import { Browser, Page, launch } from "puppeteer";
 import { config } from "./config";
 import { Logger } from "./logger";
+import { sleep } from "./sleep";
 
 let page: Page;
 
-async function initialize() {
+async function initialize(): Promise<Page> {
     await sleep(1000);
 
     const browser: Browser = await launch(
@@ -29,7 +30,7 @@ async function initialize() {
 
     const authPage = await browser.newPage();
     await authPage.setRequestInterception(true);
-    authPage.on("request", r => {
+    authPage.on("request", (r): void => {
         r.respond({
             status: 200,
             contentType: "text/plain",
@@ -37,9 +38,9 @@ async function initialize() {
         });
     });
     await authPage.goto("https://bloxflip.com/crash");
-    await authPage.evaluate(() => {
-        const AuthToken = document.querySelector("body")?.textContent;
-        localStorage.setItem("_DO_NOT_SHARE_BLOXFLIP_TOKEN", AuthToken!);
+    await authPage.evaluate((): void => {
+        const AuthToken: string = document.querySelector("body")?.textContent as string;
+        localStorage.setItem("_DO_NOT_SHARE_BLOXFLIP_TOKEN", AuthToken);
         if (localStorage.getItem("_DO_NOT_SHARE_BLOXFLIP_TOKEN") == AuthToken) {
             new Error("[AUTH]\t\tUnable to set auth token to localStorage");
         }
@@ -50,12 +51,6 @@ async function initialize() {
     await page.goto("https://bloxflip.com/crash", { timeout: 60000 });
 
     return page;
-}
-
-function sleep(ms: number) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
 }
 
 export { initialize };
