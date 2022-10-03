@@ -3,9 +3,10 @@ import { gameLoss, gameWon } from "./crash";
 import { config } from "../utils/config";
 import { sendWh } from "../utils/webhook";
 import { Logger } from "../utils/logger";
+import { sleep } from "../utils/sleep";
 
 let balanceBefore: number, betBefore: number;
-async function getInfo() {
+async function getInfo(): Promise<void> {
     Logger.info("DATA", "\tStarting analysis module");
 
     const bfApi = await curl.get("https://rest-bf.blox.land/user",
@@ -34,8 +35,8 @@ async function getInfo() {
     betBefore = balanceBefore / Math.pow(2, config.tries);
     betBefore = Math.round((betBefore + Number.EPSILON) * 100) / 100;
 
-    async function loop() {
-        new Promise(() => {
+    async function loop(): Promise<void> {
+        new Promise((): void => {
             setTimeout(async () => {
                 compare();
                 loop();
@@ -44,7 +45,7 @@ async function getInfo() {
     } await loop();
 }
 
-async function compare() {
+async function compare(): Promise<void> {
     const bfApi = await curl.get("https://rest-bf.blox.land/user",
         {
             userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
@@ -70,12 +71,12 @@ async function compare() {
     let bet = balance / Math.pow(2, config.tries);
     bet = Math.round((bet + Number.EPSILON) * 100) / 100;
 
-    function diffPercent(denominator: number, numerator: number) {
+    function diffPercent(denominator: number, numerator: number): string {
         const string = `${(denominator < numerator ? "-" + ((numerator - denominator) * 100) / denominator : ((denominator - numerator) * 100) / numerator)}`;
         return Math.round((parseFloat(string) + Number.EPSILON) * 100) / 100 + "%";
     }
 
-    function percentageOf(denominator: number, numerator: number) {
+    function percentageOf(denominator: number, numerator: number): string {
         return Math.round(((denominator / numerator * 100) + Number.EPSILON) * 100) / 100 + "%";
     }
 
@@ -113,12 +114,6 @@ async function compare() {
     });
 
     Logger.info("DATA", "\tSuccessfully calculated data for analysis.");
-}
-
-function sleep(ms: number) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
 }
 
 export { getInfo };

@@ -3,11 +3,12 @@ import chalk from "chalk";
 import { Logger } from "../utils/logger";
 import { sendWh } from "../utils/webhook";
 import { config } from "../utils/config";
+import { sleep } from "../utils/sleep";
 
-async function checkAuth() {
+async function checkAuth(): Promise<void> {
     Logger.info("USER", "\tFetching user information.");
 
-    async function start() {
+    async function start(): Promise<void> {
         const bfApi = await curl.get("https://rest-bf.blox.land/user", {
             userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
             httpHeader: [`x-auth-token: ${config.auth}`],
@@ -66,12 +67,6 @@ async function checkAuth() {
         }
 
     } await start();
-}
-
-function sleep(ms: number) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
 }
 
 export { checkAuth };

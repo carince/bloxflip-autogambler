@@ -3,14 +3,15 @@ import { curly as curl } from "node-libcurl";
 import { Logger } from "../utils/logger";
 import { sendWh } from "../utils/webhook";
 import { config } from "../utils/config";
+import { sleep } from "../utils/sleep";
 
-async function startRain() {
+async function startRain(): Promise<void> {
     Logger.info("RAIN", "\tStarting rain notifier.");
 
     let notified = false;
-    async function start() {
-        new Promise(() => {
-            setTimeout(async () => {
+    async function start(): Promise<void> {
+        new Promise((): void => {
+            setTimeout(async (): Promise<void> => {
                 const bfApi = await curl.get("https://rest-bf.blox.land/chat/history",
                     {
                         userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
@@ -107,12 +108,6 @@ async function startRain() {
             }, 5000);
         });
     } await start();
-}
-
-function sleep(ms: number) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
 }
 
 export { startRain };
