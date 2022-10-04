@@ -42,7 +42,7 @@ async function getInfo(): Promise<void> {
                 loop();
             }, 60 * 60000);
         });
-    } await loop();
+    } if (config.webhook.modules.analytics) await loop();
 }
 
 async function compare(): Promise<void> {
@@ -116,4 +116,4 @@ async function compare(): Promise<void> {
     Logger.info("DATA", "\tSuccessfully calculated data for analysis.");
 }
 
-export { getInfo };
+export { getInfo, balanceBefore };
