@@ -22,7 +22,7 @@ async function checkAuth(): Promise<void> {
             } else {
                 Logger.warn("USER", `\tFetching user info failed, Code: ${bfApi.statusCode}. trying again...`);
                 await sleep(500);
-                await start();
+                return await start();
             }
             return;
         } else {

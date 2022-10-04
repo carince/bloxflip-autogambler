@@ -1,5 +1,6 @@
 import { curly as curl } from "node-libcurl";
 import { ElementHandle } from "puppeteer";
+import { sendWh } from "../utils/webhook";
 import { page } from "../index";
 import { config } from "../utils/config";
 import { Logger } from "../utils/logger";
@@ -26,7 +27,7 @@ async function bet(won: boolean): Promise<void> {
             } else {
                 Logger.warn("BET", `\tFetching user info failed, Code: ${bfApi.statusCode}. trying again...`);
                 await sleep(500);
-                await calculate();
+                return await calculate();
             }
             return;
         } else {
@@ -53,6 +54,26 @@ async function bet(won: boolean): Promise<void> {
 
         if (calcBet > balance) {
             Logger.error("BET", "\tBet is greater than balance, wiped.");
+            sendWh(
+                {
+                    "embeds": [
+                        {
+                            "title": "Wiped!",
+                            "color": 3092790,
+                            "fields": [
+                                {
+                                    "name": "Balance",
+                                    "value": "**Before**: \n**After**:",
+                                    "inline": true
+                                }
+                            ],
+                            "footer": {
+                                "text": "bloxflip-autocrash"
+                            }
+                        }
+                    ]
+                }
+            );
             return bet(true);
         }
     } await calculate();

@@ -25,7 +25,7 @@ async function getInfo(): Promise<void> {
         } else {
             Logger.warn("DATA", `\tFetching user info failed, Code: ${bfApi.statusCode}. trying again...`);
             await sleep(500);
-            await getInfo();
+            return await getInfo();
         }
         return;
     } else {
@@ -42,7 +42,7 @@ async function getInfo(): Promise<void> {
                 loop();
             }, 60 * 60000);
         });
-    } await loop();
+    } if (config.webhook.modules.analytics) await loop();
 }
 
 async function compare(): Promise<void> {
@@ -61,7 +61,7 @@ async function compare(): Promise<void> {
         } else {
             Logger.warn("DATA", `\tFetching user info failed, Code: ${bfApi.statusCode}. trying again...`);
             await sleep(500);
-            await getInfo();
+            return await getInfo();
         }
         return;
     } else {
@@ -116,4 +116,4 @@ async function compare(): Promise<void> {
     Logger.info("DATA", "\tSuccessfully calculated data for analysis.");
 }
 
-export { getInfo };
+export { getInfo, balanceBefore };
