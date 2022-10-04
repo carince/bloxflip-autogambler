@@ -26,7 +26,7 @@ async function startRain(): Promise<void> {
                     } else {
                         Logger.warn("RAIN", `\tFetching chat history failed, Code: ${bfApi.statusCode}. trying again...`);
                         await sleep(500);
-                        await start();
+                        return await start();
                     }
                 } else {
                     bfRes = bfApi.data;
@@ -48,9 +48,9 @@ async function startRain(): Promise<void> {
                             } else {
                                 Logger.warn("RAIN", `\tFetching roblox ID failed, Code: ${rbxApi.statusCode}. trying again...`);
                                 await sleep(500);
-                                await start();
+                                return await start();
                             }
-                            return
+                            return;
                         } else {
                             hostId = bfRes.Id;
                         }
