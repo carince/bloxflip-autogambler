@@ -27,7 +27,7 @@ async function bet(won: boolean): Promise<void> {
             } else {
                 Logger.warn("BET", `\tFetching user info failed, Code: ${bfApi.statusCode}. trying again...`);
                 await sleep(500);
-                await calculate();
+                return await calculate();
             }
             return;
         } else {
@@ -73,7 +73,7 @@ async function bet(won: boolean): Promise<void> {
                         }
                     ]
                 }
-            )
+            );
             return bet(true);
         }
     } await calculate();

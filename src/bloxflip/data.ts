@@ -25,7 +25,7 @@ async function getInfo(): Promise<void> {
         } else {
             Logger.warn("DATA", `\tFetching user info failed, Code: ${bfApi.statusCode}. trying again...`);
             await sleep(500);
-            await getInfo();
+            return await getInfo();
         }
         return;
     } else {
@@ -61,7 +61,7 @@ async function compare(): Promise<void> {
         } else {
             Logger.warn("DATA", `\tFetching user info failed, Code: ${bfApi.statusCode}. trying again...`);
             await sleep(500);
-            await getInfo();
+            return await getInfo();
         }
         return;
     } else {
