@@ -105,7 +105,7 @@ async function startRain(): Promise<void> {
                 }
 
                 await start();
-            }, 5000);
+            }, 1000);
         });
     } await start();
 }
