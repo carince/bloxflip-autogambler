@@ -41,7 +41,7 @@ async function startRain(): Promise<void> {
                             }
                         );
 
-                        let hostId;
+                        let hostId: number;
                         if (rbxApi.statusCode !== 200) {
                             if (rbxApi.statusCode == 403) {
                                 Logger.error("RAIN", `\tFetching roblox ID failed, blocked by cloudflare. Code: ${rbxApi.statusCode}`, true);
@@ -50,8 +50,9 @@ async function startRain(): Promise<void> {
                                 await sleep(500);
                                 await start();
                             }
+                            return
                         } else {
-                            hostId = bfApi.data.Id;
+                            hostId = bfRes.Id;
                         }
 
                         if (bfRes.rain.prize >= config.webhook.modules.rain.minimum) {

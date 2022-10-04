@@ -13,7 +13,7 @@ let gameWon = 0;
 async function startCrash(): Promise<void> {
     await checkAuth();
 
-    if (config.webhook.modules.analytics) getInfo();
+    getInfo();
     if (config.webhook.modules.rain.enabled) startRain();
 
     Logger.info("BLOXFLIP", "Waiting for network idle...");
