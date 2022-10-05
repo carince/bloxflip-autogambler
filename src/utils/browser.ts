@@ -1,4 +1,6 @@
-import { Browser, Page, launch } from "puppeteer";
+import pup from 'puppeteer-extra'
+import stealthPlugin from 'puppeteer-extra-plugin-stealth'
+import { Browser, Page } from "puppeteer";
 import { config } from "./config";
 import { Logger } from "./logger";
 import { sleep } from "./sleep";
@@ -6,9 +8,10 @@ import { sleep } from "./sleep";
 let page: Page;
 
 async function initialize(): Promise<Page> {
-    await sleep(1000);
+    await sleep(1000); 
 
-    const browser: Browser = await launch(
+    pup.use(stealthPlugin())
+    const browser: Browser = await pup.launch(
         {
             headless: config.debugging.headless,
             defaultViewport: { width: 1920, height: 1080 },
@@ -26,7 +29,7 @@ async function initialize(): Promise<Page> {
             "x-auth-token": config.auth
         }
     );
-    Logger.info("BLOXFLIP", "Successfully setting up page for Bloxflip");
+    Logger.info("BLOXFLIP", "Successfully set up page for Bloxflip");
 
     const authPage = await browser.newPage();
     await authPage.setRequestInterception(true);
