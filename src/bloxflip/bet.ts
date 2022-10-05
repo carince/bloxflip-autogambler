@@ -5,6 +5,7 @@ import { page } from "../index";
 import { config } from "../utils/config";
 import { Logger } from "../utils/logger";
 import { sleep } from "../utils/sleep";
+import { balanceBefore } from "./data"
 
 async function bet(won: boolean): Promise<void> {
     const inputBox: ElementHandle<Element> = await page.$("input.input_input__uGeT_.input_inputWithCurrency__sAiOQ") as ElementHandle<Element>;
@@ -63,7 +64,7 @@ async function bet(won: boolean): Promise<void> {
                             "fields": [
                                 {
                                     "name": "Balance",
-                                    "value": "**Before**: \n**After**:",
+                                    "value": `**Before**: ${balanceBefore}\n**After**: ${balance}`,
                                     "inline": true
                                 }
                             ],
