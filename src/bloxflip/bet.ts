@@ -5,7 +5,7 @@ import { page } from "../index";
 import { config } from "../utils/config";
 import { Logger } from "../utils/logger";
 import { sleep } from "../utils/sleep";
-import { balanceBefore } from "./data"
+import { balanceBefore } from "./data";
 
 async function bet(won: boolean): Promise<void> {
     const inputBox: ElementHandle<Element> = await page.$("input.input_input__uGeT_.input_inputWithCurrency__sAiOQ") as ElementHandle<Element>;
@@ -22,7 +22,6 @@ async function bet(won: boolean): Promise<void> {
         );
 
         if (bfApi.statusCode !== 200) {
-            Logger.warn("DATA", `\nFetching user info failed, possibly blocked by cloudflare. Code: ${bfApi.statusCode}`);
             if (bfApi.statusCode == 403) {
                 Logger.error("BET", `\tFetching user info failed, blocked by cloudflare. Code: ${bfApi.statusCode}`, true);
             } else {

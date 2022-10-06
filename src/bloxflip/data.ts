@@ -18,8 +18,6 @@ async function getInfo(): Promise<void> {
     );
 
     if (bfApi.statusCode !== 200) {
-        Logger.warn("DATA", `\nFetching user info failed, possibly blocked by cloudflare. Code: ${bfApi.statusCode}`);
-
         if (bfApi.statusCode == 403) {
             Logger.error("DATA", `\tFetching user info failed, blocked by cloudflare. Code: ${bfApi.statusCode}`, true);
         } else {

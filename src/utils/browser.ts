@@ -1,5 +1,5 @@
-import pup from 'puppeteer-extra'
-import stealthPlugin from 'puppeteer-extra-plugin-stealth'
+import pup from "puppeteer-extra";
+import stealthPlugin from "puppeteer-extra-plugin-stealth";
 import { Browser, Page } from "puppeteer";
 import { config } from "./config";
 import { Logger } from "./logger";
@@ -10,7 +10,7 @@ let page: Page;
 async function initialize(): Promise<Page> {
     await sleep(1000); 
 
-    pup.use(stealthPlugin())
+    pup.use(stealthPlugin());
     const browser: Browser = await pup.launch(
         {
             headless: config.debugging.headless,
