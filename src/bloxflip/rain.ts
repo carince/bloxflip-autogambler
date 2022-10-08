@@ -1,5 +1,5 @@
 import { notify } from "node-notifier";
-import { page } from "../index";
+import { curly as curl } from "node-libcurl";
 import { Logger } from "../utils/logger";
 import { sendWh } from "../utils/webhook";
 import { config } from "../utils/config";
@@ -12,74 +12,53 @@ async function startRain(): Promise<void> {
     async function start(): Promise<void> {
         new Promise((): void => {
             setTimeout(async (): Promise<void> => {
-                const bfApi = await page.evaluate(async () => {
-                    let api: any;
-
-                    try {
-                        api = await fetch("https://rest-bf.blox.land/chat/history");
-                    } catch {
-                        return 2;
+                const bfApi = await curl.get("https://rest-bf.blox.land/chat/history",
+                    {
+                        userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
+                        sslVerifyPeer: false,
                     }
+                );
 
-                    if (api.status !== 200) {
-                        if (api.status == 403) {
-                            return 1;
-                        } else {
-                            return 2;
-                        }
+                let bfRes;
+                if (bfApi.statusCode !== 200) {
+                    if (bfApi.statusCode == 403) {
+                        Logger.error("RAIN", `\tFetching chat history failed, blocked by cloudflare. Code: ${bfApi.statusCode}`, true);
                     } else {
-                        return api.json();
+                        Logger.warn("RAIN", `\tFetching chat history failed, Code: ${bfApi.statusCode}. trying again...`);
+                        await sleep(500);
+                        return await start();
                     }
-                });
-
-                if (bfApi == 1) {
-                    Logger.error("RAIN", "\tFetching chat history failed, blocked by cloudflare.", true);
-                    return;
-                }
-                if (bfApi == 2) {
-                    Logger.warn("BET", "\tFetching chat history failed, trying again...");
-                    await sleep(500);
-                    return await start();
+                } else {
+                    bfRes = bfApi.data;
                 }
 
-                if (bfApi.rain.active) {
+                if (bfRes.rain.active) {
                     if (!notified) {
-                        const rbxApi = await page.evaluate(async () => {
-                            let api: any;
-
-                            try {
-                                api = await fetch("https://rest-bf.blox.land/user");
-                            } catch {
-                                return 2;
+                        const rbxApi = await curl.get(`https://api.roblox.com/users/get-by-username?username=${bfRes.rain.host}`,
+                            {
+                                userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
+                                sslVerifyPeer: false
                             }
+                        );
 
-                            if (api.status !== 200) {
-                                if (api.status == 403) {
-                                    return 1;
-                                } else {
-                                    return 2;
-                                }
+                        let hostId: number;
+                        if (rbxApi.statusCode !== 200) {
+                            if (rbxApi.statusCode == 403) {
+                                Logger.error("RAIN", `\tFetching roblox ID failed, blocked by cloudflare. Code: ${rbxApi.statusCode}`, true);
                             } else {
-                                return api.json();
+                                Logger.warn("RAIN", `\tFetching roblox ID failed, Code: ${rbxApi.statusCode}. trying again...`);
+                                await sleep(500);
+                                return await start();
                             }
-                        });
-
-                        if (rbxApi == 1) {
-                            Logger.error("RAIN", "\tFetching roblox Id failed, blocked by cloudflare.", true);
                             return;
-                        }
-                        if (rbxApi == 2) {
-                            Logger.warn("RAIN", "\tFetching roblox Id failed, trying again...");
-                            await sleep(500);
-                            return await start();
+                        } else {
+                            hostId = bfRes.Id;
                         }
 
-                        const hostId: number = rbxApi.Id;
-
-                        if (bfApi.rain.prize >= config.webhook.modules.rain.minimum) {
+                        if (bfRes.rain.prize >= config.webhook.modules.rain.minimum) {
                             notify({
                                 title: "AutoCrash Rain Notifier",
-                                message: `Robux: ${bfApi.rain.prize} R$ \nHost: ${bfApi.rain.host} \nTime Remaining: ${bfApi.rain.duration / 60000} minutes`,
+                                message: `Robux: ${bfRes.rain.prize} R$ \nHost: ${bfRes.rain.host} \nTime Remaining: ${bfRes.rain.duration / 60000} minutes`,
                                 subtitle: "bloxflip-autocrash",
                                 sound: true
                             });
@@ -93,17 +72,17 @@ async function startRain(): Promise<void> {
                                         "fields": [
                                             {
                                                 "name": "Prize",
-                                                "value": `${bfApi.rain.prize} R$`,
+                                                "value": `${bfRes.rain.prize} R$`,
                                                 "inline": true
                                             },
                                             {
                                                 "name": "Host",
-                                                "value": bfApi.rain.host,
+                                                "value": bfRes.rain.host,
                                                 "inline": true
                                             },
                                             {
                                                 "name": "Time Remaining",
-                                                "value": `${bfApi.rain.duration / 60000} minutes`,
+                                                "value": `${bfRes.rain.duration / 60000} minutes`,
                                                 "inline": true
                                             }
                                         ],
