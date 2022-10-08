@@ -1,4 +1,4 @@
-import { page } from "../index";
+import { curly as curl } from "node-libcurl";
 import { gameLoss, gameWon } from "./crash";
 import { config } from "../utils/config";
 import { sendWh } from "../utils/webhook";
@@ -9,40 +9,27 @@ let balanceBefore: number, betBefore: number;
 async function getInfo(): Promise<void> {
     Logger.info("DATA", "\tStarting analysis module");
 
-    const auth = config.auth;
-    const bfApi = await page.evaluate(async (auth: string) => {
-        let api: any;
-
-        try {
-            api = await fetch("https://rest-bf.blox.land/user", {
-                headers: { "x-auth-token": auth }
-            });
-        } catch {
-            return 2;
+    const bfApi = await curl.get("https://rest-bf.blox.land/user",
+        {
+            userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
+            sslVerifyPeer: false,
+            httpHeader: [`x-auth-token: ${config.auth}`]
         }
+    );
 
-        if (api.status !== 200) {
-            if (api.status == 403) {
-                return 1;
-            } else {
-                return 2;
-            }
+    if (bfApi.statusCode !== 200) {
+        if (bfApi.statusCode == 403) {
+            Logger.error("DATA", `\tFetching user info failed, blocked by cloudflare. Code: ${bfApi.statusCode}`, true);
         } else {
-            return api.json();
+            Logger.warn("DATA", `\tFetching user info failed, Code: ${bfApi.statusCode}. trying again...`);
+            await sleep(500);
+            return await getInfo();
         }
-    }, auth);
-
-    if (bfApi == 1) {
-        Logger.error("DATA", "\tFetching user info failed, blocked by cloudflare.", true);
         return;
+    } else {
+        balanceBefore = Math.round((bfApi.data.user.wallet + Number.EPSILON) * 100) / 100;
     }
-    if (bfApi == 2) {
-        Logger.warn("DATA", "\tFetching user info failed, trying again...");
-        await sleep(500);
-        return await getInfo();
-    }
-    
-    balanceBefore = Math.round((bfApi.user.wallet + Number.EPSILON) * 100) / 100;
+
     betBefore = balanceBefore / Math.pow(2, config.tries);
     betBefore = Math.round((betBefore + Number.EPSILON) * 100) / 100;
 
@@ -57,40 +44,28 @@ async function getInfo(): Promise<void> {
 }
 
 async function compare(): Promise<void> {
-    const auth = config.auth;
-    const bfApi = await page.evaluate(async (auth: string) => {
-        let api: any;
-
-        try {
-            api = await fetch("https://rest-bf.blox.land/user", {
-                headers: { "x-auth-token": auth }
-            });
-        } catch {
-            return 2;
+    const bfApi = await curl.get("https://rest-bf.blox.land/user",
+        {
+            userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
+            sslVerifyPeer: false,
+            httpHeader: [`x-auth-token: ${config.auth}`]
         }
+    );
 
-        if (api.status !== 200) {
-            if (api.status == 403) {
-                return 1;
-            } else {
-                return 2;
-            }
+    let balance: number;
+    if (bfApi.statusCode !== 200) {
+        if (bfApi.statusCode == 403) {
+            Logger.error("DATA", `\tFetching user info failed, blocked by cloudflare. Code: ${bfApi.statusCode}`, true);
         } else {
-            return api.json();
+            Logger.warn("DATA", `\tFetching user info failed, Code: ${bfApi.statusCode}. trying again...`);
+            await sleep(500);
+            return await getInfo();
         }
-    }, auth);
-
-    if (bfApi == 1) {
-        Logger.error("DATA", "\tFetching user info failed, blocked by cloudflare.", true);
         return;
+    } else {
+        balance = Math.round((bfApi.data.user.wallet + Number.EPSILON) * 100) / 100;
     }
-    if (bfApi == 2) {
-        Logger.warn("DATA", "\tFetching user info failed, trying again...");
-        await sleep(500);
-        return await compare();
-    }
-    
-    const balance = Math.round((bfApi.user.wallet + Number.EPSILON) * 100) / 100;
+
     let bet = balance / Math.pow(2, config.tries);
     bet = Math.round((bet + Number.EPSILON) * 100) / 100;
 

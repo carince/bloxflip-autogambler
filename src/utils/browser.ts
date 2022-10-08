@@ -29,15 +29,14 @@ async function initialize(): Promise<Page> {
             "x-auth-token": config.auth
         }
     );
-
-    await page.goto("https://bloxflip.com/crash", { timeout: 60000 });
-    const auth = config.auth;
-    await page.evaluate((auth: string) => {
-        localStorage.setItem("_DO_NOT_SHARE_BLOXFLIP_TOKEN", auth);
-    }, auth);
-    await page.reload({ timeout: 60000 });
-
     Logger.info("BLOXFLIP", "Successfully set up page for Bloxflip");
+
+    await page.goto("https://bloxflip.com/crash", { timeout: 60000 })
+    const auth = config.auth
+    await page.evaluate((auth: string) => {
+        localStorage.setItem("_DO_NOT_SHARE_BLOXFLIP_TOKEN", auth)
+    }, auth)
+    await page.reload({ timeout: 60000 });
 
     return page;
 }

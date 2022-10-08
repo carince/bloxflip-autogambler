@@ -11,13 +11,13 @@ let gameLoss = 0;
 let gameWon = 0;
 
 async function startCrash(): Promise<void> {
-    Logger.info("BLOXFLIP", "Waiting for network idle...");
-    await page.waitForNetworkIdle({ timeout: 60000 });
-
     await checkAuth();
+
     getInfo();
     if (config.webhook.modules.rain.enabled) startRain();
 
+    Logger.info("BLOXFLIP", "Waiting for network idle...");
+    await page.waitForNetworkIdle({ timeout: 60000 });
     Logger.info("BLOXFLIP", "Starting autocrash.");
 
     const elementArr: string[] = ["div.gameBlock.gameBet.crash_crashBet__D5Rs_ > button", "input.input_input__uGeT_.input_inputWithCurrency__sAiOQ", "div.header_headerUserBalance__UEAJq", "div.crash_crashGameCoefficient__M8rxs", "input.input_input__uGeT_"];
