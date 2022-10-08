@@ -23,7 +23,7 @@ async function startCrash(): Promise<void> {
     const elementArr: string[] = ["div.gameBlock.gameBet.crash_crashBet__D5Rs_ > button", "input.input_input__uGeT_.input_inputWithCurrency__sAiOQ", "div.header_headerUserBalance__UEAJq", "div.crash_crashGameCoefficient__M8rxs", "input.input_input__uGeT_"];
     for (const element of elementArr) {
         if (!await page.$(element)) {
-            Logger.error("ELEMENTS", `Unable to query the element: ${element}`);
+            Logger.error("ELEMENTS", `Unable to query the element: ${element}`, true);
         }
     }
     Logger.info("ELEMENTS", "Queried all elements.");
