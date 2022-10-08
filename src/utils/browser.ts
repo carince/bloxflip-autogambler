@@ -31,27 +31,12 @@ async function initialize(): Promise<Page> {
     );
     Logger.info("BLOXFLIP", "Successfully set up page for Bloxflip");
 
-    const authPage = await browser.newPage();
-    await authPage.setRequestInterception(true);
-    authPage.on("request", (r): void => {
-        r.respond({
-            status: 200,
-            contentType: "text/plain",
-            body: config.auth
-        });
-    });
-    await authPage.goto("https://bloxflip.com/crash");
-    await authPage.evaluate((): void => {
-        const AuthToken: string = document.querySelector("body")?.textContent as string;
-        localStorage.setItem("_DO_NOT_SHARE_BLOXFLIP_TOKEN", AuthToken);
-        if (localStorage.getItem("_DO_NOT_SHARE_BLOXFLIP_TOKEN") == AuthToken) {
-            new Error("[AUTH]\t\tUnable to set auth token to localStorage");
-        }
-    });
-    await authPage.close();
-    Logger.info("TOKEN", "Successfully set token to localStorage");
-
-    await page.goto("https://bloxflip.com/crash", { timeout: 60000 });
+    await page.goto("https://bloxflip.com/crash", { timeout: 60000 })
+    const auth = config.auth
+    await page.evaluate((auth: string) => {
+        localStorage.setItem("_DO_NOT_SHARE_BLOXFLIP_TOKEN", auth)
+    }, auth)
+    await page.reload({ timeout: 60000 });
 
     return page;
 }
