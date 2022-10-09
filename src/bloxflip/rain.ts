@@ -2,7 +2,6 @@ import { notify } from "node-notifier";
 import { Logger } from "../utils/logger";
 import { sendWh } from "../utils/webhook";
 import { config } from "../utils/config";
-import { sleep } from "../utils/sleep";
 import { get } from "../utils/pfetch";
 
 async function startRain(): Promise<void> {
@@ -17,20 +16,7 @@ async function startRain(): Promise<void> {
                 if (bfApi.rain.active) {
                     if (!notified) {
                         const rbxApi = await get(`https://api.roblox.com/users/get-by-username?username=${bfApi.rain.host}`);
-
-                        let hostId: number;
-                        if (rbxApi.statusCode !== 200) {
-                            if (rbxApi.statusCode == 403) {
-                                Logger.error("RAIN", `\tFetching roblox ID failed, blocked by cloudflare. Code: ${rbxApi.statusCode}`, true);
-                            } else {
-                                Logger.warn("RAIN", `\tFetching roblox ID failed, Code: ${rbxApi.statusCode}. trying again...`);
-                                await sleep(500);
-                                return await start();
-                            }
-                            return;
-                        } else {
-                            hostId = bfApi.Id;
-                        }
+                        const hostId = rbxApi.Id
 
                         if (bfApi.rain.prize >= config.webhook.modules.rain.minimum) {
                             if (config.webhook.modules.rain.os_notifs) {
