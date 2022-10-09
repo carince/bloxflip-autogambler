@@ -16,7 +16,7 @@ async function startRain(): Promise<void> {
                 if (bfApi.rain.active) {
                     if (!notified) {
                         const rbxApi = await get(`https://api.roblox.com/users/get-by-username?username=${bfApi.rain.host}`);
-                        const hostId = rbxApi.Id
+                        const hostId: number = rbxApi.Id
 
                         if (bfApi.rain.prize >= config.webhook.modules.rain.minimum) {
                             if (config.webhook.modules.rain.os_notifs) {
