@@ -8,7 +8,7 @@ let balanceBefore: number, betBefore: number;
 async function getInfo(): Promise<void> {
     Logger.info("DATA", "\tStarting analysis module");
 
-    const bfApi = await get("https://rest-bf.blox.land/user")
+    const bfApi = await get("https://rest-bf.blox.land/user");
 
     balanceBefore = Math.round((bfApi.user.wallet + Number.EPSILON) * 100) / 100;
     betBefore = balanceBefore / Math.pow(2, config.tries);
