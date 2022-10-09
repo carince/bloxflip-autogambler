@@ -1,4 +1,3 @@
-import { curly as curl } from "node-libcurl";
 import { ElementHandle } from "puppeteer";
 import { sendWh } from "../utils/webhook";
 import { page } from "../index";
@@ -6,34 +5,16 @@ import { config } from "../utils/config";
 import { Logger } from "../utils/logger";
 import { sleep } from "../utils/sleep";
 import { balanceBefore } from "./data";
+import { get } from "../utils/pfetch";
 
 async function bet(won: boolean): Promise<void> {
     const inputBox: ElementHandle<Element> = await page.$("input.input_input__uGeT_.input_inputWithCurrency__sAiOQ") as ElementHandle<Element>;
     let calcBet: number;
-    let balance: number;
 
     async function calculate(): Promise<void> {
-        const bfApi = await curl.get("https://rest-bf.blox.land/user",
-            {
-                userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
-                sslVerifyPeer: false,
-                httpHeader: [`x-auth-token: ${config.auth}`]
-            }
-        );
-
-        if (bfApi.statusCode !== 200) {
-            if (bfApi.statusCode == 403) {
-                Logger.error("BET", `\tFetching user info failed, blocked by cloudflare. Code: ${bfApi.statusCode}`, true);
-            } else {
-                Logger.warn("BET", `\tFetching user info failed, Code: ${bfApi.statusCode}. trying again...`);
-                await sleep(500);
-                return await calculate();
-            }
-            return;
-        } else {
-            balance = Math.round((bfApi.data.user.wallet + Number.EPSILON) * 100) / 100;
-        }
-
+        const bfApi = await get("https://rest-bf.blox.land/user")
+        
+        const balance: number = Math.round((bfApi.user.wallet + Number.EPSILON) * 100) / 100;
         const prevBet: string = await inputBox?.evaluate(e => e.getAttribute("value")) as string;
 
         if (won) {

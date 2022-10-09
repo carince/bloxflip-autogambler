@@ -1,13 +1,9 @@
-import { curly as curl } from "node-libcurl";
 import { config } from "./config";
+import { post } from "./pfetch";
 
 async function sendWh(json: any): Promise<void> {
     if (config.webhook.enabled) {
-        await curl.post(config.webhook.link, {
-            postFields: JSON.stringify(json),
-            httpHeader: ["Content-Type: application/json", "Accept: application/json"],
-            sslVerifyPeer: false
-        });
+        await post(config.webhook.link, JSON.stringify(json));
     }
 }
 
