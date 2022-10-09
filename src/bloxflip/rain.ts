@@ -33,13 +33,15 @@ async function startRain(): Promise<void> {
                         }
 
                         if (bfApi.rain.prize >= config.webhook.modules.rain.minimum) {
-                            notify({
-                                title: "AutoCrash Rain Notifier",
-                                message: `Robux: ${bfApi.rain.prize} R$ \nHost: ${bfApi.rain.host} \nTime Remaining: ${bfApi.rain.duration / 60000} minutes`,
-                                subtitle: "bloxflip-autocrash",
-                                sound: true
-                            });
-
+                            if (config.webhook.modules.rain.os_notifs) {
+                                notify({
+                                    title: "AutoCrash Rain Notifier",
+                                    message: `Robux: ${bfApi.rain.prize} R$ \nHost: ${bfApi.rain.host} \nTime Remaining: ${bfApi.rain.duration / 60000} minutes`,
+                                    subtitle: "bloxflip-autocrash",
+                                    sound: true
+                                });
+                            }
+                            
                             sendWh({
                                 "embeds": [
                                     {
