@@ -45,6 +45,8 @@ copy(localStorage.getItem(`_DO_NOT_SHARE_BLOXFLIP_TOKEN`))
             "rain": {
                 // Toggle rain notifications
                 "enabled": true,
+                // Toggle OS notifications
+                "os_notifs": true,
                 // Minimum rain prize to notify
                 "minimum": 1000
             },
