@@ -1,10 +1,10 @@
 import { ElementHandle } from "puppeteer";
-import { sendWh } from "../utils/webhook";
 import { page } from "../index";
+import { balanceBefore } from "./data";
+import { sendWh } from "../utils/webhook";
 import { config } from "../utils/config";
 import { Logger } from "../utils/logger";
 import { sleep } from "../utils/sleep";
-import { balanceBefore } from "./data";
 import { get } from "../utils/pfetch";
 
 async function bet(won: boolean): Promise<void> {
