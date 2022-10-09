@@ -1,10 +1,10 @@
 import { page } from "../index";
 import { bet } from "./bet";
-import { Logger } from "../utils/logger";
 import { checkAuth } from "./user";
 import { getInfo } from "./data";
-import { config } from "../utils/config";
 import { startRain } from "./rain";
+import { config } from "../utils/config";
+import { Logger } from "../utils/logger";
 import { sleep } from "../utils/sleep";
 
 let gameLoss = 0;
