@@ -12,7 +12,7 @@ async function bet(won: boolean): Promise<void> {
     let calcBet: number;
 
     async function calculate(): Promise<void> {
-        const bfApi = await get("https://rest-bf.blox.land/user")
+        const bfApi = await get("https://rest-bf.blox.land/user");
         
         const balance: number = Math.round((bfApi.user.wallet + Number.EPSILON) * 100) / 100;
         const prevBet: string = await inputBox?.evaluate(e => e.getAttribute("value")) as string;
