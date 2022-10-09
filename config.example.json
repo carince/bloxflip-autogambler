@@ -11,6 +11,8 @@
             "rain": {
                 // Toggle rain notifications
                 "enabled": true,
+                // Toggle OS notifications
+                "os_notifs": true,
                 // Minimum rain prize to notify
                 "minimum": 1000
             },

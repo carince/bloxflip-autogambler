@@ -13,6 +13,7 @@ interface configInt {
         modules: {
             rain: {
                 enabled: boolean;
+                os_notifs: boolean;
                 minimum: number;
             };
             analytics: boolean;
