@@ -10,6 +10,7 @@ async function get(url: string): Promise<any> {
         try {
             api = await fetch(url, {
                 method: "get",
+                mode: "cors",
                 credentials: "omit",
                 headers: { "x-auth-token": auth },
             });
@@ -48,6 +49,7 @@ async function post(url: string, body: string): Promise<any> {
             api = await fetch(url, {
                 method: "post",
                 credentials: "omit",
+                mode: "cors",
                 headers: { "Content-Type": "application/json", "Accept": "application/json" },
                 body: body
             });
