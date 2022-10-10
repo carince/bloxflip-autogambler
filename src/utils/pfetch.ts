@@ -38,7 +38,7 @@ async function get(url: string): Promise<any> {
         return await get(url);
     }
 
-    if (api == 1) {
+    if (api == 3) {
         return Logger.error("PFETCH", "Fetching failed, unknown error.", true);
     }
 
@@ -79,8 +79,7 @@ async function post(url: string, body: string): Promise<any> {
     }
 
     if (api == 3) {
-        // return Logger.error("PFETCH", "Post failed, unknown error.", true);
-        return await sleep(60000);
+        return Logger.error("PFETCH", "Post failed, unknown error.", true);
     }
 }
 
