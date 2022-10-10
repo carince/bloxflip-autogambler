@@ -15,9 +15,6 @@ async function startRain(): Promise<void> {
 
                 if (bfApi.rain.active) {
                     if (!notified) {
-                        const rbxApi = await get(`https://api.roblox.com/users/get-by-username?username=${bfApi.rain.host}`);
-                        const hostId: number = rbxApi.Id
-
                         if (bfApi.rain.prize >= config.webhook.modules.rain.minimum) {
                             if (config.webhook.modules.rain.os_notifs) {
                                 notify({
@@ -27,7 +24,7 @@ async function startRain(): Promise<void> {
                                     sound: true
                                 });
                             }
-                            
+
                             sendWh({
                                 "embeds": [
                                     {
@@ -53,9 +50,6 @@ async function startRain(): Promise<void> {
                                         ],
                                         "footer": {
                                             "text": "bloxflip-autocrash"
-                                        },
-                                        "thumbnail": {
-                                            "url": `https://www.roblox.com/headshot-thumbnail/image?userId=${hostId}&width=720&height=720`
                                         }
                                     }
                                 ]
