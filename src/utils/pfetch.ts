@@ -24,7 +24,7 @@ async function get(url: string): Promise<any> {
                 return api.json();
             }
         } catch {
-            return 3;
+            return 2;
         }
     }, auth, url);
 
@@ -34,12 +34,8 @@ async function get(url: string): Promise<any> {
 
     if (api == 2) {
         Logger.warn("PFETCH", "Fetching failed. trying again...");
-        await sleep(500);
+        await sleep(1000);
         return await get(url);
-    }
-
-    if (api == 3) {
-        return Logger.error("PFETCH", "Fetching failed, unknown error.", true);
     }
 
     return api;
@@ -64,7 +60,7 @@ async function post(url: string, body: string): Promise<any> {
                 }
             }
         } catch {
-            return 3;
+            return 2;
         }
     }, url, body);
 
@@ -76,10 +72,6 @@ async function post(url: string, body: string): Promise<any> {
         Logger.warn("PFETCH", "Post failed. trying again...");
         await sleep(5000);
         return await post(url, body);
-    }
-
-    if (api == 3) {
-        return Logger.error("PFETCH", "Post failed, unknown error.", true);
     }
 }
 
