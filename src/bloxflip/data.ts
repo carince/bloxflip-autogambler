@@ -59,7 +59,7 @@ async function compare(): Promise<void> {
                     },
                     {
                         "name": "Overall Game's",
-                        "value": `**Won: ** ${gameWon} of ${gameCount} games (${percentageOf(gameWon, gameCount)})\n**Lost: ** ${gameLoss} of ${gameCount} games (${percentageOf(gameLoss, gameCount)})\n**Ratio: ** ${Math.round(gameWon / gameCount * 100)}/${Math.round(gameLoss / gameCount * 100)}`,
+                        "value": `**Joined: ** ${gameWon+gameLoss} games\n**Won: ** ${gameWon} games (${percentageOf(gameWon, gameCount)})\n**Lost: ** ${gameLoss} games (${percentageOf(gameLoss, gameCount)})`,
                         "inline": true
                     }
                 ],
