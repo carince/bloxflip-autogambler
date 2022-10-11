@@ -1,13 +1,16 @@
 import { execSync } from "node:child_process";
-import { Logger } from "./logger";
+import { Logger } from "./logger.js";
 import inquirer from "inquirer";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 async function updater() {
     let currentHash;
     let upstreamHash;
-
-    let isOutdated = false;
+    let isOutdated;
 
     const gitDir = join(__dirname, "../../.git");
 

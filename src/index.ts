@@ -1,16 +1,18 @@
 import { Page } from "puppeteer";
-import { startCrash } from "./bloxflip/crash";
-import { checkAuth } from "./bloxflip/user";
-import { getInfo } from "./bloxflip/data";
-import { startRain } from "./bloxflip/rain";
-import { config } from "./utils/config";
-import { Logger } from "./utils/logger";
-import { sleep } from "./utils/sleep";
-import { initialize } from "./utils/browser";
-import { updater } from "./utils/updater";
+import { startCrash } from "./bloxflip/crash.js";
+import { checkAuth } from "./bloxflip/user.js";
+import { getInfo } from "./bloxflip/data.js";
+import { startRain } from "./bloxflip/rain.js";
+import { config } from "./utils/config.js";
+import { Logger } from "./utils/logger.js";
+import { sleep } from "./utils/sleep.js";
+import { initialize } from "./utils/browser.js";
+import { updater } from "./utils/updater.js";
 let page: Page;
 
 (async (): Promise<void> => {
+    await updater();
+
     Logger.log("STARTUP", "Starting bloxflip-autocrash");
     Logger.log("SUPPORT", "Support the developers by giving the repo a star! https://github.com/Norikiru/bloxflip-autocrash");
     
