@@ -3,3 +3,4 @@ config.json
 error.png
 dist
 tsconfig.tsbuildinfo
+.vscode

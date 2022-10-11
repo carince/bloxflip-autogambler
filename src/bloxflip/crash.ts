@@ -1,7 +1,7 @@
-import { page } from "../index";
-import { bet } from "./bet";
-import { Logger } from "../utils/logger";
-import { sleep } from "../utils/sleep";
+import { page } from "../index.js";
+import { bet } from "./bet.js";
+import { Logger } from "../utils/logger.js";
+import { sleep } from "../utils/sleep.js";
 
 let gameLoss = 0;
 let gameWon = 0;
@@ -9,8 +9,8 @@ let gameWon = 0;
 async function startCrash(): Promise<void> {
     Logger.info("CRASH", "Starting crash bot");
 
-    let cashed: boolean = false;
-    let lossStreak: number = 0;
+    let cashed = false;
+    let lossStreak = 0;
     async function start(): Promise<void> {
         new Promise((): void => {
             setTimeout(async (): Promise<void> => {

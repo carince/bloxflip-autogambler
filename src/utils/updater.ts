@@ -1,13 +1,16 @@
 import { execSync } from "node:child_process";
-import { Logger } from "./logger";
+import { Logger } from "./logger.js";
 import inquirer from "inquirer";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 async function updater() {
     let currentHash;
     let upstreamHash;
-
-    let isOutdated = false;
+    let isOutdated;
 
     const gitDir = join(__dirname, "../../.git");
 
@@ -30,7 +33,7 @@ async function updater() {
                     message: "There is an update available! Do you want to update?",
                     type: "confirm",
                     default() {
-                        return true
+                        return true;
                     }
                 }
             ]).then(async (response: { updaterprompt: boolean }) => {
@@ -41,7 +44,7 @@ async function updater() {
                         execSync("npm i");
                         isOutdated = false;
                         Logger.log("UPDATER", "Updated successfully. Restart the bot to see changes.");
-                        return process.exit()
+                        return process.exit();
                     } catch (err: any) {
                         isOutdated = true;
                         Logger.error("UPDATER", err);
@@ -62,4 +65,4 @@ async function updater() {
     }
 }
 
-export { updater }
+export { updater };
