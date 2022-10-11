@@ -11,7 +11,8 @@ const AUTOCRASH_ROOT_DIR = join(__dirname, "../../.git");
 
 export async function updater() {
     try {
-        currentHash = execSync(`git --git-dir "${AUTOCRASH_ROOT_DIR}" show -s --format=%h`).toString().trim();
+        currentHash = "75b04cb";
+        //currentHash = execSync(`git --git-dir "${AUTOCRASH_ROOT_DIR}" show -s --format=%h`).toString().trim();
     } catch (e: any) {
         currentHash = null;
         Logger.error("UPDATER", e);
@@ -23,19 +24,28 @@ export async function updater() {
 
         if (currentHash == upstreamHash) isLatest = true;
 
-        if (currentHash != upstreamHash) {
+        if (currentHash !== upstreamHash) {
             isOutdated = false;
             inquirer.prompt([
                 {
+                    name: "updaterprompt",
                     message: "There is an update available! Do you want to update?",
                     type: "list",
                     choices: ["Yes", "No"]
                 }
-            ]).then((response: string) => {
-                if (response == "Yes") {
-                    console.log("Ye");
+            ]).then(async (response: { updaterprompt: string }) => {
+                if (response.updaterprompt == "Yes") {
+                    try {
+                        execSync(`git --git-dir "${AUTOCRASH_ROOT_DIR}" reset --hard`);
+                        execSync(`git --git-dir "${AUTOCRASH_ROOT_DIR}" pull`);
+                        execSync("npm i");
+                        await Logger.log("UPDATER", "Updated successfully. Restart the bot to see changes.");
+                    } catch (e: any) {
+                        Logger.info("UPDATER", "An error occured while updating.");
+                        Logger.error("UPDATER", e);
+                    }
                 } else {
-                    console.log("Nah");
+                    Logger.log("UPDATER", "Update skipped.");
                 }
             });
         } else {
