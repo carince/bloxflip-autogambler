@@ -24,7 +24,6 @@ export async function updater() {
         if (currentHash == upstreamHash) isLatest = true;
 
         if (currentHash !== upstreamHash) {
-            isOutdated = false;
             inquirer.prompt([
                 {
                     name: "updaterprompt",
@@ -38,12 +37,15 @@ export async function updater() {
                         execSync(`git --git-dir "${AUTOCRASH_ROOT_DIR}" reset --hard`);
                         execSync(`git --git-dir "${AUTOCRASH_ROOT_DIR}" pull`);
                         execSync("npm i");
+                        isLatest = true;
                         await Logger.log("UPDATER", "Updated successfully. Restart the bot to see changes.");
                     } catch (e: any) {
+                        isOutdated = true;
                         Logger.info("UPDATER", "An error occured while updating.");
                         Logger.error("UPDATER", e);
                     }
                 } else {
+                    isOutdated = true;
                     Logger.log("UPDATER", "Update skipped.");
                 }
             });
