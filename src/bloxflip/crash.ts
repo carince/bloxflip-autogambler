@@ -9,8 +9,8 @@ let gameWon = 0;
 async function startCrash(): Promise<void> {
     Logger.info("CRASH", "Starting crash bot");
 
-    let cashed: boolean = false;
-    let lossStreak: number = 0;
+    let cashed = false;
+    let lossStreak = 0;
     async function start(): Promise<void> {
         new Promise((): void => {
             setTimeout(async (): Promise<void> => {

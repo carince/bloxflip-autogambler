@@ -30,7 +30,7 @@ async function updater() {
                     message: "There is an update available! Do you want to update?",
                     type: "confirm",
                     default() {
-                        return true
+                        return true;
                     }
                 }
             ]).then(async (response: { updaterprompt: boolean }) => {
@@ -41,7 +41,7 @@ async function updater() {
                         execSync("npm i");
                         isOutdated = false;
                         Logger.log("UPDATER", "Updated successfully. Restart the bot to see changes.");
-                        return process.exit()
+                        return process.exit();
                     } catch (err: any) {
                         isOutdated = true;
                         Logger.error("UPDATER", err);
@@ -62,4 +62,4 @@ async function updater() {
     }
 }
 
-export { updater }
+export { updater };
