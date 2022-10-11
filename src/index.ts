@@ -8,13 +8,12 @@ import { Logger } from "./utils/logger";
 import { sleep } from "./utils/sleep";
 import { initialize } from "./utils/browser";
 import { updater } from "./utils/updater";
-export let page: Page;
-export const branch = "stable";
+let page: Page;
 
 (async (): Promise<void> => {
     await updater();
 
-    Logger.log("STARTUP", `Starting bloxflip-autocrash (${branch})`);
+    Logger.log("STARTUP", `Starting bloxflip-autocrash`);
     Logger.log("SUPPORT", "Support the developers by giving the repo a star! https://github.com/Norikiru/bloxflip-autocrash");
 
     await sleep(1000);
@@ -41,3 +40,5 @@ export const branch = "stable";
 
     await startCrash();
 })();
+
+export { page }

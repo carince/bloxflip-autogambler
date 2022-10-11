@@ -2,47 +2,50 @@ import { execSync } from "node:child_process";
 import { Logger } from "./logger";
 import inquirer from "inquirer";
 import { join } from "node:path";
-export let isOutdated = false;
-export let isLatest = false;
-let currentHash;
-let upstreamHash;
 
-const AUTOCRASH_ROOT_DIR = join(__dirname, "../../.git");
+async function updater() {
+    let currentHash;
+    let upstreamHash;
 
-export async function updater() {
+    let isOutdated = false;
+
+    const gitDir = join(__dirname, "../../.git");
+
     try {
-        currentHash = execSync(`git --git-dir "${AUTOCRASH_ROOT_DIR}" show -s --format=%h`).toString().trim();
-    } catch (e: any) {
-        currentHash = null;
-        Logger.error("UPDATER", e);
+        currentHash = execSync(`git --git-dir "${gitDir}" show -s --format=%h`).toString().trim();
+    } catch (err: any) {
+        return Logger.error("UPDATER", `Unable to fetch current hash, skipping. Is git installed?\n${err}`);
     }
 
     try {
         Logger.log("UPDATER", "Checking for updates...");
-        upstreamHash = execSync(`git --git-dir "${AUTOCRASH_ROOT_DIR}" rev-parse --short HEAD`).toString().trim();
+        upstreamHash = execSync(`git --git-dir "${gitDir}" rev-parse --short HEAD`).toString().trim();
 
-        if (currentHash == upstreamHash) isLatest = true;
+        if (currentHash == upstreamHash) isOutdated = false;
 
         if (currentHash !== upstreamHash) {
-            inquirer.prompt([
+            await inquirer.prompt([
                 {
                     name: "updaterprompt",
                     message: "There is an update available! Do you want to update?",
-                    type: "list",
-                    choices: ["Yes", "No"]
+                    type: "confirm",
+                    default() {
+                        return true
+                    }
                 }
-            ]).then(async (response: { updaterprompt: string }) => {
-                if (response.updaterprompt == "Yes") {
+            ]).then(async (response: { updaterprompt: boolean }) => {
+                if (response.updaterprompt) {
                     try {
-                        execSync(`git --git-dir "${AUTOCRASH_ROOT_DIR}" reset --hard`);
-                        execSync(`git --git-dir "${AUTOCRASH_ROOT_DIR}" pull`);
+                        execSync(`git --git-dir "${gitDir}" reset --hard`);
+                        execSync(`git --git-dir "${gitDir}" pull`);
                         execSync("npm i");
-                        isLatest = true;
-                        await Logger.log("UPDATER", "Updated successfully. Restart the bot to see changes.");
-                    } catch (e: any) {
+                        isOutdated = false;
+                        Logger.log("UPDATER", "Updated successfully. Restart the bot to see changes.");
+                        return process.exit()
+                    } catch (err: any) {
                         isOutdated = true;
-                        Logger.info("UPDATER", "An error occured while updating.");
-                        Logger.error("UPDATER", e);
+                        Logger.error("UPDATER", err);
+                        Logger.info("UPDATER", "An error occured while updating, ignoring.");
                     }
                 } else {
                     isOutdated = true;
@@ -52,7 +55,11 @@ export async function updater() {
         } else {
             Logger.log("UPDATER", "No updates found.");
         }
-    } catch (e: any) {
-        Logger.error("UPDATER", e);
+    } catch (err: any) {
+        isOutdated = true;
+        Logger.error("UPDATER", err);
+        Logger.info("UPDATER", "An error occured while updating, ignoring.");
     }
 }
+
+export { updater }
