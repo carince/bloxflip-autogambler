@@ -11,8 +11,7 @@ const AUTOCRASH_ROOT_DIR = join(__dirname, "../../.git");
 
 export async function updater() {
     try {
-        currentHash = "75b04cb";
-        //currentHash = execSync(`git --git-dir "${AUTOCRASH_ROOT_DIR}" show -s --format=%h`).toString().trim();
+        currentHash = execSync(`git --git-dir "${AUTOCRASH_ROOT_DIR}" show -s --format=%h`).toString().trim();
     } catch (e: any) {
         currentHash = null;
         Logger.error("UPDATER", e);
