@@ -1,7 +1,7 @@
-import { page } from "../index";
-import { config } from "./config";
-import { Logger } from "./logger";
-import { sleep } from "./sleep";
+import { page } from "../index.js";
+import { config } from "./config.js";
+import { Logger } from "./logger.js";
+import { sleep } from "./sleep.js";
 
 async function get(url: string): Promise<any> {
     const auth = config.auth;

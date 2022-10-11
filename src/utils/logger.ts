@@ -1,6 +1,6 @@
 import chalk from "chalk";
-import { config } from "./config";
-import { page } from "../index";
+import { config } from "./config.js";
+import { page } from "../index.js";
 
 export class Logger {
     public static log(type: string, info: string): void {

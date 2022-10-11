@@ -1,8 +1,12 @@
-import { parse } from "json5";
+import json from "json5";
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
-import { Logger } from "./logger";
-import { sleep } from "./sleep";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { Logger } from "./logger.js";
+import { sleep } from "./sleep.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 interface configInt {
     auth: string;
@@ -31,7 +35,7 @@ let config: configInt;
 
 try {
     (async (): Promise<void> => {
-        config = await parse(readFileSync(join(__dirname, "..", "..", "config.json"), "utf-8"));
+        config = await json.parse(readFileSync(join(__dirname, "..", "..", "config.json"), "utf-8"));
         Logger.info("CONFIG", "Fetched config.json.");
 
         if (config.auth.length < 1000) {

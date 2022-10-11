@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Bloxflip crash automation using the martingale strategy.",
   "main": "src/index.ts",
+  "type": "module",
   "scripts": {
     "dev": "nodemon src/index.ts -e ts",
     "start": "ts-node src/index.ts",
@@ -26,7 +27,7 @@
     "@types/inquirer": "^9.0.2",
     "@types/node": "^18.8.4",
     "chalk": "^4.1.2",
-    "inquirer": "^8.0.1",
+    "inquirer": "^9.1.3",
     "json5": "^2.2.1",
     "node-notifier": "^10.0.1",
     "puppeteer": "^17.1.3",

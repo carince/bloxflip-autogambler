@@ -1,7 +1,7 @@
-import { page } from "../index";
-import { bet } from "./bet";
-import { Logger } from "../utils/logger";
-import { sleep } from "../utils/sleep";
+import { page } from "../index.js";
+import { bet } from "./bet.js";
+import { Logger } from "../utils/logger.js";
+import { sleep } from "../utils/sleep.js";
 
 let gameLoss = 0;
 let gameWon = 0;
