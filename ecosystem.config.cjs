@@ -5,7 +5,7 @@ module.exports = {
         max_restarts: 5,
         restart_delay: 5000,
         env: {
-            "bypassUpdater": "true"
+            "BYPASS_UPDATER": "true"
         }
     }]
 }
