@@ -18,7 +18,13 @@ export class Logger {
     public static error(type: string, info: string, forceClose?: boolean): void {
         type.toUpperCase();
         console.log(chalk.redBright(`${chalk.bold(`[${type}]`)} \t${info}`));
-        if (config.debugging.ssOnError) page.screenshot({ path: "error.png" });
+        if (config.debugging.ssOnError) {
+            if (page) {
+                page.screenshot({ path: "error.png" })
+            } else {
+                Logger.info("LOGGER", "Chrome is not yet launched, ignoring page ss.")
+            }
+        };
         if (forceClose || config.debugging.exitOnError) process.exit();
     }
 
