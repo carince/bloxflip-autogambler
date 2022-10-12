@@ -10,7 +10,7 @@ const __dirname = dirname(__filename);
 async function updater() {
     let currentHash;
     let upstreamHash;
-    let isOutdated;
+    let isOutdated = false;
 
     const gitDir = join(__dirname, "../../.git");
 
@@ -23,7 +23,7 @@ async function updater() {
     try {
         Logger.log("UPDATER", "Checking for updates...");
 
-        if (process.env.bypassUpdater == "true") {
+        if (process.env.BYPASS_UPDATER == "true") {
             return Logger.info("UPDATER", "Launched with pm2, ignoring updates.")
         }
 

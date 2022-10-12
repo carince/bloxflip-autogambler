@@ -2,10 +2,11 @@ module.exports = {
     apps: [{
         name: "bloxflip-autocrash",
         script: "run start",
+        min_uptime: 300000,
         max_restarts: 5,
         restart_delay: 5000,
         env: {
-            "bypassUpdater": "true"
+            "BYPASS_UPDATER": "true"
         }
     }]
 }
