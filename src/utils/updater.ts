@@ -22,6 +22,11 @@ async function updater() {
 
     try {
         Logger.log("UPDATER", "Checking for updates...");
+
+        if (process.env.bypassUpdater == "true") {
+            return Logger.info("UPDATER", "Launched with pm2, ignoring updates.")
+        }
+
         upstreamHash = execSync(`git --git-dir "${gitDir}" rev-parse --short HEAD`).toString().trim();
 
         if (currentHash == upstreamHash) isOutdated = false;
