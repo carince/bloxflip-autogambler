@@ -1,17 +1,17 @@
 import pup from "puppeteer-extra";
 import stealthPlugin from "puppeteer-extra-plugin-stealth";
 import { Browser, Page } from "puppeteer";
-import { config } from "./config";
-import { Logger } from "./logger";
-import { sleep } from "./sleep";
+import { config } from "./config.js";
+import { Logger } from "./logger.js";
+import { sleep } from "./sleep.js";
 
 let page: Page;
 
 async function initialize(): Promise<Page> {
     await sleep(1000); 
 
-    pup.use(stealthPlugin());
-    const browser: Browser = await pup.launch(
+    pup.default.use(stealthPlugin());
+    const browser: Browser = await pup.default.launch(
         {
             headless: config.debugging.headless,
             defaultViewport: { width: 1920, height: 1080 },

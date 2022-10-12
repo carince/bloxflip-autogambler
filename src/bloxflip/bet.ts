@@ -1,11 +1,11 @@
 import { ElementHandle } from "puppeteer";
-import { page } from "../index";
-import { balanceBefore } from "./data";
-import { sendWh } from "../utils/webhook";
-import { config } from "../utils/config";
-import { Logger } from "../utils/logger";
-import { sleep } from "../utils/sleep";
-import { get } from "../utils/pfetch";
+import { page } from "../index.js";
+import { balanceBefore } from "./data.js";
+import { sendWh } from "../utils/webhook.js";
+import { config } from "../utils/config.js";
+import { Logger } from "../utils/logger.js";
+import { sleep } from "../utils/sleep.js";
+import { get } from "../utils/pfetch.js";
 
 async function bet(won: boolean): Promise<void> {
     const inputBox: ElementHandle<Element> = await page.$("input.input_input__uGeT_.input_inputWithCurrency__sAiOQ") as ElementHandle<Element>;

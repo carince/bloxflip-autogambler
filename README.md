@@ -25,12 +25,12 @@ This automation software is against Bloxflip's [Terms of Service](https://bloxfl
 git clone https://github.com/Norikiru/bloxflip-autocrash.git
 ```
 
-- Go to [Bloxflip](http://bloxflip.com "Bloxflip") and then run this code inside of the Dev Tools console. (it should copy onto your clipboard)
+- Open your Browser of choice, Go to [Bloxflip](http://bloxflip.com "Bloxflip") and then run the following code inside of the Dev Tools console. (it should copy onto your clipboard):
 ```js
 copy(localStorage.getItem(`_DO_NOT_SHARE_BLOXFLIP_TOKEN`))
 ```
 
-- Edit config.example.json with your desired configuration
+- Edit the config.example.json in the bot's folder with your desired configuration:
 ```jsonc
 {
     "auth": "Paste your Bloxflip token here",
@@ -70,7 +70,7 @@ copy(localStorage.getItem(`_DO_NOT_SHARE_BLOXFLIP_TOKEN`))
 
 - Rename `config.example.json` to `config.json`
 
-- Install required dependencies
+- Install required dependencies:
 ```bash
 npm i
 ```

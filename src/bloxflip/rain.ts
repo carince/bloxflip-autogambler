@@ -1,8 +1,8 @@
-import { notify } from "node-notifier";
-import { Logger } from "../utils/logger";
-import { sendWh } from "../utils/webhook";
-import { config } from "../utils/config";
-import { get } from "../utils/pfetch";
+import notifier from "node-notifier";
+import { Logger } from "../utils/logger.js";
+import { sendWh } from "../utils/webhook.js";
+import { config } from "../utils/config.js";
+import { get } from "../utils/pfetch.js";
 
 async function startRain(): Promise<void> {
     Logger.info("RAIN", "\tStarting rain notifier.");
@@ -17,7 +17,7 @@ async function startRain(): Promise<void> {
                     if (!notified) {
                         if (bfApi.rain.prize >= config.webhook.modules.rain.minimum) {
                             if (config.webhook.modules.rain.os_notifs) {
-                                notify({
+                                notifier.notify({
                                     title: "AutoCrash Rain Notifier",
                                     message: `Robux: ${bfApi.rain.prize} R$ \nHost: ${bfApi.rain.host} \nTime Remaining: ${bfApi.rain.duration / 60000} minutes`,
                                     subtitle: "bloxflip-autocrash",

@@ -1,13 +1,14 @@
 {
     "ts-node": {
         "swc": true,
+        "esm": true
     },
     "compilerOptions": {
         "strict": true,
         "outDir": "./dist",
         "rootDir": "./src",
         "baseUrl": "./src",
-        "module": "CommonJS",
+        "module": "ESNext",
         "target": "ESNext",
         "newLine": "LF",
         "moduleResolution": "NodeNext",
