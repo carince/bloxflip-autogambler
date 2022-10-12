@@ -1,41 +1,16 @@
-import { page } from "../index";
-import { bet } from "./bet";
-import { checkAuth } from "./user";
-import { getInfo } from "./data";
-import { startRain } from "./rain";
-import { config } from "../utils/config";
-import { Logger } from "../utils/logger";
-import { sleep } from "../utils/sleep";
+import { page } from "../index.js";
+import { bet } from "./bet.js";
+import { Logger } from "../utils/logger.js";
+import { sleep } from "../utils/sleep.js";
 
 let gameLoss = 0;
 let gameWon = 0;
 
 async function startCrash(): Promise<void> {
-    Logger.info("BLOXFLIP", "Waiting for network idle...");
-    await page.waitForNetworkIdle({ timeout: 60000 });
-
-    await checkAuth();
-    getInfo();
-    if (config.webhook.modules.rain.enabled) startRain();
-
-    Logger.info("BLOXFLIP", "Starting autocrash.");
-
-    const elementArr: string[] = ["div.gameBlock.gameBet.crash_crashBet__D5Rs_ > button", "input.input_input__uGeT_.input_inputWithCurrency__sAiOQ", "div.header_headerUserBalance__UEAJq", "div.crash_crashGameCoefficient__M8rxs", "input.input_input__uGeT_"];
-    for (const element of elementArr) {
-        if (!await page.$(element)) {
-            Logger.error("ELEMENTS", `Unable to query the element: ${element}`, true);
-        }
-    }
-    Logger.info("ELEMENTS", "Queried all elements.");
-
-    const betMulti = (await page.$$("input.input_input__uGeT_"))[1];
-    await betMulti.type("2");
-
     Logger.info("CRASH", "Starting crash bot");
 
     let cashed = false;
     let lossStreak = 0;
-
     async function start(): Promise<void> {
         new Promise((): void => {
             setTimeout(async (): Promise<void> => {
