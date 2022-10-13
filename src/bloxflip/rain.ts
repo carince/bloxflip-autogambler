@@ -13,6 +13,14 @@ async function startRain(): Promise<void> {
             setTimeout(async (): Promise<void> => {
                 const bfApi = await get("https://rest-bf.blox.land/chat/history");
 
+                async function pingId() {
+                    if (config.webhook.modules.rain.ping_id.toString().length === 18 || 19) {
+                        return `<@${config.webhook.modules.rain.ping_id}>`
+                    } else {
+                        return ""
+                    }
+                }
+
                 if (bfApi.rain.active) {
                     if (!notified) {
                         if (bfApi.rain.prize >= config.webhook.modules.rain.minimum) {
@@ -26,6 +34,7 @@ async function startRain(): Promise<void> {
                             }
 
                             sendWh({
+                                "content": await pingId(),
                                 "embeds": [
                                     {
                                         "title": "Bloxflip Rain Notifier",

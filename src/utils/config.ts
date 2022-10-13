@@ -16,6 +16,7 @@ interface configInt {
                 enabled: boolean;
                 os_notifs: boolean;
                 minimum: number;
+                ping_id: number;
             };
             analytics: boolean;
         }
