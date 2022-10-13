@@ -34,36 +34,26 @@ copy(localStorage.getItem(`_DO_NOT_SHARE_BLOXFLIP_TOKEN`))
 ```jsonc
 {
     "auth": "Paste your Bloxflip token here",
-    // How many times your balance will be divided by 2, I recommend 12.
-    "tries": 12,
+    "tries": 13, // How many times your balance will be divided by 2, I recommend 13.
     "webhook": {
-        // Set to false if your not going to use webhooks
-        "enabled": false,
-        // Discord webhook link
-        "link": "",
+        "enabled": false, // Set to false if your not going to use webhooks
+        "link": "", // Discord webhook link
         "modules": {
             "rain": {
-                // Toggle rain notifications
-                "enabled": true,
-                // Toggle OS notifications
-                "os_notifs": true,
-                // Minimum rain prize to notify
-                "minimum": 1000
+                "enabled": true, // Toggle rain notifications
+                "os_notifs": true, // Toggle OS notifications
+                "minimum": 1000, // Minimum rain prize to notify
+                "ping_id": 0 // User ID to ping
             },
-            // Toggle hourly analytics
-            "analytics": true
+            "analytics": true // Toggle hourly analytics
         }
     },
     // For debugging purposes only, dont touch if you dont know what you are doing
     "debugging": {
-        // Make chromium headless
-        "headless": true,
-        // Log info on what the code is doing
-        "verbose": false,
-        // Exit the script on error
-        "exitOnError": true,
-        // Screenshot the page on errors
-        "ssOnError": false
+        "headless": true, // Make chromium headless
+        "verbose": false, // Log info on what the code is doing
+        "exitOnError": true, // Exit the script on error
+        "ssOnError": false // Screenshot the page on errors
     }
 }
 ```
