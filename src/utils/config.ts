@@ -40,8 +40,8 @@ async function fetchCfg() {
             config = await json.parse(readFileSync(join(__dirname, "..", "..", "config.json"), "utf-8"));
             Logger.info("CONFIG", "Fetched config.json.");
 
-            if (config.auth.length < 1000) {
-                Logger.error("TOKEN", "Token length is less than 1000, please put a valid token.");
+            if (config.auth.length === 0) {
+                Logger.error("TOKEN", "Token is empty, please put a valid token.");
             }
 
             if (config.tries < 10) {
