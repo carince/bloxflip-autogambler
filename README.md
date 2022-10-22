@@ -43,7 +43,7 @@ copy(localStorage.getItem(`_DO_NOT_SHARE_BLOXFLIP_TOKEN`))
                 "enabled": true, // Toggle rain notifications
                 "os_notifs": true, // Toggle OS notifications
                 "minimum": 1000, // Minimum rain prize to notify
-                "ping_id": 0 // User ID to ping
+                "ping_id": "" // User ID to ping
             },
             "analytics": true // Toggle hourly analytics
         }
