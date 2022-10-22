@@ -12,15 +12,16 @@ async function startRain(): Promise<void> {
         new Promise((): void => {
             setTimeout(async (): Promise<void> => {
                 const bfApi = await get("https://rest-bf.blox.land/chat/history");
-
+                
                 function pingId() {
-                    if (config.webhook.modules.rain.ping_id.toString().length === 18 || 19) {
+                    const idLength = config.webhook.modules.rain.ping_id.length
+                    if (idLength === 18 || idLength === 19) {
                         return `<@${config.webhook.modules.rain.ping_id}>`
                     } else {
                         return ""
                     }
                 }
-
+                
                 if (bfApi.rain.active) {
                     if (!notified) {
                         if (bfApi.rain.prize >= config.webhook.modules.rain.minimum) {
