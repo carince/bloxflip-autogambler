@@ -92,7 +92,7 @@ async function bet(won: boolean): Promise<void> {
 
         async function click(): Promise<void> {
             if (tries <= 5) {
-                const betBtn: ElementHandle<Element> = await page.$("div.gameBlock.gameBet.crash_crashBet__D5Rs_ > button") as ElementHandle<Element>;
+                const betBtn: ElementHandle<Element> = await page.$("div.crash_buttonWrapper__1ceLh > button") as ElementHandle<Element>;
                 let textContent: string = await betBtn?.evaluate(e => e.textContent) as string;
 
                 if (textContent?.includes("Join")) {
