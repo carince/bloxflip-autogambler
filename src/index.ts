@@ -25,7 +25,7 @@ let page: Page;
     await getInfo();
     if (config.webhook.modules.rain.enabled) startRain();
 
-    const elementArr: string[] = ["div.gameBlock.gameBet.crash_crashBet__D5Rs_ > button", "input.input_input__uGeT_.input_inputWithCurrency__sAiOQ", "div.header_headerUserBalance__UEAJq", "div.crash_crashGameCoefficient__M8rxs", "input.input_input__uGeT_"];
+    const elementArr: string[] = ["div.crash_buttonWrapper__1ceLh > button", "input.input_input__uGeT_.input_inputWithCurrency__sAiOQ", "div.header_headerUserBalance__UEAJq", "div.crash_crashGameCoefficient__M8rxs", "input.input_input__uGeT_"];
     for (const element of elementArr) {
         if (!await page.$(element)) {
             Logger.error("ELEMENTS", `Unable to query element: ${element}`, true);
