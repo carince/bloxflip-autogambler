@@ -3,15 +3,15 @@
 
 <p align="center"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/Norikiru/bloxflip-autocrash?color=yellow&style=flat-square"> <img alt="GitHub forks" src="https://img.shields.io/github/forks/Norikiru/bloxflip-autocrash?style=flat-square"> <img alt="GitHub issues" src="https://img.shields.io/github/issues/Norikiru/bloxflip-autocrash?style=flat-square"> <img alt="License" src="https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square"></p>
 
-## ⚠️ WARNING 
-This automation software is against Bloxflip's [Terms of Service](https://bloxflip.com/terms "Terms of Service"), please use this at your own risk and I am not responsible for any terminated accounts.
+> **Warning**
+> This automation software is against Bloxflip's [Terms of Service](https://bloxflip.com/terms "Terms of Service"), please use this at your own risk and I am not responsible for any terminated accounts.
 
 ## 💥 Features 
 - 🤖 Automated martingale bot
 - ☔ Rain Notifier
 - 📊 Analytics
 - 🏓 Discord Webhook integration
-- 🤑 ITS FREE.
+- 🤑 ITS FREE. (and doesnt steal your token)
 
 ------------
 
