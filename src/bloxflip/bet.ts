@@ -28,7 +28,7 @@ async function bet(won: boolean): Promise<void> {
         calcBet = Math.round((calcBet + Number.EPSILON) * 100) / 100;
 
         if (calcBet == 0) {
-            Logger.error("BET", "\tTries in config is too high causing the bet to be 0.", true);
+            Logger.error("BET", "\tTries in config too high. Put your tries to a lower value.", true);
         }
 
         Logger.log("BET", `\tBet: ${calcBet} R$, Balance: ${balance} R$`);
