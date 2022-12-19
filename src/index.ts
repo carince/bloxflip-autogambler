@@ -6,7 +6,8 @@ import { startRain } from "./bloxflip/rain.js";
 import { fetchCfg, config } from "./utils/config.js";
 import { Logger } from "./utils/logger.js";
 import { initialize } from "./utils/browser.js";
-import { updater } from "./utils/updater.js";
+import { sleep } from "./utils/sleep.js"
+// import { updater } from "./utils/updater.js";
 let page: Page;
 
 (async (): Promise<void> => {
@@ -14,7 +15,7 @@ let page: Page;
     Logger.log("SUPPORT", "Support the developers by giving the repo a star! https://github.com/Norikiru/bloxflip-autocrash");
     
     await fetchCfg();
-    await updater();
+    // await updater(); - Disabled for the time being, updater is gonna get a rework.
 
     page = await initialize();
 
@@ -33,8 +34,19 @@ let page: Page;
     }
     Logger.info("ELEMENTS", "Queried all elements.");
 
-    const betMulti = (await page.$$("input.input_input__uGeT_"))[1];
-    await betMulti.type("2");
+    async function setMulti() {
+        const betMulti = (await page.$$("input.input_input__uGeT_"))[1]
+        await betMulti.type("2");
+
+        const multiValue: string = await betMulti?.evaluate(e => e.getAttribute("value")) as string;
+        if (multiValue !== "2") {
+            Logger.warn("BET", `\tbetMulti: Expected 2, got ${multiValue} \nClearing the input box and trying again.`);
+            await sleep(500);
+            await betMulti?.click({ clickCount: 3 });
+            await betMulti?.press("Backspace");
+            await setMulti()
+        }
+    } await setMulti()
 
     await startCrash();
 })();
