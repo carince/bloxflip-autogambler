@@ -66,7 +66,7 @@ async function getInfo(): Promise<void> {
                 });
 
                 Logger.info("DATA", "\tSuccessfully calculated data for analysis.");
-                await loop()
+                await loop();
             }, 60 * 60000);
         });
     } if (config.webhook.modules.analytics) await loop();

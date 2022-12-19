@@ -11,7 +11,7 @@ async function checkAuth(): Promise<void> {
         const res = await get("https://rest-bf.blox.land/user");
 
         if (res.success) {
-            const baseBet = Math.round(((Math.round((res.user.wallet + Number.EPSILON) * 100) / 100) / Math.pow(2, config.tries) + Number.EPSILON) * 100) / 100
+            const baseBet = Math.round(((Math.round((res.user.wallet + Number.EPSILON) * 100) / 100) / Math.pow(2, config.tries) + Number.EPSILON) * 100) / 100;
             
             if (baseBet === 0) {
                 return Logger.error("USER", "\tTries in config is too high causing the bet to be 0", true);

@@ -14,11 +14,11 @@ async function startRain(): Promise<void> {
                 const bfApi = await get("https://rest-bf.blox.land/chat/history");
                 
                 function pingId() {
-                    const idLength = config.webhook.modules.rain.ping_id.length
+                    const idLength = config.webhook.modules.rain.ping_id.length;
                     if (idLength === 18 || idLength === 19) {
-                        return `<@${config.webhook.modules.rain.ping_id}>`
+                        return `<@${config.webhook.modules.rain.ping_id}>`;
                     } else {
-                        return ""
+                        return "";
                     }
                 }
                 
