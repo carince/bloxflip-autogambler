@@ -24,7 +24,7 @@ async function updater() {
         Logger.log("UPDATER", "Checking for updates...");
 
         if (process.env.BYPASS_UPDATER == "true") {
-            return Logger.info("UPDATER", "Launched with pm2, ignoring updates.")
+            return Logger.info("UPDATER", "Launched with pm2, ignoring updates.");
         }
 
         upstreamHash = execSync(`git --git-dir "${gitDir}" rev-parse --short HEAD`).toString().trim();

@@ -20,11 +20,11 @@ export class Logger {
         console.log(chalk.redBright(`${chalk.bold(`[${type}]`)} \t${info}`));
         if (config.debugging.ssOnError) {
             if (page) {
-                page.screenshot({ path: "error.png" })
+                page.screenshot({ path: "error.png" });
             } else {
-                Logger.info("LOGGER", "Chrome is not yet launched, ignoring page ss.")
+                Logger.info("LOGGER", "Chrome is not yet launched, ignoring page ss.");
             }
-        };
+        }
         if (forceClose || config.debugging.exitOnError) process.exit();
     }
 
