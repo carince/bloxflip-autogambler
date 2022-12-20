@@ -29,6 +29,8 @@ async function startCrash(): Promise<void> {
 
     async function start(): Promise<void> {
         new Promise(async (): Promise<void> => {
+            await sleep(500)
+
             const textContent: string = await page.$eval("div.crash_crashGameCoefficient__M8rxs", e => e.textContent) as string;
             const className = await page.$eval("div.crash_crashGameCoefficient__M8rxs", e => e.className);
 
@@ -48,6 +50,7 @@ async function startCrash(): Promise<void> {
                     if (!cashed) {
                         if ((gameLoss + gameWon) >= (restart * 1000)) {
                             restart++;
+                            gameWon++;
                             Logger.log("CRASH", "Restarting Bloxflip...\n ");
                             await page.reload({ timeout: 60000 });
                             return await startCrash()
@@ -80,7 +83,6 @@ async function startCrash(): Promise<void> {
                 }
             }
 
-            await sleep(500)
             await start();
         });
     } await start();
