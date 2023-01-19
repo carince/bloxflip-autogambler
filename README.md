@@ -1,3 +1,13 @@
+<h1 align="center">⚠️ bloxflip-autocrash has reached EOL ⚠️</h1>
+<p align="center">I wont be doing updates anymore if Bloxflip ever breaks it. </p>
+
+##  Known Issues (for future maintainers)
+- Updater doesnt work.
+- Aton of fallbacks needed (like if theres no config, it just crashes and gives no message)
+- and shit code (imo)
+
+Was a nice ride learning to code but I don't have a use for this anymore. Good luck to future maintainers!
+
 <h1 align="center">bloxflip-autocrash</h1>
 <p align="center">Bloxflip crash automation using the martingale strategy.<br>Earn robux passively while you sit back!</p>
 
