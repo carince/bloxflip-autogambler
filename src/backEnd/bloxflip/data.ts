@@ -1,4 +1,3 @@
-import { gameLoss, gameWon } from "./crash.js";
 import { config } from "../utils/config.js";
 import { sendWh } from "../utils/webhook.js";
 import { Logger } from "../utils/logger.js";
@@ -17,7 +16,7 @@ async function getInfo(): Promise<void> {
 
     async function loop(): Promise<void> {
         new Promise(async (): Promise<void> => {
-            await sleep(60 * 60000)
+            await sleep(60 * 60000);
 
             const bfApi = await get("https://rest-bf.blox.land/user");
 
@@ -30,11 +29,6 @@ async function getInfo(): Promise<void> {
                 return Math.round((parseFloat(string) + Number.EPSILON) * 100) / 100 + "%";
             }
 
-            function percentageOf(denominator: number, numerator: number): string {
-                return Math.round(((denominator / numerator * 100) + Number.EPSILON) * 100) / 100 + "%";
-            }
-
-            const gameCount = gameLoss + gameWon;
             sendWh({
                 "embeds": [
                     {
@@ -49,11 +43,6 @@ async function getInfo(): Promise<void> {
                             {
                                 "name": "Bet",
                                 "value": `**Before: ** ${betBefore}\n**After: ** ${bet}\n**Difference: ** ${diffPercent(bet, betBefore)}`,
-                                "inline": true
-                            },
-                            {
-                                "name": "Overall Game's",
-                                "value": `**Joined: ** ${gameWon + gameLoss} games\n**Won: ** ${gameWon} games (${percentageOf(gameWon, gameCount)})\n**Lost: ** ${gameLoss} games (${percentageOf(gameLoss, gameCount)})`,
                                 "inline": true
                             }
                         ],
