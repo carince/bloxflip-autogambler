@@ -1,9 +1,14 @@
 import { Page } from "puppeteer";
 import { checkAuth } from "./bloxflip/user.js";
 import { getInfo } from "./bloxflip/data.js";
+import { startRain } from "./bloxflip/rain.js";
 import { fetchCfg } from "./utils/config.js";
 import { Logger } from "./utils/logger.js";
 import { initialize } from "./utils/browser.js";
+import { config } from "./utils/config.js";
+import { sleep } from "./utils/sleep.js";
+import { readFileSync, existsSync } from "fs";
+
 let page: Page;
 
 (async (): Promise<void> => {
@@ -15,7 +20,16 @@ let page: Page;
 
     await checkAuth();
     await getInfo();
+    if (config.webhook.modules.rain.enabled) startRain();
     
+    await sleep(5000);
+    if (existsSync("./dist/autoCrash.js")) {
+        const autoCrash = readFileSync("./dist/autoCrash.js", "utf-8");
+        Logger.info("BFAC", "\tInjecting UserScript...");
+        page.evaluate(autoCrash);
+    } else {
+        Logger.error("BFAC", "\tUnable to read UserScript, make sure that UserScript is built.", true);
+    }
 })();
 
 export { page };

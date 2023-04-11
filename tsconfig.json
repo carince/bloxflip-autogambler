@@ -22,10 +22,11 @@
         "sourceMap": true,
         "strictPropertyInitialization": false,
         "incremental": true,
-        "isolatedModules": true
+        "isolatedModules": true,
+        "allowJs": true
     },
     "include": [
-        "**/**/*"
+        "src/**/*"
     ],
     "exclude": [
         "/.github",
