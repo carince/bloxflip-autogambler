@@ -3,9 +3,7 @@ import { config } from "./config.js";
 
 const bfWs: WebSocket = new WebSocket("wss://ws.bloxflip.com/socket.io/?transport=websocket");
 
-async function connectWs() {
-    const bfWs: WebSocket = new WebSocket("wss://ws.bloxflip.com/socket.io/?transport=websocket");
-    
+async function connectWs() {    
     bfWs.addEventListener("message", async (event) => {
         if (event.data.charAt(0) == "0") {
             bfWs.send("40/chat,");
