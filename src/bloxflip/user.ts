@@ -5,7 +5,7 @@ import { get } from "../utils/pfetch.js";
 import { config } from "../utils/config.js";
 
 async function checkAuth(): Promise<void> {
-    Logger.info("USER", "\tFetching user information.");
+    Logger.info("USER", "Fetching user information.");
 
     async function start(): Promise<void> {
         const res = await get("https://rest-bf.blox.land/user");
@@ -14,10 +14,10 @@ async function checkAuth(): Promise<void> {
             const baseBet = Math.round(((Math.round((res.user.wallet + Number.EPSILON) * 100) / 100) / Math.pow(2, config.tries) + Number.EPSILON) * 100) / 100;
             
             if (baseBet === 0) {
-                return Logger.error("USER", "\tTries in config is too high causing the bet to be 0", true);
+                return Logger.error("USER", "Tries in config is too high causing the bet to be 0", true);
             }
 
-            Logger.log("USER", `\t${chalk.bold("User Information")} \n\t\tUsername: ${res.user.robloxUsername} \n\t\tID: ${res.user.robloxId}\n\t\tBalance: ${Math.round((res.user.wallet + Number.EPSILON) * 100) / 100} R$`);
+            Logger.log("USER", `${chalk.bold("Successfully logged in!")} \nUsername: ${res.user.robloxUsername} \nID: ${res.user.robloxId} \nBalance: ${Math.round((res.user.wallet + Number.EPSILON) * 100) / 100} R$`);
             sendWh({
                 "embeds": [
                     {

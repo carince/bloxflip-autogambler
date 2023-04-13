@@ -5,7 +5,7 @@ import { config } from "../utils/config.js";
 import { get } from "../utils/pfetch.js";
 
 async function startRain(): Promise<void> {
-    Logger.info("RAIN", "\tStarting rain notifier.");
+    Logger.info("RAIN", "Starting rain notifier.");
 
     let notified = false;
     async function start(): Promise<void> {
@@ -65,7 +65,7 @@ async function startRain(): Promise<void> {
                                 ]
                             });
                         } else {
-                            Logger.info("RAIN", "\tPrize is not greater or equal than the minimum value set in the config, ignoring...");
+                            Logger.info("RAIN", "Prize is not greater or equal than the minimum value set in the config, ignoring...");
                         }
 
                         notified = true;

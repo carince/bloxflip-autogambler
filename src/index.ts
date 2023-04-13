@@ -25,10 +25,10 @@ let page: Page;
     await sleep(5000);
     if (existsSync("./dist/autoCrash.js")) {
         const autoCrash = readFileSync("./dist/autoCrash.js", "utf-8");
-        Logger.info("BFAC", "\tInjecting UserScript...");
+        Logger.info("BFAC", "Injecting UserScript...");
         page.evaluate(autoCrash);
     } else {
-        Logger.error("BFAC", "\tUnable to read UserScript, make sure that UserScript is built.", true);
+        Logger.error("BFAC", "Unable to read UserScript, make sure that UserScript is built.", true);
     }
 })();
 

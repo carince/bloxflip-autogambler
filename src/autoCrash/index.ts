@@ -10,6 +10,8 @@ async function startCrash() {
     try {
         await fetchCfg();
         await connectWs();
+
+        const kA = new keepAlive();
         
         bfWs.addEventListener("close", async () => {
             console.log("[WS] WebSocket closed unexpectedly, attempting reconnect...");
@@ -18,8 +20,7 @@ async function startCrash() {
             kA.stop();
             startCrash();
         });
-
-        const kA = new keepAlive();
+        
         Promise.all([
             bfWs.addEventListener("message", (event) => crash(event)),
             kA.start()
