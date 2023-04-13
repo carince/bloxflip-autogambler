@@ -6,7 +6,7 @@ import { sleep } from "../utils/sleep.js";
 
 let balanceBefore: number, betBefore: number;
 async function getInfo(): Promise<void> {
-    Logger.info("DATA", "\tStarting analysis module");
+    Logger.info("DATA", "Starting analysis module");
 
     const bfApi = await get("https://rest-bf.blox.land/user");
 
@@ -56,7 +56,7 @@ async function getInfo(): Promise<void> {
                 ]
             });
 
-            Logger.info("DATA", "\tSuccessfully calculated data for analysis.");
+            Logger.info("DATA", "Successfully calculated data for analysis.");
             await loop();
         });
     } if (config.webhook.modules.analytics) await loop();

@@ -37,7 +37,7 @@ async function fetchCfg() {
 
     try {
         (async (): Promise<void> => {
-            config = await json.parse(readFileSync(join(__dirname, "..", "config.json"), "utf-8"));
+            config = await json.parse(readFileSync(join(__dirname, "..", "config.json5"), "utf-8"));
             Logger.info("CONFIG", "Fetched config.json.");
 
             if (config.auth.length === 0) {
