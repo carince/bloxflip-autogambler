@@ -1,9 +1,11 @@
 import { calculateBet } from "../bloxflip/bet.js";
 import { config } from "./config.js";
 
-const bfWs: WebSocket = new WebSocket("wss://ws.bloxflip.com/socket.io/?transport=websocket");
+let bfWs: WebSocket;
 
-async function connectWs() {    
+async function connectWs() {
+    bfWs = new WebSocket("wss://ws.bloxflip.com/socket.io/?transport=websocket");
+
     bfWs.addEventListener("message", async (event) => {
         if (event.data.charAt(0) == "0") {
             bfWs.send("40/chat,");
