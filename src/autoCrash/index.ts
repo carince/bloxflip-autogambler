@@ -1,18 +1,30 @@
-import { connectWs } from "./utils/ws.js";
+import { connectWs, bfWs } from "./utils/ws.js";
 import { fetchCfg } from "./utils/config.js";
-import { startCrash } from "./bloxflip/crash.js";
+import { crash } from "./bloxflip/crash.js";
 import { keepAlive } from "./utils/keepAlive.js";
+import { sleep } from "../utils/sleep.js";
 
-async function autoCrash() {
+console.log("[BFAC] Running AutoCrash");
+
+async function startCrash() {
     try {
-        console.log("[BFAC] Running autocrash...");
-
         await fetchCfg();
         await connectWs();
+        
+        bfWs.addEventListener("close", async () => {
+            console.log("[WS] WebSocket closed unexpectedly, attempting reconnect...");
+            await sleep(5000);
+            bfWs.removeEventListener("message", crash);
+            kA.stop();
+            startCrash();
+        });
 
-        Promise.all([startCrash(), keepAlive()]);
-
+        const kA = new keepAlive();
+        Promise.all([
+            bfWs.addEventListener("message", (event) => crash(event)),
+            kA.start()
+        ]);
     } catch (err) {
         console.error(`[BFAC] Error occured, killing AutoCrash. \n${err}`);
     }
-} autoCrash();
+} startCrash();
