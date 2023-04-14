@@ -15,6 +15,7 @@ async function connectWs() {
         if (event.data == "40/crash") {
             bfWs.send(`42/crash,["auth","${config.auth}"]`);
             console.log("[WS] Connected to WebSocket");
+            console.log("──────────────────────────────────")
             await calculateBet(true);
         }
     });

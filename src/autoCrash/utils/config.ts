@@ -1,24 +1,26 @@
 interface configInt {
     auth: string;
     tries: number;
+    rain: {
+        enabled: boolean;
+        minimum: number;
+    }
 }
 
-const config: configInt = {
+let config: configInt = {
     auth: "",
-    tries: 100
+    tries: 100,
+    rain: {
+        enabled: false,
+        minimum: 0
+    }
 };
 
 async function fetchCfg() {
-    if (localStorage.getItem("BFAC_auth")) {
-        config.auth = localStorage.getItem("BFAC_auth")!;
+    if (localStorage.getItem("BFAC_config")) {
+        config = JSON.parse(localStorage.getItem("BFAC_config")!)
     } else {
-        return console.error("[CONFIG] Authentication token not found.");
-    }
-
-    if (localStorage.getItem("BFAC_tries")) {
-        config.tries = parseFloat(localStorage.getItem("BFAC_tries")!);
-    } else {
-        return console.error("[CONFIG] Tries not found.");
+        return console.error(`[CONFIG] Unable to parse config.`)
     }
 }
 
