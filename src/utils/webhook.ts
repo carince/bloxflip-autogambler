@@ -1,5 +1,5 @@
-import { config } from "./config.js";
-import { post } from "./pfetch.js";
+import { config } from "@utils/config.js";
+import { post } from "@utils/pfetch.js";
 
 async function sendWh(json: any): Promise<void> {
     if (config.webhook.enabled) {

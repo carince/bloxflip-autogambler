@@ -1,6 +1,6 @@
 import notifier from "node-notifier";
-import { sendWh } from "../utils/webhook.js";
-import { config } from "../utils/config.js";
+import { sendWh } from "@utils/webhook.js";
+import { config } from "@utils/config.js";
 import { Request, Response } from "express";
 
 async function notifyRain(req: Request, res: Response): Promise<void> {

@@ -1,6 +1,6 @@
 import express from "express"
-import { Logger } from "./logger.js"
-import { notifyRain } from "../bloxflip/rain.js"
+import { Logger } from "@utils/logger.js"
+import { notifyRain } from "../api/rain.js"
 
 async function startApi() {
     const app = express()

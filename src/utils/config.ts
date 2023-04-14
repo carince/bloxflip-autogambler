@@ -2,8 +2,8 @@ import json from "json5";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { Logger } from "./logger.js";
-import { sleep } from "./sleep.js";
+import { Logger } from "@utils/logger.js";
+import { sleep } from "@utils/sleep.js";
 
 interface configInt {
     auth: string;

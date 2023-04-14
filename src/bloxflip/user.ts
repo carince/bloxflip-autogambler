@@ -1,8 +1,8 @@
 import chalk from "chalk";
-import { Logger } from "../utils/logger.js";
-import { sendWh } from "../utils/webhook.js";
-import { get } from "../utils/pfetch.js";
-import { config } from "../utils/config.js";
+import { Logger } from "@utils/logger.js";
+import { sendWh } from "@utils/webhook.js";
+import { get } from "@utils/pfetch.js";
+import { config } from "@utils/config.js";
 
 async function checkAuth(): Promise<void> {
     Logger.info("USER", "Fetching user information.");

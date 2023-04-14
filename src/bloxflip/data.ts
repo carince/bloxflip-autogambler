@@ -1,8 +1,8 @@
-import { config } from "../utils/config.js";
-import { sendWh } from "../utils/webhook.js";
-import { Logger } from "../utils/logger.js";
-import { get } from "../utils/pfetch.js";
-import { sleep } from "../utils/sleep.js";
+import { config } from "@utils/config.js";
+import { sendWh } from "@utils/webhook.js";
+import { Logger } from "@utils/logger.js";
+import { get } from "@utils/pfetch.js";
+import { sleep } from "@utils/sleep.js";
 
 let balanceBefore: number, betBefore: number;
 async function getInfo(): Promise<void> {
