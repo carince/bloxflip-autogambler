@@ -23,7 +23,10 @@
         "strictPropertyInitialization": false,
         "incremental": true,
         "isolatedModules": true,
-        "allowJs": true
+        "allowJs": true,
+        "paths": {
+            "@utils/*": ["utils/*"]
+        }
     },
     "include": [
         "src/**/*"

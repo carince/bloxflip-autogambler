@@ -1,13 +1,12 @@
 import { Page } from "puppeteer";
 import { checkAuth } from "./bloxflip/user.js";
 import { getInfo } from "./bloxflip/data.js";
-import { startRain } from "./bloxflip/rain.js";
 import { fetchCfg } from "./utils/config.js";
 import { Logger } from "./utils/logger.js";
 import { initialize } from "./utils/browser.js";
-import { config } from "./utils/config.js";
 import { sleep } from "./utils/sleep.js";
 import { readFileSync, existsSync } from "fs";
+import { startApi } from "./utils/server.js";
 
 let page: Page;
 
@@ -17,10 +16,10 @@ let page: Page;
     
     await fetchCfg();
     page = await initialize();
+    await startApi()
 
     await checkAuth();
     await getInfo();
-    if (config.webhook.modules.rain.enabled) startRain();
     
     await sleep(5000);
     if (existsSync("./dist/autoCrash.js")) {
