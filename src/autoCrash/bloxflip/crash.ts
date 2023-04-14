@@ -1,11 +1,13 @@
 import { bfWs } from "../utils/ws.js";
 import { calculateBet } from "./bet.js";
+import { post } from "../utils/api.js";
 
 interface gameInt {
     bet: number;
     joined: boolean;
     started: boolean;
     lossStreak: number;
+    crashPoint: number;
     wallet: number;
 }
 
@@ -13,6 +15,7 @@ const game: gameInt = {
     bet: 0,
     joined: false,
     started: false,
+    crashPoint: 0,
     lossStreak: 0,
     wallet: 0
 };
@@ -55,26 +58,40 @@ async function crash(event: MessageEvent) {
 
     // Game end
     if (event.data.includes("42/crash,[\"game-end\",")) {
-        const crashPoint = event.data.match(/(?<="crashPoint":)(.*?)(?=,)/)[0];
+        game.crashPoint = event.data.match(/(?<="crashPoint":)(.*?)(?=,)/)[0];
         game.started = false;
 
         if (!game.joined) {
-            return console.log(`[CRASH] Ignoring as we haven't joined this round.: ${crashPoint}`);
+            return console.log(`[CRASH] Ignoring as we haven't joined this round.: ${game.crashPoint}`);
         }
 
-        if (crashPoint >= 2) {
+        if (game.crashPoint >= 2) {
             game.lossStreak = 0;
-            console.log(`[CRASH] Won: ${crashPoint}x`);
+            console.log(`[CRASH] Won: ${game.crashPoint}x`);
+            sendLog();
             await calculateBet(true);
         } else {
             game.lossStreak = game.lossStreak + 1;
-            console.log(`[CRASH] Lost: ${crashPoint}x - #${game.lossStreak}`);
+            console.log(`[CRASH] Lost: ${game.crashPoint}x - #${game.lossStreak}`);
+            sendLog();
             await calculateBet(false);
         }
 
-        console.log("──────────────────────────────────");
         game.joined = false;
+        console.log("──────────────────────────────────");
     }
+}
+
+function sendLog() {
+    post("game", {
+        game: {
+            crashPoint: game.crashPoint,
+            joined: game.joined,
+            lossStreak: game.lossStreak,
+            wallet: game.wallet,
+            bet: game.bet
+        }
+    });
 }
 
 export { crash, game };

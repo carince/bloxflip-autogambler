@@ -4,7 +4,7 @@ import { config } from "@utils/config.js";
 import { Request, Response } from "express";
 
 async function notifyRain(req: Request, res: Response): Promise<void> {
-    const { rain }: any = req.body!
+    const { rain }: any = req.body!;
 
     if (rain.prize >= config.webhook.modules.rain.minimum) {
         function pingId() {
@@ -57,7 +57,7 @@ async function notifyRain(req: Request, res: Response): Promise<void> {
         });
     }
 
-    res.sendStatus(200)
+    res.sendStatus(200);
 }
 
 export { notifyRain };

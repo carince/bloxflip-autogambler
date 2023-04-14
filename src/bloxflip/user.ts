@@ -12,12 +12,15 @@ async function checkAuth(): Promise<void> {
 
         if (res.success) {
             const baseBet = Math.round(((Math.round((res.user.wallet + Number.EPSILON) * 100) / 100) / Math.pow(2, config.tries) + Number.EPSILON) * 100) / 100;
-            
+
             if (baseBet === 0) {
                 return Logger.error("USER", "Tries in config is too high causing the bet to be 0", true);
             }
 
-            Logger.log("USER", `${chalk.bold("Successfully logged in!")} \nUsername: ${res.user.robloxUsername} \nID: ${res.user.robloxId} \nBalance: ${Math.round((res.user.wallet + Number.EPSILON) * 100) / 100} R$`);
+            Logger.log("USER",
+                `${chalk.bold("Successfully logged in!")} \nUsername: ${res.user.robloxUsername} \nID: ${res.user.robloxId} \nBalance: ${Math.round((res.user.wallet + Number.EPSILON) * 100) / 100} R$`,
+                { seperator: true }
+            );
             sendWh({
                 "embeds": [
                     {
