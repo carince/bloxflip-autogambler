@@ -18,9 +18,9 @@ let config: configInt = {
 
 async function fetchCfg() {
     if (localStorage.getItem("BFAC_config")) {
-        config = JSON.parse(localStorage.getItem("BFAC_config")!)
+        config = JSON.parse(localStorage.getItem("BFAC_config")!);
     } else {
-        return console.error(`[CONFIG] Unable to parse config.`)
+        return console.error("[CONFIG] Unable to parse config.");
     }
 }
 

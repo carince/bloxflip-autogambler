@@ -24,7 +24,7 @@ async function initialize(): Promise<Page> {
 
     page = (await browser.pages())[0];
     await page.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44");
-    await page.goto("https://api.bloxflip.com/", { timeout: 0 });
+    await page.goto("http://localhost:6580/", { timeout: 0 });
 
     await page.evaluate((config) => {
         const browserConfig = {
@@ -34,7 +34,7 @@ async function initialize(): Promise<Page> {
                 enabled: config.webhook.modules.rain.enabled,
                 minimum: config.webhook.modules.rain.minimum
             }
-        }
+        };
 
         localStorage.setItem("BFAC_config", JSON.stringify(browserConfig));
     }, config);

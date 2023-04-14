@@ -6,7 +6,7 @@ import { Logger } from "@utils/logger.js";
 import { initialize } from "@utils/browser.js";
 import { sleep } from "@utils/sleep.js";
 import { readFileSync, existsSync } from "fs";
-import { startApi } from "@utils/server.js";
+import { startApi } from "@api/server.js";
 
 let page: Page;
 
@@ -15,8 +15,8 @@ let page: Page;
     Logger.log("SUPPORT", "Support the developers by giving the repo a star! https://github.com/Norikiru/bloxflip-autocrash");
     
     await fetchCfg();
+    await startApi();
     page = await initialize();
-    await startApi()
 
     await checkAuth();
     await getInfo();
