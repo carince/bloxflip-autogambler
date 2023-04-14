@@ -1,9 +1,9 @@
 import puppeteer from "puppeteer-extra";
 import stealthPlugin from "puppeteer-extra-plugin-stealth";
 import { Browser, Page } from "puppeteer";
-import { config } from "./config.js";
-import { Logger } from "./logger.js";
-import { sleep } from "./sleep.js";
+import { config } from "@utils/config.js";
+import { Logger } from "@utils/logger.js";
+import { sleep } from "@utils/sleep.js";
 
 let page: Page;
 

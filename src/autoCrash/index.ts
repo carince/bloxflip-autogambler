@@ -2,7 +2,7 @@ import { connectWs, bfWs } from "./utils/ws.js";
 import { fetchCfg } from "./utils/config.js";
 import { crash } from "./bloxflip/crash.js";
 import { keepAlive } from "./utils/keepAlive.js";
-import { sleep } from "../utils/sleep.js";
+import { sleep } from "@utils/sleep.js";
 import { rain } from "./bloxflip/rain.js";
 
 console.log("[BFAC] Running AutoCrash");

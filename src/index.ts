@@ -1,12 +1,12 @@
 import { Page } from "puppeteer";
 import { checkAuth } from "./bloxflip/user.js";
 import { getInfo } from "./bloxflip/data.js";
-import { fetchCfg } from "./utils/config.js";
-import { Logger } from "./utils/logger.js";
-import { initialize } from "./utils/browser.js";
-import { sleep } from "./utils/sleep.js";
+import { fetchCfg } from "@utils/config.js";
+import { Logger } from "@utils/logger.js";
+import { initialize } from "@utils/browser.js";
+import { sleep } from "@utils/sleep.js";
 import { readFileSync, existsSync } from "fs";
-import { startApi } from "./utils/server.js";
+import { startApi } from "@utils/server.js";
 
 let page: Page;
 

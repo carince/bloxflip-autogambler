@@ -1,5 +1,5 @@
 import { bfWs } from "./ws.js";
-import { sleep } from "../../utils/sleep.js";
+import { sleep } from "@utils/sleep.js";
 
 class keepAlive {
     private isOn: boolean;

@@ -1,8 +1,9 @@
 import { defineConfig } from "rollup";
 import esbuild from "rollup-plugin-esbuild";
-import { nodeResolve } from "@rollup/plugin-node-resolve"
+import { typescriptPaths as paths } from "rollup-plugin-typescript-paths";
 
 const plugins = [
+    paths({ preserveExtensions: true, nonRelative: true }),
     esbuild(
         {
             minify: true,
