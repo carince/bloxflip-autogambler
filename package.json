@@ -28,15 +28,12 @@
     "typescript": "^4.8.3"
   },
   "dependencies": {
-    "@types/node": "^18.8.4",
     "chalk": "^4.1.2",
     "express": "^4.18.2",
-    "hagen": "^2.0.2",
     "json5": "^2.2.1",
     "node-notifier": "^10.0.1",
     "puppeteer": "^17.1.3",
     "puppeteer-extra": "^3.3.4",
-    "puppeteer-extra-plugin-stealth": "^2.11.1",
-    "socket.io-client": "^4.6.1"
+    "puppeteer-extra-plugin-stealth": "^2.11.1"
   }
 }
