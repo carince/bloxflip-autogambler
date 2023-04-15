@@ -7,7 +7,7 @@ import { sleep } from "@utils/sleep.js";
 
 let page: Page;
 
-async function initialize(): Promise<Page> {
+async function startBrowser(): Promise<void> {
     await sleep(1000);
 
     puppeteer.default.use(stealthPlugin());
@@ -40,7 +40,6 @@ async function initialize(): Promise<Page> {
     }, config);
 
     Logger.info("BLOXFLIP", "Successfully set up page for Bloxflip");
-    return page;
 }
 
-export { initialize };
+export { startBrowser, page };

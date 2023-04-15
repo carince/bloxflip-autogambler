@@ -1,4 +1,4 @@
-import { page } from "../index.js";
+import { page } from "@utils/browser.js";
 import { config } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
 import { sleep } from "@utils/sleep.js";

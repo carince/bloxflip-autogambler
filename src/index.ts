@@ -1,14 +1,11 @@
-import { Page } from "puppeteer";
 import { checkAuth } from "./bloxflip/user.js";
 import { getInfo } from "./bloxflip/data.js";
 import { fetchCfg } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
-import { initialize } from "@utils/browser.js";
+import { startBrowser, page } from "@utils/browser.js";
 import { sleep } from "@utils/sleep.js";
-import { readFileSync, existsSync } from "fs";
+import { readFileSync, existsSync } from "node:fs";
 import { startApi } from "@api/server.js";
-
-let page: Page;
 
 (async (): Promise<void> => {
     Logger.log("STARTUP", "Starting bloxflip-autocrash");
@@ -16,7 +13,7 @@ let page: Page;
     
     await fetchCfg();
     await startApi();
-    page = await initialize();
+    await startBrowser();
 
     await checkAuth();
     await getInfo();
