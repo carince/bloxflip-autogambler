@@ -4,8 +4,9 @@ import { crash } from "./bloxflip/crash.js";
 import { keepAlive } from "./utils/keepAlive.js";
 import { sleep } from "@utils/sleep.js";
 import { rain } from "./bloxflip/rain.js";
+import { Logger } from "./utils/logger.js"
 
-console.log("[BFAC] Running AutoCrash");
+Logger.info("BFAC", "Running AutoCrash");
 
 async function startCrash() {
     try {
@@ -15,7 +16,7 @@ async function startCrash() {
         const kA = new keepAlive();
         
         bfWs.addEventListener("close", async () => {
-            console.log("[WS] WebSocket closed unexpectedly, attempting reconnect...");
+            Logger.warn("WS", "WebSocket closed unexpectedly, attempting reconnect...");
             await sleep(5000);
 
             bfWs.removeEventListener("message", crash);
@@ -31,6 +32,6 @@ async function startCrash() {
             kA.start()
         ]);
     } catch (err) {
-        console.error(`[BFAC] Error occured, killing AutoCrash. \n${err}`);
+        Logger.error("BFAC", `Error occured, killing AutoCrash. \n${err}`, true);
     }
 } startCrash();

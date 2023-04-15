@@ -1,3 +1,5 @@
+import { Logger } from './logger.js'
+
 interface configInt {
     auth: string;
     tries: number;
@@ -20,8 +22,8 @@ async function fetchCfg() {
     if (localStorage.getItem("BFAC_config")) {
         config = JSON.parse(localStorage.getItem("BFAC_config")!);
     } else {
-        return console.error("[CONFIG] Unable to parse config.");
+        return Logger.error("CONFIG", "Unable to parse config.", true);
     }
 }
 
-export { fetchCfg, config};
+export { fetchCfg, config };

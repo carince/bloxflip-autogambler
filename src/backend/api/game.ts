@@ -6,7 +6,7 @@ async function logGame(req: Request, res: Response): Promise<void> {
 
     if (!game.joined) {
         Logger.log("GAME",
-            `Ignoring as we haven't joined this round. \nCrash Point: ${game.crashPoint}`,
+            `Unable to join this round. \nCrash Point: ${game.crashPoint}`,
             { customColor: 93, seperator: true}
         );
     } else {

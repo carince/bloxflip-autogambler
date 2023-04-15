@@ -7,9 +7,7 @@ interface loggerOptions {
 }
 
 export class Logger {
-    public static log(type: string, info: string, options?: loggerOptions): void {
-        type.toUpperCase();
-
+    public static log(label: string, message: string, options?: loggerOptions): void {
         const customColor = options?.customColor;
         const seperator = options?.seperator;
         const seperatorText = "──────────────────────────────────\n";
@@ -22,24 +20,21 @@ export class Logger {
             infoStyle = chalk.bold.ansi(customColor);
         }
 
-        console.log((`${labelStyle(` ${type} `)} ${infoStyle(`${seperator ? `${seperatorText}` : ""}${info}`)}`));
+        console.log((`${labelStyle(` ${label} `)} ${infoStyle(`${seperator ? `${seperatorText}` : ""}${message}`)}`));
     }
 
-    public static info(type: string, info: string): void {
+    public static info(label: string, message: string): void {
         if (config.debugging.verbose) {
-            type.toUpperCase();
-            console.log(`${chalk.bold.bgBlueBright.ansi(30)(` ${type} `)} ${chalk.blueBright(info)}`);
+            console.log(`${chalk.bold.bgBlueBright.ansi(30)(` ${label} `)} ${chalk.blueBright(message)}`);
         }
     }
 
-    public static error(type: string, info: string, forceClose?: boolean): void {
-        type.toUpperCase();
-        console.log(`${chalk.bold.bgRedBright.ansi(30)(` ${type} `)} ${chalk.redBright(info)}`);
+    public static error(label: string, message: string, forceClose?: boolean): void {
+        console.log(`${chalk.bold.bgRedBright.ansi(30)(` ${label} `)} ${chalk.redBright(message)}`);
         if (forceClose) process.exit();
     }
 
-    public static warn(type: string, info: string): void {
-        type.toUpperCase();
-        console.log(`${chalk.bold.bgYellowBright.ansi(30)(` ${type} `)} ${chalk.yellowBright(info)}`);
+    public static warn(label: string, message: string): void {
+        console.log(`${chalk.bold.bgYellowBright.ansi(30)(` ${label} `)} ${chalk.yellowBright(message)}`);
     }
 }
