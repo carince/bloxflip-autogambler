@@ -35,7 +35,7 @@ export class Logger {
     public static error(type: string, info: string, forceClose?: boolean): void {
         type.toUpperCase();
         console.log(`${chalk.bold.bgRedBright.ansi(30)(` ${type} `)} ${chalk.redBright(info)}`);
-        if (forceClose || config.debugging.exitOnError) process.exit();
+        if (forceClose) process.exit();
     }
 
     public static warn(type: string, info: string): void {
