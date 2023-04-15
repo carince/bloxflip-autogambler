@@ -16,7 +16,7 @@ const plugins = [
 
 export default defineConfig([
     {
-        input: `src/index.ts`,
+        input: `src/backend/index.ts`,
         treeshake: true,
         cache: true,
         external: ['json5', 'chalk', 'puppeteer', 'puppeteer-extra', 'puppeteer-extra-plugin-stealth', 'node-notifier', 'express', 'node:fs', 'node:path', 'node:url'],
@@ -30,11 +30,11 @@ export default defineConfig([
         plugins: plugins
     },
     {
-        input: `src/autoCrash/index.ts`,
+        input: `src/userScript/index.ts`,
         treeshake: true,
         cache: true,
         output: {
-            file: `dist/autoCrash.js`,
+            file: `dist/userScript.js`,
             compact: true,
             format: "cjs",
             strict: true,

@@ -4,8 +4,8 @@ import { fetchCfg } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
 import { startBrowser, page } from "@utils/browser.js";
 import { sleep } from "@utils/sleep.js";
-import { readFileSync, existsSync } from "node:fs";
 import { startApi } from "@api/server.js";
+import { readFileSync, existsSync } from "node:fs";
 
 (async (): Promise<void> => {
     Logger.log("STARTUP", "Starting bloxflip-autocrash");
@@ -19,8 +19,8 @@ import { startApi } from "@api/server.js";
     await getInfo();
     
     await sleep(5000);
-    if (existsSync("./dist/autoCrash.js")) {
-        const autoCrash = readFileSync("./dist/autoCrash.js", "utf-8");
+    if (existsSync("./dist/userScript.js")) {
+        const autoCrash = readFileSync("./dist/userScript.js", "utf-8");
         Logger.info("BFAC", "Injecting UserScript...");
         page.evaluate(autoCrash);
     } else {
