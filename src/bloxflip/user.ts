@@ -49,7 +49,7 @@ async function checkAuth(): Promise<void> {
                             },
                             {
                                 "name": "Modules",
-                                "value": `**Rain: **${config.webhook.modules.rain.enabled}, ${config.webhook.modules.rain.minimum} R$\n**Analytics: **${config.webhook.modules.analytics}`,
+                                "value": `**Rain: **${config.modules.rain.enabled}, ${config.modules.rain.minimum} R$\n**Analytics: **${config.modules.analytics}`,
                                 "inline": true
                             }
                         ],

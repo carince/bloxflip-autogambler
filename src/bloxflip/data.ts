@@ -59,7 +59,7 @@ async function getInfo(): Promise<void> {
             Logger.info("DATA", "Successfully calculated data for analysis.");
             await loop();
         });
-    } if (config.webhook.modules.analytics) await loop();
+    } if (config.modules.analytics) await loop();
 }
 
 export { getInfo, balanceBefore };

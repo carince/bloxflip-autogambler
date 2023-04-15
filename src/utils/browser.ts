@@ -31,8 +31,8 @@ async function initialize(): Promise<Page> {
             auth: config.auth,
             tries: config.tries,
             rain: {
-                enabled: config.webhook.modules.rain.enabled,
-                minimum: config.webhook.modules.rain.minimum
+                enabled: config.modules.rain.enabled,
+                minimum: config.modules.rain.minimum
             }
         };
 

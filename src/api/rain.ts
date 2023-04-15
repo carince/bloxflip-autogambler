@@ -6,17 +6,19 @@ import { Request, Response } from "express";
 async function notifyRain(req: Request, res: Response): Promise<void> {
     const { rain }: any = req.body!;
 
-    if (rain.prize >= config.webhook.modules.rain.minimum) {
+    const rainConfig = config.modules.rain
+
+    if (rain.prize >= rainConfig.minimum) {
         function pingId() {
-            const idLength = config.webhook.modules.rain.ping_id.length;
+            const idLength = rainConfig.notifications.webhook.ping_id.length;
             if (idLength === 18 || idLength === 19) {
-                return `<@${config.webhook.modules.rain.ping_id}>`;
+                return `<@${rainConfig.notifications.webhook.ping_id}>`;
             } else {
                 return "";
             }
         }
 
-        if (config.webhook.modules.rain.os_notifs) {
+        if (rainConfig.notifications.os_notifs) {
             notifier.notify({
                 title: "AutoCrash Rain Notifier",
                 message: `Robux: ${rain.prize} R$ \nHost: ${rain.host} \nTime Remaining: ${rain.duration / 60000} minutes`,
