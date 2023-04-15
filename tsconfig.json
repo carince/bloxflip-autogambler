@@ -25,8 +25,8 @@
         "isolatedModules": true,
         "allowJs": true,
         "paths": {
-            "@utils/*": ["utils/*"],
-            "@api/*": ["api/*"]
+            "@utils/*": ["backend/utils/*"],
+            "@api/*": ["backend/api/*"]
         }
     },
     "include": [
