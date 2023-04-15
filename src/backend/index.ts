@@ -21,7 +21,6 @@ import { readFileSync, existsSync } from "node:fs";
     await sleep(5000);
     if (existsSync("./dist/userScript.js")) {
         const autoCrash = readFileSync("./dist/userScript.js", "utf-8");
-        Logger.info("BFAC", "Injecting UserScript...");
         page.evaluate(autoCrash);
     } else {
         Logger.error("BFAC", "Unable to read UserScript, make sure that UserScript is built.", true);
