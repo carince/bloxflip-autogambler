@@ -1,24 +1,32 @@
 {
-    "auth": "Paste your Bloxflip token here",
-    "tries": 13, // How many times your balance will be divided by 2, I recommend 13.
+    "auth": "",
+    "tries": 13, 
     "webhook": {
-        "enabled": false, // Set to false if your not going to use webhooks
-        "link": "", // Discord webhook link
-        "modules": {
-            "rain": {
-                "enabled": true, // Toggle rain notifications
-                "os_notifs": true, // Toggle OS notifications
-                "minimum": 1000, // Minimum rain prize to notify
-                "ping_id": "" // User ID to ping
-            },
-            "analytics": true // Toggle hourly analytics
-        }
+        "enabled": true, 
+        "link": "" 
+    },
+    "modules": {
+        "rain": {
+            "enabled": true, 
+            "minimum": 0,
+            "notifications": {
+                "os_notifs": true,
+                "webhook": {
+                    "enabled": true,
+                    "ping_id": 0
+                }
+            }
+        },
+        "analytics": {
+            "enabled": false,
+            "notifications": {
+                "webhook": false
+            }
+        } 
     },
     // For debugging purposes only, dont touch if you dont know what you are doing
     "debugging": {
-        "headless": true, // Make chromium headless
-        "verbose": false, // Log info on what the code is doing
-        "exitOnError": true, // Exit the script on error
-        "ssOnError": false // Screenshot the page on errors
+        "headless": true,
+        "verbose": false
     }
 }

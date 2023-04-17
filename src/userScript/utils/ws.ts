@@ -9,7 +9,7 @@ async function connectWs() {
 
     bfWs.addEventListener("message", async (event) => {
         if (event.data.charAt(0) == "0") {
-            bfWs.send("40/chat,");
+            if (config.rain.enabled) bfWs.send("40/chat,");
             bfWs.send("40/crash,");
         }
 
