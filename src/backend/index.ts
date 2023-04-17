@@ -1,5 +1,5 @@
 import { checkAuth } from "./bloxflip/user.js";
-import { getInfo } from "./bloxflip/data.js";
+import { dataAnalysis } from "./bloxflip/data.js";
 import { fetchCfg } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
 import { startBrowser, page } from "@utils/browser.js";
@@ -16,7 +16,7 @@ import { readFileSync, existsSync } from "node:fs";
     await startBrowser();
 
     await checkAuth();
-    await getInfo();
+    await dataAnalysis.start();
     
     await sleep(5000);
     if (existsSync("./dist/userScript.js")) {

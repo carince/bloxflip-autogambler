@@ -1,5 +1,12 @@
 import { config } from "../utils/config.js";
 import { post } from "../utils/api.js";
+import { bfWs } from "../utils/ws.js";
+
+async function startRain() {
+    if (config.rain.enabled) {
+        return bfWs.addEventListener("message", (event) => rain(event))
+    }
+}
 
 async function rain(event: MessageEvent) {
     if (!config.rain.enabled) return;
@@ -26,4 +33,4 @@ async function rain(event: MessageEvent) {
     }
 }
 
-export { rain };
+export { startRain, rain };

@@ -4,62 +4,64 @@ import { Logger } from "@utils/logger.js";
 import { get } from "@utils/pfetch.js";
 import { sleep } from "@utils/sleep.js";
 
-let balanceBefore: number, betBefore: number;
-async function getInfo(): Promise<void> {
-    Logger.info("DATA", "Starting analysis module");
+class dataAnalysis {
+    public static async start() {
+        if (!config.modules.analytics.enabled) return;
 
-    const bfApi = await get("https://rest-bf.blox.land/user");
+        Logger.info("DATA", "Starting analysis module");
 
-    balanceBefore = Math.round((bfApi.user.wallet + Number.EPSILON) * 100) / 100;
-    betBefore = balanceBefore / Math.pow(2, config.tries);
-    betBefore = Math.round((betBefore + Number.EPSILON) * 100) / 100;
+        const bfApi = await get("https://rest-bf.blox.land/user");
 
-    async function loop(): Promise<void> {
-        new Promise(async (): Promise<void> => {
-            await sleep(60 * 60000);
+        let balanceBefore = Math.round((bfApi.user.wallet + Number.EPSILON) * 100) / 100;
+        let betBefore = balanceBefore / Math.pow(2, config.tries);
+        betBefore = Math.round((betBefore + Number.EPSILON) * 100) / 100;
 
-            const bfApi = await get("https://rest-bf.blox.land/user");
-
-            const balance: number = Math.round((bfApi.user.wallet + Number.EPSILON) * 100) / 100;
-            let bet: number = balance / Math.pow(2, config.tries);
-            bet = Math.round((bet + Number.EPSILON) * 100) / 100;
-
-            function diffPercent(denominator: number, numerator: number): string {
-                const string = `${(denominator < numerator ? "-" + ((numerator - denominator) * 100) / denominator : ((denominator - numerator) * 100) / numerator)}`;
-                return Math.round((parseFloat(string) + Number.EPSILON) * 100) / 100 + "%";
-            }
-
-            sendWh({
-                "embeds": [
-                    {
-                        "title": "Hourly Analysis",
-                        "color": 3092790,
-                        "fields": [
-                            {
-                                "name": "Balance",
-                                "value": `**Before: ** ${balanceBefore}\n**After: ** ${balance}\n**Difference: ** ${diffPercent(balance, balanceBefore)}`,
-                                "inline": true
+        for (let i = 0; i < Infinity; i++) {
+            new Promise(async (): Promise<void> => {
+                await sleep(60 * 60000);
+    
+                const bfApi = await get("https://rest-bf.blox.land/user");
+    
+                const balance: number = Math.round((bfApi.user.wallet + Number.EPSILON) * 100) / 100;
+                let bet: number = balance / Math.pow(2, config.tries);
+                bet = Math.round((bet + Number.EPSILON) * 100) / 100;
+    
+                function diffPercent(denominator: number, numerator: number): string {
+                    const string = `${(denominator < numerator ? "-" + ((numerator - denominator) * 100) / denominator : ((denominator - numerator) * 100) / numerator)}`;
+                    return Math.round((parseFloat(string) + Number.EPSILON) * 100) / 100 + "%";
+                }
+    
+                sendWh({
+                    "embeds": [
+                        {
+                            "title": "Hourly Analysis",
+                            "color": 3092790,
+                            "fields": [
+                                {
+                                    "name": "Balance",
+                                    "value": `**Before: ** ${balanceBefore}\n**After: ** ${balance}\n**Difference: ** ${diffPercent(balance, balanceBefore)}`,
+                                    "inline": true
+                                },
+                                {
+                                    "name": "Bet",
+                                    "value": `**Before: ** ${betBefore}\n**After: ** ${bet}\n**Difference: ** ${diffPercent(bet, betBefore)}`,
+                                    "inline": true
+                                }
+                            ],
+                            "footer": {
+                                "text": "bloxflip-autocrash"
                             },
-                            {
-                                "name": "Bet",
-                                "value": `**Before: ** ${betBefore}\n**After: ** ${bet}\n**Difference: ** ${diffPercent(bet, betBefore)}`,
-                                "inline": true
+                            "thumbnail": {
+                                "url": "https://bloxflip.com/favicon.ico"
                             }
-                        ],
-                        "footer": {
-                            "text": "bloxflip-autocrash"
-                        },
-                        "thumbnail": {
-                            "url": "https://bloxflip.com/favicon.ico"
                         }
-                    }
-                ]
+                    ]
+                });
+    
+                Logger.info("DATA", "Successfully calculated data for analysis.");
             });
-
-            Logger.info("DATA", "Successfully calculated data for analysis.");
-            await loop();
-        });
-    } if (config.modules.analytics) await loop();
+        }
+    }
 }
 
-export { getInfo, balanceBefore };
+export { dataAnalysis };
