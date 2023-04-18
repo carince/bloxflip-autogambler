@@ -4,7 +4,7 @@ import { crash } from "./bloxflip/crash.js";
 import { keepAlive } from "./utils/keepAlive.js";
 import { sleep } from "@utils/sleep.js";
 import { startRain, rain } from "./bloxflip/rain.js";
-import { Logger } from "./utils/logger.js"
+import { Logger } from "./utils/logger.js";
 
 Logger.info("BFAC", "Running AutoCrash");
 

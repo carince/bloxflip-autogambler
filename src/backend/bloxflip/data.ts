@@ -12,7 +12,7 @@ class dataAnalysis {
 
         const bfApi = await get("https://rest-bf.blox.land/user");
 
-        let balanceBefore = Math.round((bfApi.user.wallet + Number.EPSILON) * 100) / 100;
+        const balanceBefore = Math.round((bfApi.user.wallet + Number.EPSILON) * 100) / 100;
         let betBefore = balanceBefore / Math.pow(2, config.tries);
         betBefore = Math.round((betBefore + Number.EPSILON) * 100) / 100;
 
@@ -21,7 +21,7 @@ class dataAnalysis {
                 await sleep(60 * 60000);
     
                 const bfApi = await get("https://rest-bf.blox.land/user");
-    
+
                 const balance: number = Math.round((bfApi.user.wallet + Number.EPSILON) * 100) / 100;
                 let bet: number = balance / Math.pow(2, config.tries);
                 bet = Math.round((bet + Number.EPSILON) * 100) / 100;
