@@ -6,11 +6,13 @@ import { startBrowser, page } from "@utils/browser.js";
 import { sleep } from "@utils/sleep.js";
 import { startApi } from "@api/server.js";
 import { readFileSync, existsSync } from "node:fs";
+import { checkUpdates } from "@utils/updater.js";
 
 (async (): Promise<void> => {
     Logger.log("STARTUP", "Starting bloxflip-autocrash");
     Logger.log("SUPPORT", "Support the developers by giving the repo a star! https://github.com/Norikiru/bloxflip-autocrash");
     
+    await checkUpdates();
     await fetchCfg();
     await startApi();
     await startBrowser();
