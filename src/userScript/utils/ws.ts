@@ -1,6 +1,6 @@
 import { calculateBet } from "../bloxflip/bet.js";
 import { config } from "./config.js";
-import { Logger } from "./logger.js"
+import { Logger } from "./logger.js";
 
 let bfWs: WebSocket;
 

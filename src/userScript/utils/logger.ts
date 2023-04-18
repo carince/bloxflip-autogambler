@@ -8,41 +8,41 @@ interface loggerOptions {
 
 export class Logger {
     public static log(label: string, message: string, options?: loggerOptions): void {
-        post(`log/log`, {
+        post("log/log", {
             logs: {
                 label: label,
                 message: message,
                 options: options
             }
-        })
+        });
 
         console.log(`[${label}] ${message}`);
     }
 
     public static info(label: string, message: string): void {
-        post(`log/info`, {
+        post("log/info", {
             logs: {
                 label: label,
                 message: message
             }
-        })
+        });
 
         console.log(`[${label}] ${message}`);
     }
 
     public static warn(label: string, message: string): void {
-        post(`log/warn`, {
+        post("log/warn", {
             logs: {
                 label: label,
                 message: message
             }
-        })
+        });
 
         console.warn(`[${label}] ${message}`);
     }
 
     public static error(label: string, message: string, forceClose: boolean): void {
-        post(`log/error`, {
+        post("log/error", {
             logs: {
                 label: label,
                 message: message,
@@ -50,7 +50,7 @@ export class Logger {
                     forceClose: forceClose
                 }
             }
-        })
+        });
 
         console.error(`[${label}] ${message}`);
     }

@@ -4,7 +4,7 @@ import { bfWs } from "../utils/ws.js";
 
 async function startRain() {
     if (config.rain.enabled) {
-        return bfWs.addEventListener("message", (event) => rain(event))
+        return bfWs.addEventListener("message", (event) => rain(event));
     }
 }
 

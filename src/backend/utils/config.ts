@@ -44,7 +44,7 @@ async function fetchCfg() {
     const __dirname = dirname(__filename);
 
     try {
-        if (!existsSync(join(__dirname, "..", "config.json5"))) return Logger.error("CONFIG", `config.json not found.`, true);
+        if (!existsSync(join(__dirname, "..", "config.json5"))) return Logger.error("CONFIG", "config.json not found.", true);
         config = await json.parse(readFileSync(join(__dirname, "..", "config.json5"), "utf-8"));
         Logger.info("CONFIG", "Fetched config.json.");
 
@@ -57,7 +57,7 @@ async function fetchCfg() {
             await sleep(3000);
         }
     } catch (err) {
-        Logger.error("CONFIG", `Unabled to read config.json.`, true);
+        Logger.error("CONFIG", "Unabled to read config.json.", true);
     }
 }
 

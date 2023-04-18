@@ -6,7 +6,7 @@ import { Request, Response } from "express";
 async function notifyRain(req: Request, res: Response): Promise<void> {
     const { rain }: any = req.body!;
 
-    const rainConfig = config.modules.rain
+    const rainConfig = config.modules.rain;
 
     if (rain.prize >= rainConfig.minimum) {
         function pingId() {
