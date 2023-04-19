@@ -13,7 +13,7 @@ class dataAnalysis {
         const bfApi = await get("https://rest-bf.blox.land/user");
 
         const balanceBefore = Math.round((bfApi.user.wallet + Number.EPSILON) * 100) / 100;
-        let betBefore = balanceBefore / Math.pow(2, config.tries);
+        let betBefore = balanceBefore / Math.pow(2, config.bet.tries);
         betBefore = Math.round((betBefore + Number.EPSILON) * 100) / 100;
 
         for (let i = 0; i < Infinity; i++) {
@@ -23,7 +23,7 @@ class dataAnalysis {
                 const bfApi = await get("https://rest-bf.blox.land/user");
 
                 const balance: number = Math.round((bfApi.user.wallet + Number.EPSILON) * 100) / 100;
-                let bet: number = balance / Math.pow(2, config.tries);
+                let bet: number = balance / Math.pow(2, config.bet.tries);
                 bet = Math.round((bet + Number.EPSILON) * 100) / 100;
     
                 function diffPercent(denominator: number, numerator: number): string {

@@ -14,11 +14,15 @@ async function calculateBet(won: boolean) {
         return res.json();
     });
 
-    game.wallet = Math.round((bfApi.user.wallet + Number.EPSILON) * 100) / 100;
+    game.wallet = +bfApi.user.wallet.toFixed(2);
 
     if (won) {
-        game.bet = game.wallet / Math.pow(2, parseFloat(`${config.tries}`));
-        game.bet = Math.round((game.bet + Number.EPSILON) * 100) / 100;
+        if (config.bet.custom) {
+            game.bet = config.bet.custom
+        } else {
+            game.bet = game.wallet / Math.pow(2, config.bet.tries);
+        }
+        game.bet = +game.bet.toFixed(2)
     } else {
         game.bet = game.bet * 2;
     }
