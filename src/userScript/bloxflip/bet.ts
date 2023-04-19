@@ -20,7 +20,7 @@ async function calculateBet(won: boolean) {
         if (config.bet.custom) {
             game.bet = config.bet.custom
         } else {
-            game.bet = game.wallet / Math.pow(2, config.bet.tries);
+            game.bet = game.wallet / Math.pow(config.bet.multiplier, config.bet.tries);
         }
         game.bet = +game.bet.toFixed(2)
     } else {

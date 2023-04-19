@@ -2,7 +2,8 @@
     "auth": "",
     "bet": {
         "tries": 13, 
-        "custom": 0
+        "custom": 0,
+        "multiplier": 2
     },
     "webhook": {
         "enabled": true, 

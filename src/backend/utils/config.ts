@@ -10,6 +10,7 @@ interface configInt {
     bet: {
         tries: number;
         custom: number; 
+        multiplier: number;
     }
     webhook: {
         enabled: boolean;

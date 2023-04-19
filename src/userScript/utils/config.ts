@@ -5,6 +5,7 @@ interface configInt {
     bet: {
         tries: number;
         custom: number;
+        multiplier: number;
     }
     rain: {
         enabled: boolean;
@@ -16,7 +17,8 @@ let config: configInt = {
     auth: "",
     bet: {
         tries: 100,
-        custom: 0
+        custom: 0,
+        multiplier: 2
     },
     rain: {
         enabled: false,
