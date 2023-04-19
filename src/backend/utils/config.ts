@@ -7,7 +7,10 @@ import { sleep } from "@utils/sleep.js";
 
 interface configInt {
     auth: string;
-    tries: number;
+    bet: {
+        tries: number;
+        custom: number; 
+    }
     webhook: {
         enabled: boolean;
         link: string;
@@ -52,7 +55,7 @@ async function fetchCfg() {
             Logger.error("TOKEN", "Token is empty, please put a valid token.");
         }
 
-        if (config.tries < 10) {
+        if (config.bet.tries < 10) {
             Logger.warn("CONFIG", "It is not recommended to set the tries below 10, exit the script with CTRL+C if you want to make changes.");
             await sleep(3000);
         }

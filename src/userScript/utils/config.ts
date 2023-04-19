@@ -2,7 +2,10 @@ import { Logger } from "./logger.js";
 
 interface configInt {
     auth: string;
-    tries: number;
+    bet: {
+        tries: number;
+        custom: number;
+    }
     rain: {
         enabled: boolean;
         minimum: number;
@@ -11,7 +14,10 @@ interface configInt {
 
 let config: configInt = {
     auth: "",
-    tries: 100,
+    bet: {
+        tries: 100,
+        custom: 0
+    },
     rain: {
         enabled: false,
         minimum: 0

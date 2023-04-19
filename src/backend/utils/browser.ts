@@ -29,7 +29,10 @@ async function startBrowser(): Promise<void> {
     await page.evaluate((config) => {
         const browserConfig = {
             auth: config.auth,
-            tries: config.tries,
+            bet: {
+                tries: config.bet.tries,
+                custom: config.bet.custom
+            },
             rain: {
                 enabled: config.modules.rain.enabled,
                 minimum: config.modules.rain.minimum
