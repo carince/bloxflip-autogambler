@@ -1,6 +1,9 @@
 {
     "auth": "",
-    "tries": 13, 
+    "bet": {
+        "tries": 13, 
+        "custom": 0
+    },
     "webhook": {
         "enabled": true, 
         "link": "" 

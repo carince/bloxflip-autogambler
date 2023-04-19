@@ -12,9 +12,9 @@ class dataAnalysis {
 
         const bfApi = await get("https://rest-bf.blox.land/user");
 
-        const balanceBefore = Math.round((bfApi.user.wallet + Number.EPSILON) * 100) / 100;
+        const balanceBefore = +bfApi.user.wallet.toFixed(2)
         let betBefore = balanceBefore / Math.pow(2, config.bet.tries);
-        betBefore = Math.round((betBefore + Number.EPSILON) * 100) / 100;
+        betBefore = +betBefore.toFixed(2)
 
         for (let i = 0; i < Infinity; i++) {
             new Promise(async (): Promise<void> => {
@@ -22,13 +22,13 @@ class dataAnalysis {
     
                 const bfApi = await get("https://rest-bf.blox.land/user");
 
-                const balance: number = Math.round((bfApi.user.wallet + Number.EPSILON) * 100) / 100;
+                const balance: number = +bfApi.user.wallet.toFixed(2)
                 let bet: number = balance / Math.pow(2, config.bet.tries);
-                bet = Math.round((bet + Number.EPSILON) * 100) / 100;
+                bet = +bet.toFixed(2)
     
                 function diffPercent(denominator: number, numerator: number): string {
                     const string = `${(denominator < numerator ? "-" + ((numerator - denominator) * 100) / denominator : ((denominator - numerator) * 100) / numerator)}`;
-                    return Math.round((parseFloat(string) + Number.EPSILON) * 100) / 100 + "%";
+                    return `${+parseFloat(string).toFixed(2)} + %`;
                 }
     
                 sendWh({

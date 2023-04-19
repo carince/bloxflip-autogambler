@@ -8,17 +8,17 @@ async function checkAuth(): Promise<void> {
     Logger.info("USER", "Fetching user information.");
 
     async function start(): Promise<void> {
-        const res = await get("https://rest-bf.blox.land/user");
+        const bfApi = await get("https://rest-bf.blox.land/user");
 
-        if (res.success) {
-            const baseBet = Math.round(((Math.round((res.user.wallet + Number.EPSILON) * 100) / 100) / Math.pow(2, config.bet.tries) + Number.EPSILON) * 100) / 100;
+        if (bfApi.success) {
+            const baseBet = +(+bfApi.user.wallet.toFixed(2) / Math.pow(2, config.bet.tries)).toFixed(2);
 
             if (baseBet === 0) {
                 return Logger.error("USER", "Tries in config is too high causing the bet to be 0", true);
             }
 
             Logger.log("USER",
-                `${chalk.bold("Successfully logged in!")} \nUsername: ${res.user.robloxUsername} \nID: ${res.user.robloxId} \nBalance: ${Math.round((res.user.wallet + Number.EPSILON) * 100) / 100} R$`,
+                `${chalk.bold("Successfully logged in!")} \nUsername: ${bfApi.user.robloxUsername} \nID: ${bfApi.user.robloxId} \nBalance: ${+bfApi.user.wallet.toFixed(2)} R$`,
                 { seperator: true }
             );
             sendWh({
@@ -29,17 +29,17 @@ async function checkAuth(): Promise<void> {
                         "fields": [
                             {
                                 "name": "Username",
-                                "value": res.user.robloxUsername,
+                                "value": bfApi.user.robloxUsername,
                                 "inline": true
                             },
                             {
                                 "name": "Roblox ID",
-                                "value": res.user.robloxId,
+                                "value": bfApi.user.robloxId,
                                 "inline": true
                             },
                             {
                                 "name": "Balance",
-                                "value": `${Math.round((res.user.wallet + Number.EPSILON) * 100) / 100} R$`,
+                                "value": `${+bfApi.user.wallet.toFixed(2)} R$`,
                                 "inline": true
                             },
                             {
@@ -57,7 +57,7 @@ async function checkAuth(): Promise<void> {
                             "text": "bloxflip-autocrash"
                         },
                         "thumbnail": {
-                            "url": `https://www.roblox.com/headshot-thumbnail/image?userId=${res.user.robloxId}&width=720&height=720`
+                            "url": `https://www.roblox.com/headshot-thumbnail/image?userId=${bfApi.user.robloxId}&width=720&height=720`
                         }
                     }
                 ]
