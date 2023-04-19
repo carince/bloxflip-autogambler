@@ -1,6 +1,7 @@
 import { bfWs } from "../utils/ws.js";
 import { calculateBet } from "./bet.js";
 import { post } from "../utils/api.js";
+import { config } from "userScript/utils/config.js";
 
 interface gameInt {
     bet: number;
@@ -32,7 +33,7 @@ async function crash(event: MessageEvent) {
                 return console.log("[BET] Cannot place bet, already joined the game.");
             }
 
-            bfWs.send(`42/crash,["join-game",{"autoCashoutPoint":200,"betAmount":${game.bet}}]`);
+            bfWs.send(`42/crash,["join-game",{"autoCashoutPoint":${config.bet.multiplier * 100},"betAmount":${game.bet}}]`);
             console.log(`[BET] Balance: ${game.wallet}, Bet: ${game.bet}`);
         }
     }
@@ -65,7 +66,7 @@ async function crash(event: MessageEvent) {
             return console.log(`[CRASH] Ignoring as we haven't joined this round.: ${game.crashPoint}`);
         }
 
-        if (game.crashPoint >= 2) {
+        if (game.crashPoint >= config.bet.multiplier) {
             game.lossStreak = 0;
             console.log(`[CRASH] Won: ${game.crashPoint}x`);
             sendLog();

@@ -31,7 +31,8 @@ async function startBrowser(): Promise<void> {
             auth: config.auth,
             bet: {
                 tries: config.bet.tries,
-                custom: config.bet.custom
+                custom: config.bet.custom,
+                multiplier: config.bet.multiplier
             },
             rain: {
                 enabled: config.modules.rain.enabled,
