@@ -19,7 +19,7 @@ export default defineConfig([
         input: `src/backend/index.ts`,
         treeshake: true,
         cache: true,
-        external: ['json5', 'chalk', 'puppeteer', 'puppeteer-extra', 'puppeteer-extra-plugin-stealth', 'node-notifier', 'express', 'node:fs', 'node:path', 'node:url'],
+        external: ['json5', 'chalk', 'puppeteer', 'puppeteer-extra', 'puppeteer-extra-plugin-stealth', 'node-notifier', 'express', 'node:fs', 'node:path', 'node:url', 'node:child_process'],
         output: {
             file: `dist/index.js`,
             compact: true,
