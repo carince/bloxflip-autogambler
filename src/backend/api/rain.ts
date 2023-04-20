@@ -9,15 +9,6 @@ async function notifyRain(req: Request, res: Response): Promise<void> {
     const rainConfig = config.modules.rain;
 
     if (rain.prize >= rainConfig.minimum) {
-        function pingId() {
-            const idLength = rainConfig.notifications.webhook.ping_id.length;
-            if (idLength === 18 || idLength === 19) {
-                return `<@${rainConfig.notifications.webhook.ping_id}>`;
-            } else {
-                return "";
-            }
-        }
-
         if (rainConfig.notifications.os_notifs) {
             notifier.notify({
                 title: "AutoCrash Rain Notifier",
@@ -60,6 +51,16 @@ async function notifyRain(req: Request, res: Response): Promise<void> {
     }
 
     res.sendStatus(200);
+}
+
+function pingId() {
+    const rainConfig = config.modules.rain;
+    const idLength = rainConfig.notifications.webhook.ping_id.length;
+    if (idLength === 18 || idLength === 19) {
+        return `<@${rainConfig.notifications.webhook.ping_id}>`;
+    } else {
+        return "";
+    }
 }
 
 export { notifyRain };

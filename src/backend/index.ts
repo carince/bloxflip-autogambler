@@ -1,9 +1,8 @@
 import { checkAuth } from "./bloxflip/user.js";
-import { dataAnalysis } from "./bloxflip/data.js";
+import { startDataAnalysis } from "./bloxflip/data.js";
 import { fetchCfg } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
 import { startBrowser, page } from "@utils/browser.js";
-import { sleep } from "@utils/sleep.js";
 import { startApi } from "@api/server.js";
 import { readFileSync, existsSync } from "node:fs";
 import { checkUpdates } from "@utils/updater.js";
@@ -18,7 +17,7 @@ import { checkUpdates } from "@utils/updater.js";
 
     await checkUpdates();
     await checkAuth();
-    await dataAnalysis.start();
+    await startDataAnalysis();
     
     if (existsSync("./dist/userScript.js")) {
         const autoCrash = readFileSync("./dist/userScript.js", "utf-8");

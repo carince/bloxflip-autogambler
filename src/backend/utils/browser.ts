@@ -4,6 +4,7 @@ import { Browser, Page } from "puppeteer";
 import { config } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
 import { sleep } from "@utils/sleep.js";
+import { USER_AGENT } from "./constants.js";
 
 let page: Page;
 
@@ -23,7 +24,7 @@ async function startBrowser(): Promise<void> {
     Logger.info("BROWSER", "Successfully started browser");
 
     page = (await browser.pages())[0];
-    await page.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44");
+    await page.setUserAgent(USER_AGENT);
     await page.goto("http://localhost:6580/", { timeout: 0 });
 
     await page.evaluate((config) => {
