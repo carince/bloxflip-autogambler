@@ -29,11 +29,14 @@ interface configInt {
             }
         };
         analytics: {
-            enabled: boolean,
+            enabled: boolean;
             notifications: {
                 webhook: true
             }
         };
+        updater: {
+            enabled: boolean;
+        }
     };
     debugging: {
         headless: boolean;

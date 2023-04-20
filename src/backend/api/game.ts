@@ -5,14 +5,14 @@ import { config } from "@utils/config.js";
 async function logGame(req: Request, res: Response): Promise<void> {
     const { game }: any = req.body!;
 
-    const won = game.crashPoint >= config.bet.multiplier
+    const won = game.crashPoint >= config.bet.multiplier;
 
     async function calculateWallet() {
-        game.wallet = game.wallet - game.bet
+        game.wallet = game.wallet - game.bet;
         if (game.crashPoint >= config.bet.multiplier) {
-            game.wallet = game.wallet + game.bet * config.bet.multiplier
+            game.wallet = game.wallet + game.bet * config.bet.multiplier;
         }
-        return +game.wallet.toFixed(2)
+        return +game.wallet.toFixed(2);
     }
 
     if (!game.joined) {

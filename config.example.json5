@@ -26,7 +26,10 @@
             "notifications": {
                 "webhook": false
             }
-        } 
+        },
+        "updater": {
+            "enabled": true
+        }
     },
     // For debugging purposes only, dont touch if you dont know what you are doing
     "debugging": {
