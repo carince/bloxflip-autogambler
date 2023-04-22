@@ -1,7 +1,6 @@
 import { config } from "@utils/config.js";
-import { sendWh } from "@utils/webhook.js";
 import { Logger } from "@utils/logger.js";
-import { get } from "@utils/pfetch.js";
+import { getBfUser, sendWh } from "@utils/pfetch.js";
 import { sleep } from "@utils/sleep.js";
 
 async function startDataAnalysis() {
@@ -9,9 +8,13 @@ async function startDataAnalysis() {
 
     Logger.info("DATA", "Starting analysis module");
 
-    const bfApi = await get("https://rest-bf.blox.land/user");
+    const bfUser = await getBfUser<{
+        user: {
+            wallet: number
+        }
+    }>();
 
-    const balanceBefore = +bfApi.user.wallet.toFixed(2);
+    const balanceBefore = +bfUser!.user.wallet.toFixed(2);
     let betBefore = balanceBefore / Math.pow(2, config.bet.tries);
     betBefore = +betBefore.toFixed(2);
 
@@ -19,9 +22,13 @@ async function startDataAnalysis() {
         new Promise(async (): Promise<void> => {
             await sleep(60 * 60000);
 
-            const bfApi = await get("https://rest-bf.blox.land/user");
+            const bfUser = await getBfUser<{
+                user: {
+                    wallet: number
+                }
+            }>();
 
-            const balance: number = +bfApi.user.wallet.toFixed(2);
+            const balance: number = +bfUser!.user.wallet.toFixed(2);
             let bet: number = balance / Math.pow(2, config.bet.tries);
             bet = +bet.toFixed(2);
 
