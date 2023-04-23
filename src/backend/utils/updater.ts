@@ -17,7 +17,7 @@ async function checkUpdates() {
 
         Logger.log("UPDATER", `${chalk.bold("New update(s) found!")} \n${await stringifyUpdates(updates)} Run \`git pull origin ${branch}\` to pull the new updates!`, { seperator: true });
     } catch (err) {
-        Logger.error("UPDATE", "Unable to get commit hashes, is git installed?");
+        Logger.error("UPDATE", "Unable to get updates.");
     }
 }
 
@@ -34,13 +34,7 @@ async function stringifyUpdates(updates: any[]) {
 }
 
 async function compareChanges(branch: string, currentHash: string) {
-    const data = await getGh<{
-        commits: Array<{
-            hash: string
-            author: string
-            message: string
-        }>
-    }>(branch, currentHash);
+    const data = await getGh(branch, currentHash);
 
     return data!.commits.map((c: any) => ({
         hash: c.sha.slice(0, 7),
