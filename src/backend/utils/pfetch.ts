@@ -3,8 +3,9 @@ import { config } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
 import { sleep } from "@utils/sleep.js";
 import { USER_AGENT } from "@utils/constants.js";
+import { UserApi } from "@types";
 
-async function getBfUser<T>(): Promise<T | void> {
+async function getBfUser(): Promise<UserApi | void> {
     const auth = config.auth;
     for (let i = 1; i < 6; i++) {
         const res: Record<string, unknown> & { apiError: any } = await page.evaluate(async (auth: string) => {
@@ -29,7 +30,7 @@ async function getBfUser<T>(): Promise<T | void> {
         }, auth);
 
         if (res.success) {
-            return res as T;
+            return res as unknown as UserApi;
         } else {
             Logger.error("PFETCH", `Fetching user data failed.\nError: ${res.error}`, true);
         }

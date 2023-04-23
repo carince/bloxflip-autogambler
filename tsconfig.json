@@ -26,7 +26,8 @@
         "allowJs": true,
         "paths": {
             "@utils/*": ["backend/utils/*"],
-            "@api/*": ["backend/api/*"]
+            "@api/*": ["backend/api/*"],
+            "@types": ["backend/index.d.ts"]
         }
     },
     "include": [

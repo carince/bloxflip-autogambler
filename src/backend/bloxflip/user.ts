@@ -6,14 +6,7 @@ import { config } from "@utils/config.js";
 async function checkAuth(): Promise<void> {
     Logger.info("USER", "Fetching user information.");
 
-    const bfUser = await getBfUser<{
-        success: boolean
-        user: {
-            wallet: number
-            robloxUsername: string
-            robloxId: number
-        }
-    }>();
+    const bfUser = await getBfUser();
 
     const baseBet = +(+bfUser!.user.wallet.toFixed(2) / Math.pow(2, config.bet.tries)).toFixed(2);
 
@@ -53,7 +46,7 @@ async function checkAuth(): Promise<void> {
                     },
                     {
                         "name": "Modules",
-                        "value": `**Rain: **${config.modules.rain.enabled}, ${config.modules.rain.minimum} R$\n**Analytics: **${config.modules.analytics}`,
+                        "value": `**Rain: **${config.modules.rain.enabled}, ${config.modules.rain.minimum} R$\n**Analytics: **${config.modules.analytics.enabled}\n**Updater: **${config.modules.updater.enabled}`,
                         "inline": true
                     }
                 ],
