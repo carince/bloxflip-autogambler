@@ -24,8 +24,8 @@ async function startDataAnalysis() {
         bet = +bet.toFixed(2);
 
         function diffPercent(denominator: number, numerator: number): string {
-            const string = `${(denominator < numerator ? "-" + ((numerator - denominator) * 100) / denominator : ((denominator - numerator) * 100) / numerator)}`;
-            return `${+parseFloat(string).toFixed(2)} + %`;
+            const string = `${(denominator < numerator ? "-" + ((numerator - denominator) * 100) / denominator : "+" + ((denominator - numerator) * 100) / numerator)}`;
+            return `${+parseFloat(string).toFixed(2)} %`;
         }
 
         sendWh({
