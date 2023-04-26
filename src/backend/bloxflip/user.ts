@@ -36,7 +36,7 @@ async function checkAuth(): Promise<void> {
                     },
                     {
                         "name": "Balance",
-                        "value": `${+bfUser!.user.wallet.toFixed(2)} R$`,
+                        "value": `${+bfUser!.user.wallet.toFixed(2) } R$ ${config.bet.custom ? "(Custom)" : ""}`,
                         "inline": true
                     },
                     {
