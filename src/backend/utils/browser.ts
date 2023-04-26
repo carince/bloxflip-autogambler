@@ -4,7 +4,7 @@ import { Browser, Page } from "puppeteer";
 import { config } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
 import { sleep } from "@utils/sleep.js";
-import { USER_AGENT } from "./constants.js";
+import { USER_AGENT } from "@utils/constants.js";
 
 let page: Page;
 

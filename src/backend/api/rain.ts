@@ -1,5 +1,5 @@
 import notifier from "node-notifier";
-import { sendWh } from "@utils/webhook.js";
+import { sendWh } from "@utils/pfetch.js";
 import { config } from "@utils/config.js";
 import { Request, Response } from "express";
 

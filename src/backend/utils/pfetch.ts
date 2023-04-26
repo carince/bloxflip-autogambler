@@ -2,74 +2,107 @@ import { page } from "@utils/browser.js";
 import { config } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
 import { sleep } from "@utils/sleep.js";
+import { USER_AGENT } from "@utils/constants.js";
+import { GitHubCommits, UserApi } from "@types";
 
-async function get(url: string): Promise<any> {
+async function getBfUser(): Promise<UserApi | void> {
     const auth = config.auth;
-    let tries = 0;
-
-    async function api(): Promise<any> {
-        tries++;
-        const res = await page.evaluate(async (auth: string, url: string) => {
+    for (let i = 1; i < 6; i++) {
+        const res: Record<string, unknown> & { apiError: any } = await page.evaluate(async (auth: string) => {
             let api;
-            try {
-                api = await fetch(url, {
-                    method: "get",
-                    mode: "cors",
-                    credentials: "omit",
-                    headers: { "x-auth-token": auth },
-                });
-            } catch (err) {
-                return { apiError: err };
-            }
 
-            if (!api.ok) return { apiError: api.status };
-            return api.json();
-        }, auth, url);
+            try {
+                api = await fetch("https://rest-bf.blox.land/user", {
+                    method: "get",
+                    headers: {
+                        "x-auth-token": auth
+                    }
+                });
+
+                if (api.ok) {
+                    return api.json();
+                } else {
+                    return { apiError: api.status };
+                }
+            } catch (e) {
+                return { apiError: e };
+            }
+        }, auth);
+
+        if (res.success) {
+            return res as unknown as UserApi;
+        } else {
+            Logger.error("PFETCH", `Fetching user data failed.\nError: ${res.error}`, { forceClose: true });
+        }
 
         if (res.apiError) {
-            Logger.warn("PFETCH", `Fetching failed, trying again... \nError: ${JSON.stringify(res)} \nLink: ${url}`);
-            await sleep(2000);
-            if (tries === 5) return Logger.error("PFETCH", `Fetching failed, \nError: ${JSON.stringify(res)} \nLink: ${url}`, true);
-            return await api();
-        } else {
-            return res;
+            Logger.warn("PFETCH", `Fetching user data failed, trying again... #${i} \nError: ${res.apiError} `);
+            if (i === 4) return Logger.error("PFETCH", `Fetching user data failed. \nError: ${res.apiError}`, { forceClose: true });
+            await sleep(5000);
         }
     }
-
-    return await api();
 }
 
-async function post(url: string, body: string): Promise<any> {
-    let tries = 0;
+async function sendWh(body: any) {
+    if (!config.webhook.enabled) return;
+    const link = config.webhook.link;
 
-    async function api(): Promise<any> {
-        tries++;
-        const res = await page.evaluate(async (url: string, body: string) => {
-            let api;
-            try {
-                api = await fetch(url, {
-                    method: "post",
-                    credentials: "omit",
-                    mode: "cors",
-                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
-                    body: body
-                });
-            } catch (err) {
-                return { apiError: err };
+    const res: { apiError: any } | undefined = await page.evaluate(async (link: string, body: any) => {
+        let api;
+
+        console.log("im here");
+
+        try {
+            api = await fetch(link, {
+                method: "post",
+                headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                body: JSON.stringify(body)
+            });
+
+            if (!api.ok) {
+                return { apiError: api.status };
             }
-
-            if (!api.ok) return { apiError: api.status };
-        }, url, body);
-
-        if (res?.apiError) {
-            Logger.warn("PFETCH", `Posting failed, trying again... \nCode: ${JSON.stringify(res)} \nLink: ${url}`);
-            await sleep(2000);
-            if (tries === 5) return Logger.error("PFETCH", `Posting failed. \nCode: ${JSON.stringify(res)} \nLink: ${url}`);
-            await api();
+        } catch (e) {
+            return { apiError: e };
         }
-    }
+    }, link, body);
 
-    return await api();
+    if (res?.apiError) {
+        Logger.warn("PFETCH", `Sending webhook failed. \nError: ${res.apiError}`);
+    }
 }
 
-export { get, post };
+async function getGh(branch: string, hash: string): Promise<GitHubCommits | void> {
+    for (let i = 1; i < 6; i++) {
+        const res: { apiError: any } = await page.evaluate(async (branch: string, hash: string, USER_AGENT: string) => {
+            let api;
+
+            try {
+                api = await fetch(`https://api.github.com/repos/carince/bloxflip-autocrash/compare/${hash}...${branch}`, {
+                    method: "get",
+                    headers: {
+                        "User-Agent": USER_AGENT
+                    }
+                });
+
+                if (api.ok) {
+                    return api.json();
+                } else {
+                    return { apiError: api.status };
+                }
+            } catch (e) {
+                return { apiError: e };
+            }
+        }, branch, hash, USER_AGENT);
+
+        if (res.apiError) {
+            Logger.warn("PFETCH", `Fetching GitHub changes failed, trying again... #${i} \nError: ${res.apiError} `);
+            if (i === 4) return Logger.error("PFETCH", `Fetching GitHub changes failed. \nError: ${res.apiError}`);
+            await sleep(5000);
+        } else {
+            return res as unknown as GitHubCommits;
+        }
+    }
+}
+
+export { getBfUser, sendWh, getGh };
