@@ -27,7 +27,9 @@
         "paths": {
             "@utils/*": ["backend/utils/*"],
             "@api/*": ["backend/api/*"],
+            "@bf/*": ["backend/bloxflip/*"],
             "@types": ["backend/index.d.ts"]
+            
         }
     },
     "include": [

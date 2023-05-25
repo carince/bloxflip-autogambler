@@ -12,16 +12,16 @@ const plugins = [
             format: "esm"
         }
     )
-]
+];
 
 export default defineConfig([
     {
-        input: `src/backend/index.ts`,
+        input: "src/backend/index.ts",
         treeshake: true,
         cache: true,
-        external: ['json5', 'chalk', 'puppeteer', 'puppeteer-extra', 'puppeteer-extra-plugin-stealth', 'node-notifier', 'express', 'node:fs', 'node:path', 'node:url', 'node:child_process'],
+        external: ["json5", "chalk", "puppeteer", "puppeteer-extra", "puppeteer-extra-plugin-stealth", "node-notifier", "express", "node:fs", "node:path", "node:url", "node:child_process"],
         output: {
-            file: `dist/index.js`,
+            file: "dist/index.js",
             compact: true,
             format: "esm",
             strict: true,
@@ -30,11 +30,11 @@ export default defineConfig([
         plugins: plugins
     },
     {
-        input: `src/userScript/index.ts`,
+        input: "src/userScript/index.ts",
         treeshake: true,
         cache: true,
         output: {
-            file: `dist/userScript.js`,
+            file: "dist/userScript.js",
             compact: true,
             format: "cjs",
             strict: true,
@@ -42,4 +42,4 @@ export default defineConfig([
         },
         plugins: plugins
     }
-])
+]);
