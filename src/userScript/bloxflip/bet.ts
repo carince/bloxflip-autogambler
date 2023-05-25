@@ -5,7 +5,7 @@ async function calculateBet(won: boolean) {
     const headers: HeadersInit = new Headers();
     headers.set("x-auth-token", `${config.auth}`); 
 
-    const bfApi = await fetch("https://rest-bf.blox.land/user", {
+    const bfApi = await fetch("https://api.bloxflip.com/user", {
         method: "GET",
         mode: "cors",
         credentials: "omit",

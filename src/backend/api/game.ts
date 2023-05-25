@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Logger } from "@utils/logger.js";
 import { config } from "@utils/config.js";
+import { data } from "@bf/data.js";
 
 async function logGame(req: Request, res: Response): Promise<void> {
     const { game }: any = req.body!;
@@ -21,10 +22,18 @@ async function logGame(req: Request, res: Response): Promise<void> {
             { customColor: 93, seperator: true}
         );
     } else {
+        const wallet = await calculateWallet();
+
         Logger.log("GAME",
-            `Status: ${won ? "Won" : `Loss - #${game.lossStreak}`} \nCrash Point: ${game.crashPoint}x \nBet: ${game.bet} R$, Wallet: ${await calculateWallet()} R$`,
+            `Status: ${won ? "Won" : `Loss - #${game.lossStreak}`} \nCrash Point: ${game.crashPoint}x \nBet: ${game.bet} R$, Wallet: ${wallet} R$`,
             { customColor: won ? 92 : 91, seperator: true}
         );
+
+        data.pushGame({
+            crash: game.crashPoint as number,
+            bet: game.bet as number,
+            wallet: wallet
+        });
     }
 
     res.sendStatus(200);

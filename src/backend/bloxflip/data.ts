@@ -2,6 +2,27 @@ import { config } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
 import { getBfUser, sendWh } from "@utils/pfetch.js";
 import { sleep } from "@utils/sleep.js";
+import { Game, Rain } from "@types";
+
+class Data {
+    games: Array<Game | null>;
+    rains: Array<Rain | null>;
+
+    public pushGame(game: Game) {
+        this.games.push(game);
+    }
+
+    public pushRain(rain: Rain) {
+        this.rains.push(rain);
+    }
+
+    constructor() {
+        this.games = [];
+        this.rains = [];
+    }
+}
+
+const data = new Data();
 
 async function startDataAnalysis() {
     if (!config.modules.analytics.enabled) return;
@@ -62,4 +83,4 @@ async function startDataAnalysis() {
     new Promise(start);
 }
 
-export { startDataAnalysis };
+export { startDataAnalysis, data};

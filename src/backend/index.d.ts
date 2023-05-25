@@ -58,3 +58,15 @@ export type GitHubCommits = {
         message: string
     }>
 }
+
+export type Game = {
+    crash: number;
+    bet: number;
+    wallet: number;
+}
+
+export type Rain = {
+    prize: number;
+    host: string;
+    time: number;
+}

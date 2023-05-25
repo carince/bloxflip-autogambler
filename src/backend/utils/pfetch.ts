@@ -12,7 +12,7 @@ async function getBfUser(): Promise<UserApi | void> {
             let api;
 
             try {
-                api = await fetch("https://rest-bf.blox.land/user", {
+                api = await fetch("https://api.bloxflip.com/user", {
                     method: "get",
                     headers: {
                         "x-auth-token": auth
