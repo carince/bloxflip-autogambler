@@ -1,4 +1,5 @@
 import notifier from "node-notifier";
+import { socket } from "@api/server.js";
 import { sendWh } from "@utils/pfetch.js";
 import { config } from "@utils/config.js";
 import { data } from "@bf/data.js";
@@ -8,6 +9,12 @@ async function notifyRain(req: Request, res: Response): Promise<void> {
     const { rain }: any = req.body!;
 
     const date = new Date();
+
+    socket.emit("new-rain", {
+        prize: rain.prize,
+        host: rain.host,
+        time: date.getTime()
+    });
 
     data.pushRain({
         prize: rain.prize,

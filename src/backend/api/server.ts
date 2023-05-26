@@ -5,17 +5,19 @@ import { Logger } from "@utils/logger.js";
 import { notifyRain } from "@api/rain.js";
 import { logGame } from "@api/game.js";
 import { log } from "@api/log.js";
-import { sendData } from "@api/data.js";
 import { __dirname } from "@utils/constants.js";
+import { data } from "@bf/data.js";
 import { join } from "path";
+
+let socket: Server;
 
 async function startApi() {
     const app = express();
     const server = http.createServer(app);
-    const io = new Server(server);
+    socket = new Server(server);
 
     app.use(express.json());
-    app.use(express.static(join(__dirname, "pages", "public")));
+    app.use("/public", express.static(join(__dirname, "pages", "public")));
 
     server.listen(6580, "0.0.0.0", () => {
         Logger.info("API", "Successfully started Express server, listening on port 6580.");
@@ -38,16 +40,10 @@ async function startApi() {
         log(req, res);
     });
 
-    app.get("/data", (req, res) => {
-        sendData(req, res);
-    });
-
-    io.on("connection", (socket) => {
-        Logger.log("WS", "A user connected");
-        socket.on("disconnect", () => {
-            Logger.log("WS", "A  user disconnected");
-        });
+    socket.on("connection", () => {
+        socket.emit("games", data.games);
+        socket.emit("rains", data.rains);
     });
 }
 
-export { startApi };
+export { startApi, socket };

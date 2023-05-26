@@ -1,14 +1,37 @@
 import { Game, Rain } from "@types";
+// @ts-ignore
+import io from "../../../node_modules/socket.io/client-dist/socket.io.esm.min.js";
+
+let games: Array<Game>;
+let rains: Array<Rain>;
 
 async function fetchData() {
-    const data: { games: Array<Game>, rains: Array<Rain> } = await fetch("http://localhost:6580/data").then(res => res.json());
+    const socket = io("http://localhost:6580");
 
-    updateCrash(data.games);
-    updateBalance(data.games);
-    updateRain(data.rains);
+    socket.on("games", (i: Array<Game>) => {
+        games = i;
+        updateCrash();
+        updateBalance();
+    });
+
+    socket.on("rains", (i: Array<Rain>) => {
+        rains = i;
+        updateRain();
+    });
+
+    socket.on("new-game", (i: Game) => {
+        games.push(i);
+        updateCrash();
+        updateBalance();
+    });
+
+    socket.on("new-rain", (i: Rain) => {
+        rains.push(i);
+        updateRain();
+    });
 }
 
-async function updateCrash(games: Array<Game>) {
+async function updateCrash() {
     const joined = document.querySelector(".GamesJoined");
     const won = document.querySelector(".GamesWon");
     const lost = document.querySelector(".GamesLost");
@@ -49,6 +72,12 @@ async function updateCrash(games: Array<Game>) {
         streak!.textContent = `${max} (${maxMultiplier}x)`;
 
         const recentGames = games.slice(-10);
+        
+        const bodies =  document.querySelectorAll("table.GamesRecent > tbody");
+        Array.from(bodies).map(body => {
+            body.remove();
+        });
+
         const tbody = document.createElement("tbody");
         recentGames.map(game => {
             const tr = document.createElement("tr");
@@ -78,7 +107,7 @@ async function updateCrash(games: Array<Game>) {
     }
 }
 
-function updateBalance(games: Array<Game>) {
+function updateBalance() {
     const before = document.querySelector("p.BalBefore");
     const current = document.querySelector("p.BalCurrent");
 
@@ -86,7 +115,7 @@ function updateBalance(games: Array<Game>) {
     current!.textContent = `${games.slice(-1)[0].wallet}`;
 }
 
-async function updateRain(rains: Array<Rain>) {
+async function updateRain() {
     const amount = document.querySelector("p.RainsAmount");
     const prize = document.querySelector("p.RainsPrize");
 
