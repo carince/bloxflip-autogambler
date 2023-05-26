@@ -10,9 +10,8 @@ const plugins = [
     ts(),
     swc(),
     esbuild({
-        minify: true,
-        treeShaking: true,
-        target: "esnext",
+        minify: false,
+        treeShaking: false,
         format: "esm"
     })
 ];
@@ -41,7 +40,8 @@ await mkdir("./dist/pages");
 await mkdir("./dist/pages/public");
 
 // Copy static files for analytics page.
-copyFile("./src/backend/pages/index.html", "./dist/pages/index.html");
+await copyFile("./src/backend/pages/index.html", "./dist/pages/index.html");
+await copyFile("./node_modules/socket.io/client-dist/socket.io.js", "./dist/pages/public/socket.io.js");
 for (const file of await readdir("./src/backend/pages/public")) {
     copyFile(`./src/backend/pages/public/${file}`, `./dist/pages/public/${file}`);
 }
@@ -51,7 +51,7 @@ console.log("Building backend...");
 try {
     const backend = await rollup({
         input: "./src/backend/index.ts",
-        onwarn: () => {},
+        onwarn: () => { },
         plugins
     });
 
@@ -59,7 +59,7 @@ try {
         file: "./dist/index.js",
         format: "esm",
         compact: true
-    }); 
+    });
     await backend.close();
 
     console.log("Successfully built backend!");
@@ -69,11 +69,11 @@ try {
 }
 
 // UserScript 
-console.log("Building userScript");
+console.log("Building userScript...");
 try {
     const userScript = await rollup({
         input: "./src/userScript/index.ts",
-        onwarn: () => {},
+        onwarn: () => { },
         plugins
     });
 
@@ -81,21 +81,20 @@ try {
         file: "./dist/userScript.js",
         format: "cjs",
         compact: true
-    }); 
+    });
     await userScript.close();
 
     console.log("Successfully built UserScript!");
 } catch (err) {
     console.error(`Failed to build UserScript:\n ${err}`);
-    process.exit(1);
 }
 
 // Analytics Page
-console.log("Building Analytics");
+console.log("Building Analytics...");
 try {
     const userScript = await rollup({
         input: "./src/backend/pages/index.ts",
-        onwarn: () => {},
+        onwarn: () => { },
         plugins
     });
 
@@ -103,7 +102,7 @@ try {
         file: "./dist/pages/public/index.js",
         format: "cjs",
         compact: true
-    }); 
+    });
     await userScript.close();
 
     console.log("Successfully built Analytics!");

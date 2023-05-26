@@ -50,8 +50,6 @@ async function sendWh(body: any) {
     const res: { apiError: any } | undefined = await page.evaluate(async (link: string, body: any) => {
         let api;
 
-        console.log("im here");
-
         try {
             api = await fetch(link, {
                 method: "post",

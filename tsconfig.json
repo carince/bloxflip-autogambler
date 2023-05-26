@@ -15,6 +15,7 @@
         "resolveJsonModule": true,
         "useUnknownInCatchVariables": true,
         "allowUnreachableCode": false,
+        "allowSyntheticDefaultImports": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "esModuleInterop": true,

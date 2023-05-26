@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { socket } from "@api/server.js";
 import { Logger } from "@utils/logger.js";
 import { config } from "@utils/config.js";
 import { data } from "@bf/data.js";
@@ -28,6 +29,12 @@ async function logGame(req: Request, res: Response): Promise<void> {
             `Status: ${won ? "Won" : `Loss - #${game.lossStreak}`} \nCrash Point: ${game.crashPoint}x \nBet: ${game.bet} R$, Wallet: ${wallet} R$`,
             { customColor: won ? 92 : 91, seperator: true}
         );
+
+        socket.emit("new-game", {
+            crash: game.crashPoint as number,
+            bet: game.bet as number,
+            wallet: wallet
+        });
 
         data.pushGame({
             crash: game.crashPoint as number,
