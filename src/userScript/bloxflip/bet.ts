@@ -5,7 +5,7 @@ async function calculateBet(won: boolean) {
     const headers: HeadersInit = new Headers();
     headers.set("x-auth-token", `${config.auth}`); 
 
-    const bfApi = await fetch("https://api.bloxflip.com/user", {
+    const bfApi = await fetch("https://rest-bf.blox.land/user", {
         method: "GET",
         mode: "cors",
         credentials: "omit",
@@ -14,13 +14,13 @@ async function calculateBet(won: boolean) {
         return res.json();
     });
 
-    game.wallet = +bfApi.user.wallet.toFixed(2);
+    game.balance = +bfApi.user.wallet.toFixed(2);
 
     if (won) {
-        if (config.bet.custom) {
-            game.bet = config.bet.custom;
+        if (config.bet.startingBet) {
+            game.bet = config.bet.startingBet;
         } else {
-            game.bet = game.wallet / Math.pow(config.bet.multiplier, config.bet.tries);
+            game.bet = game.balance / Math.pow(config.bet.autoCashout, config.bet.tries);
         }
         game.bet = +game.bet.toFixed(2);
     } else {

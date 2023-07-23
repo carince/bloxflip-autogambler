@@ -1,6 +1,5 @@
 import { config } from "../utils/config.js";
-import { post } from "../utils/api.js";
-import { bfWs } from "../utils/ws.js";
+import { bfWs, serverWs } from "../utils/ws.js";
 import { Logger } from "../utils/logger.js";
 
 async function startRain() {
@@ -22,16 +21,15 @@ async function rain(event: MessageEvent) {
 
         if (rainData.active !== "true") return;
         if (rainData.prize < config.rain.minimum) {
-            return Logger.log("RAIN", `Rain detected! \nNot notifying cause of set minimum \nRobux: ${rainData.prize} R$ \nHost: ${rainData.host} \nTime Remaining: ${rainData.duration / 60000} minute(s)`);
+            return Logger.log("RAIN", `Rain detected! \nNot notifying cause of set minimum \nRobux: ${rainData.prize} R$ \nHost: ${rainData.host} \nTime Remaining: ${rainData.duration / 60000} minute(s)`, { skipEmit: true });
         }
 
-        Logger.log("RAIN", `Rain detected! \nRobux: ${rainData.prize} R$ \nHost: ${rainData.host} \nTime Remaining: ${rainData.duration / 60000} minute(s)`);
-        post("rain", {
-            rain: {
-                duration: rainData.duration,
-                prize: rainData.prize,
-                host: rainData.host
-            }
+        Logger.log("RAIN", `Rain detected! \nRobux: ${rainData.prize} R$ \nHost: ${rainData.host} \nTime Remaining: ${rainData.duration / 60000} minute(s)`, { skipEmit: true });
+
+        serverWs.emit("new-rain", {
+            duration: rainData.duration,
+            prize: rainData.prize,
+            host: rainData.host
         });
     }
 }

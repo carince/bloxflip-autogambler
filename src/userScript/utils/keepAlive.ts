@@ -1,4 +1,4 @@
-import { bfWs } from "./ws.js";
+import { bfWsSend } from "./ws.js";
 import { sleep } from "@utils/sleep.js";
 
 class keepAlive {
@@ -13,9 +13,9 @@ class keepAlive {
         for (let i = 0; i < Infinity; i++) {
             if (this.enabled) {
                 try {
-                    await sleep(30000);
-                    bfWs.send("2");
-                } catch { }
+                    await sleep(25000);
+                    bfWsSend("2");
+                } catch { continue; }
             }
         }
     }

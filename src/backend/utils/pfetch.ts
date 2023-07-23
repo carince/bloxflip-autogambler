@@ -32,21 +32,18 @@ async function getBfUser(): Promise<UserApi | void> {
         if (res.success) {
             return res as unknown as UserApi;
         } else {
-            Logger.error("PFETCH", `Fetching user data failed.\nError: ${res.error}`, { forceClose: true });
+            Logger.error("PFETCH", `Fetching user data failed.\nError: ${res.error}`);
         }
 
         if (res.apiError) {
-            Logger.warn("PFETCH", `Fetching user data failed, trying again... #${i} \nError: ${res.apiError} `);
-            if (i === 4) return Logger.error("PFETCH", `Fetching user data failed. \nError: ${res.apiError}`, { forceClose: true });
+            Logger.warn("PFETCH", `Fetching user data failed, trying again... #${i} \nError: ${res.apiError}`);
+            if (i === 4) return Logger.error("PFETCH", `Fetching user data failed. \nError: ${res.apiError}`);
             await sleep(5000);
         }
     }
 }
 
-async function sendWh(body: any) {
-    if (!config.webhook.enabled) return;
-    const link = config.webhook.link;
-
+async function sendWh(body: any, link: string) {
     const res: { apiError: any } | undefined = await page.evaluate(async (link: string, body: any) => {
         let api;
 
@@ -69,6 +66,7 @@ async function sendWh(body: any) {
         Logger.warn("PFETCH", `Sending webhook failed. \nError: ${res.apiError}`);
     }
 }
+
 
 async function getGh(branch: string, hash: string): Promise<GitHubCommits | void> {
     for (let i = 1; i < 6; i++) {

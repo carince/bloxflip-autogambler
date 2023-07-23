@@ -2,85 +2,60 @@ import chalk from "chalk";
 import { createWriteStream, WriteStream, existsSync, mkdirSync } from "fs";
 import { join } from "path";
 import { config } from "@utils/config.js";
-import { LoggerOptions } from "@types";
-import { sleep } from "@utils/sleep.js";
 import { __dirname } from "@utils/constants.js";
+import { Game } from "@types";
 
-const seperatorChar = "─";
 let logFile: string;
 let logStream: WriteStream;
 
-export default class Logger {
-    public static async log(label: string, message: string, options?: LoggerOptions): Promise<void> {
-        const customColor = options?.customColor;
-        const seperator = options?.seperator;
-        const seperatorString = seperatorChar.repeat(Logger.getLongestLine(message));
-
-        let labelStyle = chalk.bold.bgGreenBright.ansi(30);
-        let infoStyle = chalk.greenBright;
-
-        if (customColor) {
-            labelStyle = chalk.bold.bgAnsi(customColor).ansi(30);
-            infoStyle = chalk.bold.ansi(customColor);
-        }
-
-        console.log((`${labelStyle(` ${label} `)} ${infoStyle(`${seperator ? `${seperatorString}\n` : ""}${message}`)}`));
+class Logger {
+    public static async log(label: string, message: string): Promise<void> {
+        console.log((`${chalk.bgGreenBright.black(` ${label} `)} ${chalk.greenBright(message)}`));
     }
 
-    public static info(label: string, message: string, options?: LoggerOptions): void {
+    public static info(label: string, message: string): void {
         if (config.debugging.verbose) {
-            const customColor = options?.customColor;
-            const seperator = options?.seperator;
-            const seperatorString = seperatorChar.repeat(Logger.getLongestLine(message));
-
-            let labelStyle = chalk.bold.bgBlueBright.ansi(30);
-            let infoStyle = chalk.blueBright;
-
-            if (customColor) {
-                labelStyle = chalk.bold.bgAnsi(customColor).ansi(30);
-                infoStyle = chalk.bold.ansi(customColor);
-            }
-
-            console.log(`${labelStyle(` ${label} `)} ${infoStyle(`${seperator ? `${seperatorString}\n` : ""}${message}`)}`);
+            console.log(`${chalk.bgBlueBright(` ${label} `)} ${chalk.blueBright(message)}`);
         }
     }
 
-    public static async error(label: string, message: string, options?: LoggerOptions & { forceClose: boolean }): Promise<void> {
-        const customColor = options?.customColor;
-        const seperator = options?.seperator;
-        const seperatorString = seperatorChar.repeat(Logger.getLongestLine(message));
-
-        let labelStyle = chalk.bold.bgRedBright.ansi(30);
-        let infoStyle = chalk.redBright;
-
-        if (customColor) {
-            labelStyle = chalk.bold.bgAnsi(customColor).ansi(30);
-            infoStyle = chalk.bold.ansi(customColor);
-        }
-
-        console.log(`${labelStyle(` ${label} `)} ${infoStyle(`${seperator ? `${seperatorString}\n` : ""}${message}`)}`);
-        await sleep(60000);
-        if (options) process.exit();
+    public static warn(label: string, message: string): void {
+        console.log(`${chalk.bgYellowBright.black(` ▲ ${label} `)} ${chalk.yellowBright(message)}`);
     }
 
-    public static warn(label: string, message: string, options?: LoggerOptions): void {
-        const customColor = options?.customColor;
-        const seperator = options?.seperator;
-        const seperatorString = seperatorChar.repeat(Logger.getLongestLine(message));
+    public static async error(label: string, message: string): Promise<void> {
+        console.log(`${chalk.bgRedBright(` ⬣ ${label} `)} ${chalk.redBright(message)}`);
+        process.exit(1);
+    }
 
-        let labelStyle = chalk.bold.bgYellowBright.ansi(30);
-        let infoStyle = chalk.yellowBright;
+    public static async logGame(game: Game & { lossStreak: number }) {
+        if (game.crash >= config.bet.autoCashout) {
+            const message = `Status: Won \nCrash Point: ${game.crash}x \nBet: ${game.bet} R$, Balance: ${game.balance} R$`;
+            const seperator = "-".repeat(Logger.getLongestLine(message) - 6);
 
-        if (customColor) {
-            labelStyle = chalk.bold.bgAnsi(customColor).ansi(30);
-            infoStyle = chalk.bold.ansi(customColor);
+            console.log(`${chalk.bgGreenBright(" GAME ")} ${chalk.greenBright(`${seperator}\n${message}`)}`);
+        } else {
+            const message = `Status: Loss - #${game.lossStreak} \nCrash Point: ${game.crash}x \nBet: ${game.bet} R$, Balance: ${game.balance} R$`;
+            const seperator = "-".repeat(Logger.getLongestLine(message) - 7);
+
+            console.log(`${chalk.bgRedBright(" GAME ")} ${chalk.redBright(`${seperator}\n${message}`)}`);
         }
-
-        console.log(`${labelStyle(` ${label} `)} ${infoStyle(`${seperator ? `${seperatorString}\n` : ""}${message}`)}`);
     }
 
     public static async logToLogs(log: string): Promise<void> {
         logStream.write(`${log}\n`);
+    }
+
+    public static async createLog() {
+        const date = new Date;
+        logFile = join(__dirname, "..", "logs", `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}_${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}.txt`);
+    
+        if (!existsSync(join(__dirname, "..", "logs"))){
+            mkdirSync(join(__dirname, "..", "logs"));
+        }
+    
+        Logger.info("LOGS", `Successfully created log file: "${logFile}"`);
+        logStream = createWriteStream(logFile);
     }
 
     private static getLongestLine(string: string): number {
@@ -89,16 +64,4 @@ export default class Logger {
     }
 }
 
-async function createLog() {
-    const date = new Date;
-    logFile = join(__dirname, "..", "logs", `${date.getMonth()}-${date.getDate()}-${date.getFullYear()}_${date.getHours()}-${date.getSeconds()}.txt`);
-
-    if (!existsSync(join(__dirname, "..", "logs"))){
-        mkdirSync(join(__dirname, "..", "logs"));
-    }
-
-    Logger.info("LOGS", `Creating log file: "${logFile}"`);
-    logStream = createWriteStream(logFile);
-}
-
-export { Logger, createLog, logFile };
+export { Logger, logFile };

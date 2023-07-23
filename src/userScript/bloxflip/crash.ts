@@ -1,24 +1,27 @@
-import { bfWs } from "../utils/ws.js";
+import { bfWs, bfWsSend, connectBfWs, serverWs } from "../utils/ws.js";
 import { calculateBet } from "./bet.js";
-import { post } from "../utils/api.js";
-import { config } from "userScript/utils/config.js";
+import { startRain, rain } from "./rain.js";
+import { keepAlive } from "../utils/keepAlive.js";
+import { config } from "../utils/config.js";
+import { Logger } from "../utils/logger.js";
+import { sleep } from "@utils/sleep.js";
 
 interface gameInt {
     bet: number;
     joined: boolean;
     started: boolean;
     lossStreak: number;
-    crashPoint: number;
-    wallet: number;
+    crash: number;
+    balance: number;
 }
 
 const game: gameInt = {
     bet: 0,
     joined: false,
     started: false,
-    crashPoint: 0,
+    crash: 0,
     lossStreak: 0,
-    wallet: 0
+    balance: 0
 };
 
 async function crash(event: MessageEvent) {
@@ -26,32 +29,34 @@ async function crash(event: MessageEvent) {
     if (event.data.includes("42/crash,[\"game-starting\",")) {
         if (game.bet !== 0) {
             if (game.started) {
-                return console.log("[BET] Cannot place bet, game has already started.");
+                return Logger.warn("BET", "Cannot place bet, game has already started.");
             }
 
             if (game.joined) {
-                return console.log("[BET] Cannot place bet, already joined the game.");
+                return Logger.warn("BET", "Cannot place bet, already joined the game.");
             }
 
-            bfWs.send(`42/crash,["join-game",{"autoCashoutPoint":${config.bet.multiplier * 100},"betAmount":${game.bet}}]`);
-            console.log(`[BET] Balance: ${game.wallet}, Bet: ${game.bet}`);
+            bfWsSend(`42/crash,["join-game",{"autoCashoutPoint":${config.bet.autoCashout * 100},"betAmount":${game.bet}}]`);
+            game.balance = game.balance - game.bet;
+            game.balance = +game.balance.toFixed(2);
+            Logger.log("BET", `Balance: ${game.balance}, Bet: ${game.bet}`, { skipEmit: true });
         }
     }
 
     // Check if we successfully joined
     if (event.data.includes("42/crash,[\"game-join-success\"")) {
         if (game.joined) {
-            return console.log("[CRASH] Why did we try to join again when we are already in? (my code is shit)");
+            return Logger.log("CRASH", "Why did we try to join again when we are already in? (my code is shit)");
         }
 
         game.joined = true;
-        console.log("[CRASH] Joined game successfully");
+        Logger.log("CRASH", "Joined game successfully", { skipEmit: true });
     }
 
     // Game starting
     if (event.data.includes("42/crash,[\"eos-commit\"")) {
         if (!game.joined) {
-            console.log("[CRASH] Failed to join game");
+            Logger.warn("CRASH", "Failed to join game");
         }
 
         game.started = true;
@@ -59,40 +64,62 @@ async function crash(event: MessageEvent) {
 
     // Game end
     if (event.data.includes("42/crash,[\"game-end\",")) {
-        game.crashPoint = event.data.match(/(?<="crashPoint":)(.*?)(?=,)/)[0];
+        game.crash = event.data.match(/(?<="crashPoint":)(.*?)(?=,)/)[0];
         game.started = false;
 
         if (!game.joined) {
-            return console.log(`[CRASH] Ignoring as we haven't joined this round.: ${game.crashPoint}`);
+            return Logger.warn("CRASH", `Ignoring as we haven't joined this round: ${game.crash}x`);
         }
 
-        if (game.crashPoint >= config.bet.multiplier) {
+        if (game.crash >= config.bet.autoCashout) {
             game.lossStreak = 0;
-            console.log(`[CRASH] Won: ${game.crashPoint}x`);
-            sendLog();
+            Logger.log("CRASH", `Won: ${game.crash}x`, { skipEmit: true });
+            game.balance = game.balance + (game.bet * config.bet.autoCashout);
+            game.balance = +game.balance.toFixed(2);
+            sendGame();
             await calculateBet(true);
         } else {
             game.lossStreak = game.lossStreak + 1;
-            console.log(`[CRASH] Lost: ${game.crashPoint}x - #${game.lossStreak}`);
-            sendLog();
+            Logger.log("CRASH", `Lost: ${game.crash}x - #${game.lossStreak}`, { skipEmit: true });
+            sendGame();
             await calculateBet(false);
         }
 
         game.joined = false;
-        console.log("──────────────────────────────────");
+        Logger.log("L I N E", "──────────────────────────────────", { skipEmit: true });
     }
 }
 
-function sendLog() {
-    post("game", {
-        game: {
-            crashPoint: game.crashPoint,
-            joined: game.joined,
-            lossStreak: game.lossStreak,
-            wallet: game.wallet,
-            bet: game.bet
-        }
+function sendGame() {
+    serverWs.emit("new-game", {
+        crash: game.crash,
+        lossStreak: game.lossStreak,
+        balance: game.balance,
+        bet: game.bet
     });
 }
 
-export { crash, game };
+async function startAutoCrash() {
+    await connectBfWs();
+    const kA = new keepAlive();
+
+    bfWs.addEventListener("close", async () => {
+        Logger.warn("WS", "WebSocket closed unexpectedly, attempting reconnect...");
+
+        bfWs.removeEventListener("message", crash);
+        bfWs.removeEventListener("message", rain);
+        kA.stop();
+
+        await sleep(5000);
+        return startAutoCrash();
+    });
+
+    Promise.all([
+        bfWs.addEventListener("message", (event) => crash(event)),
+        startRain(),
+        kA.start()
+    ]);
+}
+
+
+export { startAutoCrash, crash, game };

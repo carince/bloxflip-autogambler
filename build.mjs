@@ -1,5 +1,6 @@
 import { copyFile, readdir, mkdir, unlink, lstat, rmdir } from "fs/promises";
 import { existsSync as exists } from "fs";
+import { execSync } from "child_process";
 
 import { rollup } from "rollup";
 import ts from "@rollup/plugin-typescript";
@@ -40,18 +41,21 @@ await mkdir("./dist/pages");
 await mkdir("./dist/pages/public");
 
 // Copy static files for analytics page.
-await copyFile("./src/backend/pages/index.html", "./dist/pages/index.html");
+await copyFile("./src/analytics/index.html", "./dist/pages/index.html");
 await copyFile("./node_modules/socket.io/client-dist/socket.io.js", "./dist/pages/public/socket.io.js");
-for (const file of await readdir("./src/backend/pages/public")) {
-    copyFile(`./src/backend/pages/public/${file}`, `./dist/pages/public/${file}`);
+
+if (exists("./src/analytics/public")) {
+    for (const file of await readdir("./src/analytics/public")) {
+        copyFile(`./src/analytics/public/${file}`, `./dist/pages/public/${file}`);
+    }
 }
 
 // Backend
-console.log("Building backend...");
+console.log("Building Backend...");
 try {
     const backend = await rollup({
         input: "./src/backend/index.ts",
-        onwarn: () => { },
+        onwarn: () => { return; },
         plugins
     });
 
@@ -62,23 +66,23 @@ try {
     });
     await backend.close();
 
-    console.log("Successfully built backend!");
+    console.log("Successfully built Backend!");
 } catch (err) {
-    console.error(`Failed to build backend:\n ${err}`);
+    console.error(`Failed to build Backend:\n ${err}`);
     process.exit(1);
 }
 
 // UserScript 
-console.log("Building userScript...");
+console.log("Building UserScript...");
 try {
     const userScript = await rollup({
-        input: "./src/userScript/index.ts",
-        onwarn: () => { },
+        input: "./src/userscript/index.ts",
+        onwarn: () => { return; },
         plugins
     });
 
     await userScript.write({
-        file: "./dist/userScript.js",
+        file: "./dist/userscript.js",
         format: "cjs",
         compact: true
     });
@@ -92,21 +96,26 @@ try {
 // Analytics Page
 console.log("Building Analytics...");
 try {
-    const userScript = await rollup({
-        input: "./src/backend/pages/index.ts",
-        onwarn: () => { },
+    const analytics = await rollup({
+        input: "./src/analytics/index.ts",
+        onwarn: () => { return; },
         plugins
     });
 
-    await userScript.write({
+    await analytics.write({
         file: "./dist/pages/public/index.js",
         format: "cjs",
         compact: true
     });
-    await userScript.close();
+    await analytics.close();
 
     console.log("Successfully built Analytics!");
 } catch (err) {
     console.error(`Failed to build Analytics:\n ${err}`);
     process.exit(1);
+}
+
+if (process.argv.includes("--run")) {
+    console.log("Running bloxflip-autocrash...");
+    execSync("node .", { stdio: "inherit" });
 }
