@@ -11,35 +11,25 @@ export type Config = {
     auth: string;
     bet: {
         tries: number;
-        custom: number; 
-        multiplier: number;
+        startingBet: number;
+        autoCashout: number;
     }
-    webhook: {
+    rain: {
         enabled: boolean;
-        link: string;
-    };
-    modules: {
-        rain: {
-            enabled: boolean;
-            minimum: number;
-            notifications: {
-                os_notifs: boolean;
-                webhook: {
-                    os_notifs: boolean;
-                    ping_id: string;
-                }
+        minimum: number;
+        notifications: {
+            os_notifs: boolean;
+            webhook: {
+                enabled: boolean;
+                link: string;
+                ping_id: string;
             }
-        };
-        analytics: {
-            enabled: boolean;
-            notifications: {
-                webhook: true
-            }
-        };
-        updater: {
-            enabled: boolean;
         }
     };
+    updater: {
+        enabled: boolean;
+        autoUpdate: boolean
+    }
     debugging: {
         headless: boolean;
         verbose: boolean;
@@ -62,11 +52,16 @@ export type GitHubCommits = {
 export type Game = {
     crash: number;
     bet: number;
-    wallet: number;
+    balance: number;
 }
 
 export type Rain = {
     prize: number;
     host: string;
     time: number;
+}
+
+export type Profile = {
+    username: string,
+    id: number,
 }

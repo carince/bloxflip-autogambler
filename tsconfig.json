@@ -27,7 +27,7 @@
         "allowJs": true,
         "paths": {
             "@utils/*": ["backend/utils/*"],
-            "@api/*": ["backend/api/*"],
+            "@server/*": ["backend/server/*"],
             "@bf/*": ["backend/bloxflip/*"],
             "@types": ["backend/index.d.ts"]
             

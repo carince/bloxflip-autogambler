@@ -1,57 +1,53 @@
-import { post } from "./api.js";
+import { serverWs } from "./ws.js";
 
-interface loggerOptions {
-    customColor?: number;
-    seperator?: boolean;
-    forceClose?: boolean;
-}
+class Logger {
+    public static async log(label: string, message: string, options?: { skipEmit: boolean }) {
+        console.log(`%c ${label} %c ${message}`, "background-color: green", "color: green");
 
-export class Logger {
-    public static log(label: string, message: string, options?: loggerOptions): void {
-        post("log/log", {
-            logs: {
-                label: label,
-                message: message,
-                options: options
-            }
+        if (options?.skipEmit) return;
+        if (!serverWs || !serverWs?.connected) return;
+        serverWs.emit("new-log", {
+            type: "log",
+            label: `CLIENT > ${label}`,
+            message: message,
         });
-
-        console.log(`[${label}] ${message}`);
     }
 
-    public static info(label: string, message: string): void {
-        post("log/info", {
-            logs: {
-                label: label,
-                message: message
-            }
-        });
+    public static async info(label: string, message: string, options?: { skipEmit?: boolean }) {
+        console.log(`%c ${label} %c ${message}`, "background-color: blue", "color: blue");
 
-        console.log(`[${label}] ${message}`);
+        if (options?.skipEmit) return;
+        if (!serverWs || !serverWs?.connected) return;
+        serverWs.emit("new-log", {
+            type: "info",
+            label: `CLIENT > ${label}`,
+            message: message,
+        });
     }
 
-    public static warn(label: string, message: string): void {
-        post("log/warn", {
-            logs: {
-                label: label,
-                message: message
-            }
-        });
+    public static async warn(label: string, message: string, options?: { skipEmit: boolean }) {
+        console.log(`%c ▲ ${label} %c ${message}`, "background-color: yellow; color: black", "color: yellow");
 
-        console.warn(`[${label}] ${message}`);
+        if (options?.skipEmit) return;
+        if (!serverWs || !serverWs?.connected) return;
+        serverWs.emit("new-log", {
+            type: "warn",
+            label: `CLIENT > ${label}`,
+            message: message,
+        });
     }
 
-    public static error(label: string, message: string, forceClose: boolean): void {
-        post("log/error", {
-            logs: {
-                label: label,
-                message: message,
-                options: {
-                    forceClose: forceClose
-                }
-            }
-        });
+    public static async error(label: string, message: string, options?: { forceClose?: boolean, skipEmit?: boolean }) {
+        console.log(`%c ⬣ ${label} %c ${message}`, "background-color: red", "color: red");
 
-        console.error(`[${label}] ${message}`);
+        if (options?.skipEmit) return;
+        if (!serverWs || !serverWs?.connected) return;
+        serverWs.emit("new-log", {
+            type: "error",
+            label: `CLIENT > ${label}`,
+            message: message
+        });
     }
 }
+
+export { Logger };
