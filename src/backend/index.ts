@@ -10,7 +10,7 @@ import { fetchConfig } from "@utils/config.js";
 (async (): Promise<void> => {
     Logger.log("STARTUP", "Starting bloxflip-autocrash");
     Logger.log("SUPPORT", "Support the developers by giving the repo a star! https://github.com/Norikiru/bloxflip-autocrash");
-   
+
     await fetchConfig();
     await startServer();
     await startBrowser();
@@ -18,13 +18,13 @@ import { fetchConfig } from "@utils/config.js";
 
     await checkUpdates();
     await checkAuth();
-    
+
     await sleep(5000);
     if (existsSync("./dist/userScript.js")) {
         const autoCrash = readFileSync("./dist/userscript.js", "utf-8");
         page.evaluate(autoCrash);
     } else {
-        Logger.error("BFAC", "Unable to read UserScript, make sure that UserScript is built.");
+        Logger.error("BFAC", "Unable to read UserScript, make sure that UserScript is built.", { forceClose: true });
     }
 })();
 

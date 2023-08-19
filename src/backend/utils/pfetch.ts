@@ -8,7 +8,7 @@ import { GitHubCommits, UserApi } from "@types";
 async function getBfUser(): Promise<UserApi | void> {
     const auth = config.auth;
     for (let i = 1; i < 6; i++) {
-        const res: Record<string, unknown> & { apiError: any } = await page.evaluate(async (auth: string) => {
+        const res: Record<string, unknown> & { apiError: { code: any, body: any } } = await page.evaluate(async (auth: string) => {
             let api;
 
             try {
@@ -22,22 +22,18 @@ async function getBfUser(): Promise<UserApi | void> {
                 if (api.ok) {
                     return api.json();
                 } else {
-                    return { apiError: api.status };
+                    return { apiError: { code: api?.status, body: await api?.text() }};
                 }
             } catch (e) {
-                return { apiError: e };
+                return { apiError: { code: e, body: null }};
             }
         }, auth);
 
         if (res.success) {
             return res as unknown as UserApi;
-        } else {
-            Logger.error("PFETCH", `Fetching user data failed.\nError: ${res.error}`);
-        }
-
-        if (res.apiError) {
-            Logger.warn("PFETCH", `Fetching user data failed, trying again... #${i} \nError: ${res.apiError}`);
-            if (i === 4) return Logger.error("PFETCH", `Fetching user data failed. \nError: ${res.apiError}`);
+        } else if (res.apiError) {
+            Logger.warn("PFETCH", `Fetching user data failed, trying again... #${i} \nCode: ${res.apiError.code} \nBody: ${res.apiError.body}`);
+            if (i === 2) return Logger.error("PFETCH", `Fetching user data failed. \nCode: ${res.apiError.code} \nBody: ${res.apiError.body}`, { forceClose: true });
             await sleep(5000);
         }
     }
@@ -93,7 +89,7 @@ async function getGh(branch: string, hash: string): Promise<GitHubCommits | void
 
         if (res.apiError) {
             Logger.warn("PFETCH", `Fetching GitHub changes failed, trying again... #${i} \nError: ${res.apiError} `);
-            if (i === 4) return Logger.error("PFETCH", `Fetching GitHub changes failed. \nError: ${res.apiError}`);
+            if (i === 2) return Logger.error("PFETCH", `Fetching GitHub changes failed. \nError: ${res.apiError}`, { forceClose: true });
             await sleep(5000);
         } else {
             return res as unknown as GitHubCommits;

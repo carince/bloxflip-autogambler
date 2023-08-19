@@ -45,7 +45,8 @@ class Logger {
         serverWs.emit("new-log", {
             type: "error",
             label: `CLIENT > ${label}`,
-            message: message
+            message: message,
+            forceClose: options?.forceClose
         });
     }
 }

@@ -25,6 +25,11 @@ const game: gameInt = {
 };
 
 async function crash(event: MessageEvent) {
+    // Unable to join due to expired/invalid token
+    if (event.data.includes("42/crash,[\"notify-error\",\"Your session has expired, please refresh your page!\"]")) {
+        return Logger.error("CRASH", "Token is either expired or invalid, try taking your auth token again after relogging into Bloxflip", { forceClose: true });
+    }
+
     // Game Intermission before it starts
     if (event.data.includes("42/crash,[\"game-starting\",")) {
         if (game.bet !== 0) {
@@ -56,7 +61,7 @@ async function crash(event: MessageEvent) {
     // Game starting
     if (event.data.includes("42/crash,[\"eos-commit\"")) {
         if (!game.joined) {
-            Logger.warn("CRASH", "Failed to join game");
+            Logger.warn("CRASH", "Failed to join game, bet was not placed before game started.");
         }
 
         game.started = true;

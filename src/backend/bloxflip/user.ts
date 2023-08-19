@@ -12,7 +12,7 @@ async function checkAuth(): Promise<void> {
     const baseBet = +(+bfUser!.user.wallet.toFixed(2) / Math.pow(2, config.bet.tries)).toFixed(2);
 
     if (baseBet === 0) {
-        return Logger.error("USER", "Tries in config is too high causing the bet to be 0");
+        return Logger.error("USER", "Tries in config is too high causing the bet to be 0", { forceClose: true });
     }
 
     Logger.log("USER",
