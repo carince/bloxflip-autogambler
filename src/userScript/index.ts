@@ -7,6 +7,6 @@ import { connectServerWs } from "./utils/ws.js";
     try {
         await connectServerWs();
     } catch (err) {
-        Logger.error("BFAC", `Error occured, killing AutoCrash. \n${err}`);
+        Logger.error("BFAC", `Error occured, killing AutoCrash. \n${err}`, { forceClose: true });
     }
 })();

@@ -23,7 +23,7 @@ async function fetchConfig() {
         config = fetchedConfig as Config;
         Logger.info("CONFIG", "Successfully fetched config.");
     } catch (err) {
-        Logger.error("CONFIG", `Unable to fetch config from server.\n${err}`);
+        Logger.error("CONFIG", `Unable to fetch config from server.\n${err}`, { forceClose: true });
     }
 }
 

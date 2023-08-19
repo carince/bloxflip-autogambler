@@ -23,9 +23,9 @@ class Logger {
         console.log(`${chalk.bgYellowBright.black(` ▲ ${label} `)} ${chalk.yellowBright(message)}`);
     }
 
-    public static async error(label: string, message: string): Promise<void> {
+    public static async error(label: string, message: string, options?: { forceClose?: boolean }): Promise<void> {
         console.log(`${chalk.bgRedBright(` ⬣ ${label} `)} ${chalk.redBright(message)}`);
-        process.exit(1);
+        if (options?.forceClose) process.exit(1);
     }
 
     public static async logGame(game: Game & { lossStreak: number }) {
@@ -49,11 +49,11 @@ class Logger {
     public static async createLog() {
         const date = new Date;
         logFile = join(__dirname, "..", "logs", `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}_${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}.txt`);
-    
-        if (!existsSync(join(__dirname, "..", "logs"))){
+
+        if (!existsSync(join(__dirname, "..", "logs"))) {
             mkdirSync(join(__dirname, "..", "logs"));
         }
-    
+
         Logger.info("LOGS", `Successfully created log file: "${logFile}"`);
         logStream = createWriteStream(logFile);
     }
