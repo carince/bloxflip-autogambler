@@ -1,65 +1,36 @@
+import { Game, Rain, Profile } from "@types";
 import { config } from "@utils/config.js";
-import { Logger } from "@utils/logger.js";
-import { getBfUser, sendWh } from "@utils/pfetch.js";
-import { sleep } from "@utils/sleep.js";
 
-async function startDataAnalysis() {
-    if (!config.modules.analytics.enabled) return;
+class Data {
+    games: Array<Game>;
+    rains: Array<Rain>;
+    profile: Profile & { options: { autoCashout: number } };
 
-    Logger.info("DATA", "Starting analysis module");
-
-    const bfUser = await getBfUser();
-
-    const balanceBefore = +bfUser!.user.wallet.toFixed(2);
-    let betBefore = balanceBefore / Math.pow(2, config.bet.tries);
-    betBefore = +betBefore.toFixed(2);
-
-    async function start() {
-        await sleep(60 * 60000);
-
-        const bfUser = await getBfUser();
-
-        const balance: number = +bfUser!.user.wallet.toFixed(2);
-        let bet: number = balance / Math.pow(2, config.bet.tries);
-        bet = +bet.toFixed(2);
-
-        function diffPercent(denominator: number, numerator: number): string {
-            const string = `${(denominator < numerator ? "-" + ((numerator - denominator) * 100) / denominator : ((denominator - numerator) * 100) / numerator)}`;
-            return `${parseFloat(string) > 0 ? "+" +parseFloat(string).toFixed(2) : +parseFloat(string).toFixed(2)} %`;
-        }
-
-        sendWh({
-            "embeds": [
-                {
-                    "title": "Hourly Analysis",
-                    "color": 3092790,
-                    "fields": [
-                        {
-                            "name": "Balance",
-                            "value": `**Before: ** ${balanceBefore}\n**After: ** ${balance}\n**Difference: ** ${diffPercent(balance, balanceBefore)}`,
-                            "inline": true
-                        },
-                        {
-                            "name": "Bet",
-                            "value": `**Before: ** ${betBefore}\n**After: ** ${bet}\n**Difference: ** ${diffPercent(bet, betBefore)}`,
-                            "inline": true
-                        }
-                    ],
-                    "footer": {
-                        "text": "bloxflip-autocrash"
-                    },
-                    "thumbnail": {
-                        "url": "https://bloxflip.com/favicon.ico"
-                    }
-                }
-            ]
-        });
-
-        Logger.info("DATA", "Successfully calculated data for analysis.");
-        await start();
+    public pushGame(game: Game) {
+        this.games.push(game);
     }
 
-    new Promise(start);
+    public pushRain(rain: Rain) {
+        this.rains.push(rain);
+    }
+
+    public updateProfile(profile: Profile) {
+        this.profile = {
+            id: profile.id,
+            username: profile.username,
+            options: {
+                autoCashout: config.bet.autoCashout
+            }
+        };
+    }
+
+    constructor() {
+        this.games = [];
+        this.rains = [];
+        this.profile = { username: "null", id: 0, options: { autoCashout: 2 } };
+    }
 }
 
-export { startDataAnalysis };
+const data = new Data();
+
+export { data };

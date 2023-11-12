@@ -24,7 +24,7 @@ npm i
 
 - Run the bot! 🚀
 ```bash
-npm run start
+npm start
 ```
 
 ### 🆕 Updating
