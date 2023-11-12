@@ -27,23 +27,6 @@ async function startBrowser(): Promise<void> {
     await page.setUserAgent(USER_AGENT);
     await page.goto("http://localhost:6580/", { timeout: 0 });
 
-    await page.evaluate((config) => {
-        const browserConfig = {
-            auth: config.auth,
-            bet: {
-                tries: config.bet.tries,
-                custom: config.bet.custom,
-                multiplier: config.bet.multiplier
-            },
-            rain: {
-                enabled: config.modules.rain.enabled,
-                minimum: config.modules.rain.minimum
-            }
-        };
-
-        localStorage.setItem("BFAC_config", JSON.stringify(browserConfig));
-    }, config);
-
     Logger.info("BLOXFLIP", "Successfully set up page for Bloxflip");
 }
 

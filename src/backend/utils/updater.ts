@@ -5,7 +5,7 @@ import { config } from "./config.js";
 import chalk from "chalk";
 
 async function checkUpdates() {
-    if (!config.modules.updater.enabled) return;
+    if (!config.updater.enabled) return;
 
     try {
         const branch = runGit("git rev-parse --abbrev-ref HEAD");
@@ -15,7 +15,7 @@ async function checkUpdates() {
 
         if (updates.length === 0) return Logger.info("UPDATER", "No updates found.");
 
-        Logger.log("UPDATER", `${chalk.bold("New update(s) found!")} \n${await stringifyUpdates(updates)} Run \`git pull origin ${branch}\` to pull the new updates!`, { seperator: true });
+        Logger.log("UPDATER", `${chalk.bold("New update(s) found!")} \n${updates[0].hash} | ${updates[0].author} | ${updates[0].message} \nRun \`git pull origin ${branch}\` to pull the new updates!`);
     } catch (err) {
         Logger.error("UPDATE", "Unable to get updates.");
     }
@@ -23,14 +23,6 @@ async function checkUpdates() {
 
 function runGit(cmd: string) {
     return execSync(cmd).toString().trim();
-}
-
-async function stringifyUpdates(updates: any[]) {
-    let string = "";
-    updates.map((upd: any) => {
-        string = string + `${upd.hash} | ${upd.author} | ${upd.message}\n`;
-    });
-    return string;
 }
 
 async function compareChanges(branch: string, currentHash: string) {

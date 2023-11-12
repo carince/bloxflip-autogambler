@@ -1,7 +1,8 @@
 import chalk from "chalk";
 import { Logger } from "@utils/logger.js";
-import { getBfUser, sendWh } from "@utils/pfetch.js";
+import { getBfUser } from "@utils/pfetch.js";
 import { config } from "@utils/config.js";
+import { data } from "@bf/data.js";
 
 async function checkAuth(): Promise<void> {
     Logger.info("USER", "Fetching user information.");
@@ -15,47 +16,14 @@ async function checkAuth(): Promise<void> {
     }
 
     Logger.log("USER",
-        `${chalk.bold("Successfully logged in!")} \nUsername: ${bfUser!.user.robloxUsername} \nID: ${bfUser!.user.robloxId} \nBalance: ${+bfUser!.user.wallet.toFixed(2)} R$`,
-        { seperator: true }
+        `${chalk.bold("Successfully logged in!")} \nUsername: ${bfUser!.user.robloxUsername} \nID: ${bfUser!.user.robloxId} \nBalance: ${+bfUser!.user.wallet.toFixed(2)} R$`
     );
-    sendWh({
-        "embeds": [
-            {
-                "title": "Successfully logged in!",
-                "color": 3092790,
-                "fields": [
-                    {
-                        "name": "Username",
-                        "value": bfUser!.user.robloxUsername,
-                        "inline": true
-                    },
-                    {
-                        "name": "Roblox ID",
-                        "value": bfUser!.user.robloxId,
-                        "inline": true
-                    },
-                    {
-                        "name": "Balance",
-                        "value": `${+bfUser!.user.wallet.toFixed(2) } R$ ${config.bet.custom ? "(Custom)" : ""}`,
-                        "inline": true
-                    },
-                    {
-                        "name": "Bet",
-                        "value": `**Tries: **${config.bet.tries}\n**Base Bet: **${baseBet}`,
-                        "inline": true
-                    },
-                    {
-                        "name": "Modules",
-                        "value": `**Rain: **${config.modules.rain.enabled}, ${config.modules.rain.minimum} R$\n**Analytics: **${config.modules.analytics.enabled}\n**Updater: **${config.modules.updater.enabled}`,
-                        "inline": true
-                    }
-                ],
-                "footer": {
-                    "text": "bloxflip-autocrash"
-                }
-            }
-        ]
+
+    data.updateProfile({
+        username: bfUser!.user.robloxUsername,
+        id: bfUser!.user.robloxId
     });
+
 }
 
 export { checkAuth };

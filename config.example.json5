@@ -1,39 +1,29 @@
 {
     "auth": "",
     "bet": {
-        "tries": 13, 
-        "custom": 0,
-        "multiplier": 2
+        "tries": 12,
+        "startingBet": 0,
+        "autoCashout": 2
     },
-    "webhook": {
-        "enabled": true, 
-        "link": "" 
-    },
-    "modules": {
-        "rain": {
-            "enabled": true, 
-            "minimum": 0,
-            "notifications": {
-                "os_notifs": true,
-                "webhook": {
-                    "enabled": true,
-                    "ping_id": 0
-                }
+    "rain": {
+        "enabled": true,
+        "minimum": 0,
+        "notifications": {
+            "os_notifs": false,
+            "webhook": {
+                "enabled": false,
+                "link": "",
+                "ping_id": 0
             }
-        },
-        "analytics": {
-            "enabled": false,
-            "notifications": {
-                "webhook": false
-            }
-        },
-        "updater": {
-            "enabled": true
         }
+    },
+    "updater": {
+        "enabled": false,
+        "autoUpdate": false
     },
     // For debugging purposes only, dont touch if you dont know what you are doing
     "debugging": {
         "headless": true,
-        "verbose": false
+        "verbose": true
     }
 }
