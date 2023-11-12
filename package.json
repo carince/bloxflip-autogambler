@@ -1,6 +1,6 @@
 {
   "name": "bloxflip-autocrash",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "Bloxflip crash automation using the martingale strategy.",
   "main": "dist/index.js",
   "type": "module",
