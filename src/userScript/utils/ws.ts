@@ -4,7 +4,7 @@ import { fetchConfig } from "./config.js";
 import { Logger } from "./logger.js";
 import { config } from "./config.js";
 import { calculateBet } from "../bloxflip/bet.js";
-import { startAutoCrash } from "userscript/bloxflip/crash.js";
+import { startAutoCrash } from "../bloxflip/crash.js";
 
 let serverWs: any;
 let bfWs: WebSocket;
@@ -24,7 +24,7 @@ async function connectServerWs() {
 async function connectBfWs() {
     if (bfWs?.OPEN) return Logger.warn("BF", "Already connected to Bloxflip WebSocket, returning...");
 
-    bfWs = new WebSocket("wss://ws.bloxflip.com/socket.io/?transport=websocket");
+    bfWs = new WebSocket("wss://ws.bloxflip.com/socket.io/?EIO=3&transport=websocket");
 
     bfWs.addEventListener("message", async (event) => {
         if (event.data.charAt(0) == "0") {
