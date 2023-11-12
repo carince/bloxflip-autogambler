@@ -9,7 +9,7 @@ import { updateProfile } from "./profile.js";
 
 let games: Array<Game>;
 let rains: Array<Rain>;
-let chart;
+let chart: any;
 
 async function fetchData() {
     const socket = io("http://localhost:6580", {
@@ -20,7 +20,7 @@ async function fetchData() {
 
     socket.emitWithAck("get-games").then((i: Array<Game>) => {
         games = i;
-
+        
         chart = new Chart(
             document.getElementById("BalGraph"),
             {
