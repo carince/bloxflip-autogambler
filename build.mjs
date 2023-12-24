@@ -76,7 +76,7 @@ try {
 console.log("Building UserScript...");
 try {
     const userScript = await rollup({
-        input: "./src/userscript/index.ts",
+        input: "./src/userScript/index.ts",
         onwarn: () => { return; },
         plugins
     });
