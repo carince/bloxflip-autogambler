@@ -20,7 +20,7 @@ import { fetchConfig } from "@utils/config.js";
     await checkAuth();
 
     await sleep(5000);
-    if (existsSync("./dist/userScript.js")) {
+    if (existsSync("./dist/userscript.js")) {
         const autoCrash = readFileSync("./dist/userscript.js", "utf-8");
         page.evaluate(autoCrash);
     } else {
