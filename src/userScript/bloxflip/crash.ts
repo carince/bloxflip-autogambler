@@ -43,6 +43,10 @@ async function crash(event: MessageEvent) {
                 return Logger.warn("BET", "Cannot place bet, already joined the game.");
             }
 
+            if (game.bet > game.balance) {
+                Logger.error("CRASH", `WIPED. \nBet: ${game.bet} \nBalance: ${game.balance} \nLoss Streak: ${game.lossStreak}`)
+            }
+
             bfWsSend(`42/crash,["join-game",{"autoCashoutPoint":${Math.trunc(config.bet.autoCashout * 100)},"betAmount":${game.bet}}]`);
             game.balance = game.balance - game.bet;
             game.balance = +game.balance.toFixed(2);
