@@ -22,8 +22,6 @@ async function connectServerWs() {
 }
 
 async function connectBfWs() {
-    if (bfWs?.OPEN) return Logger.warn("BF", "Already connected to Bloxflip WebSocket, returning...");
-
     bfWs = new WebSocket("wss://ws.bloxflip.com/socket.io/?EIO=3&transport=websocket");
 
     bfWs.addEventListener("message", async (event) => {

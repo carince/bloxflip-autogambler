@@ -40,39 +40,13 @@ async function handleRain(rain: RainInfo) {
                 wait: false
             }, (err, response) => {
                 if (response == "activate") open("https://bloxflip.com/");
+                if (err) { /* fail silently */ }
             });
         }
 
         if (rainConfig.notifications.webhook.enabled) {
             sendWh({
-                "content": `<@${config.rain.notifications.webhook.ping_id}>`,
-                "embeds": [
-                    {
-                        "title": "Bloxflip Rain Notifier",
-                        "url": "https://bloxflip.com",
-                        "color": 3092790,
-                        "fields": [
-                            {
-                                "name": "Prize",
-                                "value": `${rain.prize} R$`,
-                                "inline": true
-                            },
-                            {
-                                "name": "Host",
-                                "value": rain.host,
-                                "inline": true
-                            },
-                            {
-                                "name": "Time Remaining",
-                                "value": `${rain.duration / 60000} minutes`,
-                                "inline": true
-                            }
-                        ],
-                        "footer": {
-                            "text": "bloxflip-autocrash"
-                        }
-                    }
-                ]
+                "content": `<@${config.rain.notifications.webhook.ping_id}>\n# Bloxflip Rain Notifier\n**Prize: **${rain.prize} R$\n**Host: **${rain.host}\n**Time Remaining: **<t:${Date.now() + rain.duration}:R>`,
             }, config.rain.notifications.webhook.link);
         }
     }
