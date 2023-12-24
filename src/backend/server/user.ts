@@ -14,8 +14,8 @@ function sendConfig(callback: (ack: any) => unknown) {
             auth: config.auth,
             bet: {
                 tries: config.bet.tries,
-                startingBet: config.bet.startingBet,
-                autoCashout: config.bet.autoCashout
+                startingBet: config.bet.starting_bet,
+                autoCashout: config.bet.auto_cashout
             },
             rain: {
                 enabled: config.rain.enabled,

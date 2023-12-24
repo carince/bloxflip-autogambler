@@ -16,9 +16,7 @@ async function startBrowser(): Promise<void> {
         {
             headless: config.debugging.headless,
             defaultViewport: { width: 1920, height: 1080 },
-            args: [
-                "--start-maximized", "--single-process"
-            ]
+            args: config.debugging.launch_options
         }
     );
     Logger.info("BROWSER", "Successfully started browser");
