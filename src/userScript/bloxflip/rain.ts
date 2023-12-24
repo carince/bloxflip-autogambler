@@ -1,14 +1,17 @@
 import { config } from "../utils/config.js";
-import { bfWs, serverWs } from "../utils/ws.js";
+import { serverWs } from "../utils/ws.js";
 import { Logger } from "../utils/logger.js";
-
-async function startRain() {
-    if (config.rain.enabled) {
-        return bfWs.addEventListener("message", (event) => rain(event));
-    }
-}
+import { game } from "./crash.js";
 
 async function rain(event: MessageEvent) {
+    if (event.data.includes("42/chat,[\"notify-success\",\"Make sure to thank")) {
+        const rainBalance = event.data.match(/\d+\.\d+/)[0];
+        const rainHost = event.data.match(/\b[A-Za-z0-9_]+\b(?=\sfor hosting)/)[0];
+        game.balance = game.balance + parseFloat(rainBalance);
+        game.balance = +game.balance.toFixed(2);
+        Logger.log("RAIN", `Rain Concluded! Robux Collected: ${rainBalance} R$ \nBalance: ${game.balance} \nHost: ${rainHost}`)
+    }
+
     if (!config.rain.enabled) return;
 
     if (event.data.includes("42/chat,[\"rain-state-changed\"")) {
@@ -34,4 +37,4 @@ async function rain(event: MessageEvent) {
     }
 }
 
-export { startRain, rain };
+export { rain };

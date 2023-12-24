@@ -4,6 +4,7 @@ import { join } from "path";
 import { config } from "@utils/config.js";
 import { __dirname } from "@utils/constants.js";
 import { Game } from "@types";
+import { sleep } from "./sleep.js";
 
 let logFile: string;
 let logStream: WriteStream;
@@ -25,6 +26,7 @@ class Logger {
 
     public static async error(label: string, message: string, options?: { forceClose?: boolean }): Promise<void> {
         console.log(`${chalk.bgRedBright(` ⬣ ${label} `)} ${chalk.redBright(message)}`);
+        await sleep(15000)
         if (options?.forceClose) process.exit(1);
     }
 

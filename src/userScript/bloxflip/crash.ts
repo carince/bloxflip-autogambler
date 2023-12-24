@@ -1,6 +1,6 @@
 import { bfWs, bfWsSend, connectBfWs, serverWs } from "../utils/ws.js";
-import { calculateBet } from "./bet.js";
-import { startRain, rain } from "./rain.js";
+import { calculateBet, getUserInfo } from "./bet.js";
+import { rain } from "./rain.js";
 import { keepAlive } from "../utils/keepAlive.js";
 import { config } from "../utils/config.js";
 import { Logger } from "../utils/logger.js";
@@ -13,6 +13,7 @@ interface gameInt {
     lossStreak: number;
     crash: number;
     balance: number;
+    count: number;
 }
 
 const game: gameInt = {
@@ -21,7 +22,8 @@ const game: gameInt = {
     started: false,
     crash: 0,
     lossStreak: 0,
-    balance: 0
+    balance: 0,
+    count: 0
 };
 
 async function crash(event: MessageEvent) {
@@ -41,7 +43,7 @@ async function crash(event: MessageEvent) {
                 return Logger.warn("BET", "Cannot place bet, already joined the game.");
             }
 
-            bfWsSend(`42/crash,["join-game",{"autoCashoutPoint":${config.bet.autoCashout * 100},"betAmount":${game.bet}}]`);
+            bfWsSend(`42/crash,["join-game",{"autoCashoutPoint":${Math.trunc(config.bet.autoCashout * 100)},"betAmount":${game.bet}}]`);
             game.balance = game.balance - game.bet;
             game.balance = +game.balance.toFixed(2);
             Logger.log("BET", `Balance: ${game.balance}, Bet: ${game.bet}`, { skipEmit: true });
@@ -79,8 +81,14 @@ async function crash(event: MessageEvent) {
         if (game.crash >= config.bet.autoCashout) {
             game.lossStreak = 0;
             Logger.log("CRASH", `Won: ${game.crash}x`, { skipEmit: true });
-            game.balance = game.balance + (game.bet * config.bet.autoCashout);
-            game.balance = +game.balance.toFixed(2);
+
+            if (game.count % 10 === 0) {
+                await getUserInfo(true)
+            } else {
+                game.balance = game.balance + (game.bet * config.bet.autoCashout);
+                game.balance = +game.balance.toFixed(2);
+            }
+            
             sendGame();
             await calculateBet(true);
         } else {
@@ -107,6 +115,7 @@ function sendGame() {
 async function startAutoCrash() {
     await connectBfWs();
     const kA = new keepAlive();
+    await getUserInfo();
 
     bfWs.addEventListener("close", async () => {
         Logger.warn("WS", "WebSocket closed unexpectedly, attempting reconnect...");
@@ -121,7 +130,7 @@ async function startAutoCrash() {
 
     Promise.all([
         bfWs.addEventListener("message", (event) => crash(event)),
-        startRain(),
+        bfWs.addEventListener("message", (event) => rain(event)),
         kA.start()
     ]);
 }
