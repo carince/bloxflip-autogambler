@@ -2,8 +2,8 @@
     "auth": "",
     "bet": {
         "tries": 12,
-        "startingBet": 0,
-        "autoCashout": 2
+        "starting_bet": 0,
+        "auto_cashout": 2
     },
     "rain": {
         "enabled": true,
@@ -24,6 +24,7 @@
     // For debugging purposes only, dont touch if you dont know what you are doing
     "debugging": {
         "headless": true,
-        "verbose": true
+        "verbose": true,
+        "launch_options": ["--start-maximized", "--single-process"]
     }
 }

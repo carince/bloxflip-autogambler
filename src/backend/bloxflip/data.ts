@@ -19,7 +19,7 @@ class Data {
             id: profile.id,
             username: profile.username,
             options: {
-                autoCashout: config.bet.autoCashout
+                autoCashout: config.bet.auto_cashout
             }
         };
     }

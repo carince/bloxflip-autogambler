@@ -11,8 +11,8 @@ export type Config = {
     auth: string;
     bet: {
         tries: number;
-        startingBet: number;
-        autoCashout: number;
+        starting_bet: number;
+        auto_cashout: number;
     }
     rain: {
         enabled: boolean;
@@ -33,6 +33,7 @@ export type Config = {
     debugging: {
         headless: boolean;
         verbose: boolean;
+        launch_options: string[];
     }
 }
 

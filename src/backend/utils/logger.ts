@@ -31,7 +31,7 @@ class Logger {
     }
 
     public static async logGame(game: Game & { lossStreak: number }) {
-        if (game.crash >= config.bet.autoCashout) {
+        if (game.crash >= config.bet.auto_cashout) {
             const message = `Status: Won \nCrash Point: ${game.crash}x \nBet: ${game.bet} R$, Balance: ${game.balance} R$`;
             const seperator = "-".repeat(Logger.getLongestLine(message) - 6);
 
