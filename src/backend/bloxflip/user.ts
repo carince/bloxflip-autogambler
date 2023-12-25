@@ -9,14 +9,15 @@ async function checkAuth(): Promise<void> {
 
     const bfUser = await getBfUser();
 
-    const baseBet = +(+bfUser!.user.wallet.toFixed(2) / Math.pow(2, config.bet.tries)).toFixed(2);
+    const wallet = +(+bfUser!.user.wallet.toFixed(2) + +bfUser!.user.bonusWallet.toFixed(2)).toFixed(2)
+    const baseBet = +(wallet / Math.pow(2, config.bet.tries)).toFixed(2);
 
     if (baseBet === 0) {
         return Logger.error("USER", "Tries in config is too high causing the bet to be 0", { forceClose: true });
     }
 
     Logger.log("USER",
-        `${chalk.bold("Successfully logged in!")} \nUsername: ${bfUser!.user.robloxUsername} \nID: ${bfUser!.user.robloxId} \nBalance: ${+bfUser!.user.wallet.toFixed(2)} R$`
+        `${chalk.bold("Successfully logged in!")} \nUsername: ${bfUser!.user.robloxUsername} \nID: ${bfUser!.user.robloxId} \nBalance: ${wallet} R$`
     );
 
     data.updateProfile({
