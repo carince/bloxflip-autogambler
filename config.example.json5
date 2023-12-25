@@ -13,7 +13,7 @@
             "webhook": {
                 "enabled": false,
                 "link": "",
-                "ping_id": 0
+                "ping_id": "@everyone // <@USERID>"
             }
         }
     },

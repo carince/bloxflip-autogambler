@@ -46,7 +46,7 @@ async function handleRain(rain: RainInfo) {
 
         if (rainConfig.notifications.webhook.enabled) {
             sendWh({
-                "content": `<@${config.rain.notifications.webhook.ping_id}>\n# Bloxflip Rain Notifier\n**Prize: **${rain.prize} R$\n**Host: **${rain.host}\n**Time Remaining: **<t:${Date.now() + parseFloat(rain.duration)}:R>`,
+                "content": `${config.rain.notifications.webhook.ping_id}\n# Bloxflip Rain Notifier\n**Prize: **${rain.prize} R$\n**Host: **${rain.host}\n**Time Remaining: **<t:${Date.now() + parseFloat(rain.duration)}:R>`,
             }, config.rain.notifications.webhook.link);
         }
     }
