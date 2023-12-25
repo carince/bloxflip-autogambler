@@ -25,7 +25,7 @@ async function getUserInfo(update?: boolean) {
         return Logger.error("BET", `Fetching user data failed. \nError: ${e}`, { forceClose: update ? false : true });
     }
 
-    game.balance = +bfApi.user.wallet.toFixed(2);
+    game.balance = +(+bfApi.user.wallet.toFixed(2) + +bfApi.user.bonusWallet.toFixed(2)).toFixed(2);
 }
 
 async function calculateBet(won: boolean) {

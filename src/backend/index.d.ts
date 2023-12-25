@@ -2,6 +2,7 @@ export type UserApi = {
     success: boolean
     user: {
         wallet: number
+        bonusWallet: number
         robloxUsername: string
         robloxId: number
     }
@@ -27,8 +28,8 @@ export type Config = {
         }
     };
     updater: {
-        enabled: boolean;
-        autoUpdate: boolean
+        check: boolean;
+        auto_update: boolean
     }
     debugging: {
         headless: boolean;

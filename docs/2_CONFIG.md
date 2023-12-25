@@ -4,8 +4,8 @@
     
     bet: {
         tries: How many times your balance will be divided to 2
-        startingBet: Custom starting bet tries will be ignored if this is set
-        autoCashout: At what multiplier you want to cashout
+        starting_bet: Custom starting bet tries will be ignored if this is set
+        auto_cashout: At what multiplier you want to cashout
     }
 
     rain: {
@@ -22,12 +22,13 @@
     }
 
     updater: {
-        enabled: Toggle update notifier
-        autoUpdate: Toggle auto updating
+        check: Toggle checking for updates
+        auto_update: Toggle auto updating /* Not yet implemented */
     }
 
     // For debugging purposes only dont touch if you dont know what you are doing
     debugging: {
         headless: Toggle chrome headless mode.
         verbose: Toggle info logs.
+        launch_options: Puppeteer launch options. 
     }

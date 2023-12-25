@@ -5,7 +5,7 @@ import { config } from "./config.js";
 import chalk from "chalk";
 
 async function checkUpdates() {
-    if (!config.updater.enabled) return;
+    if (!config.updater.check) return;
 
     try {
         const branch = runGit("git rev-parse --abbrev-ref HEAD");
