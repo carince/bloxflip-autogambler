@@ -9,7 +9,7 @@ async function rain(event: MessageEvent) {
         const rainHost = event.data.match(/\b[A-Za-z0-9_]+\b(?=\sfor hosting)/)[0];
         game.balance = game.balance + parseFloat(rainBalance);
         game.balance = +game.balance.toFixed(2);
-        Logger.log("RAIN", `Rain Concluded! Robux Collected: ${rainBalance} R$ \nBalance: ${game.balance} \nHost: ${rainHost}`)
+        Logger.log("RAIN", `Rain Concluded! \nRobux Collected: ${rainBalance} R$ \nBalance: ${game.balance} \nHost: ${rainHost}`)
     }
 
     if (!config.rain.enabled) return;
