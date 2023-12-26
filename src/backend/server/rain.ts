@@ -34,7 +34,7 @@ async function handleRain(rain: RainInfo) {
         if (rainConfig.notifications.os_notifs) {
             notifier.notify({
                 title: "Bloxflip Rain Notifier",
-                message: `Robux: ${rain.prize} R$ \nHost: ${rain.host} \nTime Remaining: ${parseFloat(rain.duration) / 60000} minutes`,
+                message: `Robux: ${rain.prize} R$ \nHost: ${rain.host} \nTime Remaining: ${parseInt(rain.duration) / 60000} minutes`,
                 subtitle: "bloxflip-autocrash",
                 sound: true,
                 wait: false
@@ -46,7 +46,7 @@ async function handleRain(rain: RainInfo) {
 
         if (rainConfig.notifications.webhook.enabled) {
             sendWh({
-                "content": `${config.rain.notifications.webhook.ping_id}\n# Bloxflip Rain Notifier\n**Prize: **${rain.prize} R$\n**Host: **${rain.host}\n**Time Remaining: **<t:${Date.now() + parseFloat(rain.duration)}:R>`,
+                "content": `${config.rain.notifications.webhook.ping_id}\n# Bloxflip Rain Notifier\n**Prize: **${rain.prize} R$\n**Host: **${rain.host}\n**Time Remaining: **<t:${Math.ceil((Date.now() + parseInt(rain.duration)) / 1000)}:R>`,
             }, config.rain.notifications.webhook.link);
         }
     }
