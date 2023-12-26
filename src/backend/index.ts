@@ -9,7 +9,7 @@ import { fetchConfig } from "@utils/config.js";
 
 (async (): Promise<void> => {
     Logger.log("STARTUP", "Starting bloxflip-autocrash");
-    Logger.log("SUPPORT", "Support the developers by giving the repo a star! https://github.com/Norikiru/bloxflip-autocrash");
+    Logger.log("SUPPORT", "Support the developers by giving the repo a star! https://github.com/carince/bloxflip-autocrash");
 
     await fetchConfig();
     await startServer();
