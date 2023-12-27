@@ -21,14 +21,8 @@
         }
     }
 
-    updater: {
-        check: Toggle checking for updates
-        auto_update: Toggle auto updating /* Not yet implemented */
-    }
-
     // For debugging purposes only dont touch if you dont know what you are doing
     debugging: {
-        headless: Toggle chrome headless mode.
+        quarterly_reports: Toggle quarterly reports.
         verbose: Toggle info logs.
-        launch_options: Puppeteer launch options. 
     }
