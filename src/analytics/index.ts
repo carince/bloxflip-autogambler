@@ -1,6 +1,6 @@
-import { Game, Profile, Rain } from "@types";
+import { Game, User, Rain } from "@types";
 // @ts-ignore
-import io from "../../node_modules/socket.io/client-dist/socket.io.esm.min.js";
+import io from "../../node_modules/socket.io/dist/socket.io.js";
 
 import { updateCrash } from "./crash.js";
 import { updateBalance } from "./balance.js";
@@ -21,6 +21,8 @@ async function fetchData() {
     socket.emitWithAck("get-games").then((i: Array<Game>) => {
         games = i;
         
+        
+        // @ts-ignore
         chart = new Chart(
             document.getElementById("BalGraph"),
             {
@@ -46,7 +48,7 @@ async function fetchData() {
         updateRain(i);
     });
 
-    socket.emitWithAck("get-profile").then((i: Profile) => {
+    socket.emitWithAck("get-profile").then((i: User) => {
         updateProfile(i);
     });
 

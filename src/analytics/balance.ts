@@ -16,11 +16,11 @@ function updateBalance(games: Array<Game>) {
         lowest!.textContent = `${Math.min(...balances)} R$`;
         balance!.textContent = `${balances.slice(-1)[0]} R$`;
     } else {
-        before!.textContent = `... R$`;
-        current!.textContent = `... R$`;
-        highest!.textContent = `... R$`;
-        lowest!.textContent = `... R$`;
-        balance!.textContent = `... R$`;
+        before!.textContent = "... R$";
+        current!.textContent = "... R$";
+        highest!.textContent = "... R$";
+        lowest!.textContent = "... R$";
+        balance!.textContent = "... R$";
     }
 
 }

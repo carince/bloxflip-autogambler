@@ -1,6 +1,6 @@
-import { Profile } from "@types";
+import { User } from "@types";
 
-async function updateProfile(profile: Profile) {
+async function updateProfile(profile: User) {
     const username = document.querySelector(".ProfileUsername");
     const headshot: HTMLImageElement | null = document.querySelector(".ProfileHeadshot");
 

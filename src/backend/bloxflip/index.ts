@@ -1,12 +1,15 @@
 import { USER_AGENT } from "@utils/constants.js";
+// @ts-ignore
 import { Manager } from "socket.io-client";
 import { Logger } from "@utils/logger.js";
 import { connectChatSocket } from "@bf/chat.js";
+import { connectWalletSocket } from "./wallet.js";
+import { connectCrashSocket } from "./crash/index.js";
 
 async function startManager() {
-    const manager = new Manager(`https://ws.bloxflip.com`, {
+    const manager = new Manager("https://ws.bloxflip.com", {
         autoConnect: false,
-        transports: ['websocket'],
+        transports: ["websocket"],
         reconnection: true,
         reconnectionAttempts: Infinity,
         reconnectionDelay: 1000,
@@ -26,12 +29,14 @@ async function startManager() {
 
     manager.open(async (err: any) => {
         if (err) {
-            Logger.error("BF/MANAGER", `Error connecting to WebSocket: \n${err}`)
+            Logger.error("BF/MANAGER", `Error connecting to WebSocket: \n${err}`);
         } else {
-            Logger.info("BF/MANAGER", `Connected to Bloxflip WebSocket.`)
+            Logger.info("BF/MANAGER", "Connected to Bloxflip WebSocket.");
             await connectChatSocket(manager);
+            await connectWalletSocket(manager);
+            await connectCrashSocket(manager);
         }
-    })
+    });
 }
 
-export { startManager }
+export { startManager };

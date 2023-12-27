@@ -74,28 +74,6 @@ try {
     process.exit(1);
 }
 
-/* UserScript 
-console.log("Building UserScript...");
-try {
-    const userScript = await rollup({
-        input: "./src/userScript/index.ts",
-        onwarn: () => { return; },
-        plugins
-    });
-
-    await userScript.write({
-        file: "./dist/userscript.js",
-        format: "cjs",
-        compact: true
-    });
-    await userScript.close();
-
-    console.log("Successfully built UserScript!");
-} catch (err) {
-    console.error(`Failed to build UserScript:\n ${err}`);
-}
-*/
-
 /* Analytics Page
 console.log("Building Analytics...");
 try {

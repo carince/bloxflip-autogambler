@@ -1,13 +1,3 @@
-export type UserApi = {
-    success: boolean
-    user: {
-        wallet: number
-        bonusWallet: number
-        robloxUsername: string
-        robloxId: number
-    }
-}
-
 export type Config = {
     auth: string;
     bet: {
@@ -26,15 +16,10 @@ export type Config = {
                 ping_id: string;
             }
         }
-    };
-    updater: {
-        check: boolean;
-        auto_update: boolean
     }
     debugging: {
-        headless: boolean;
+        quarterly_reports: boolean;
         verbose: boolean;
-        launch_options: string[];
     }
 }
 
@@ -43,12 +28,10 @@ export type LoggerOptions = {
     seperator?: boolean;
 }
 
-export type GitHubCommits = {
-    commits: Array<{
-        hash: string
-        author: string
-        message: string
-    }>
+export type Data = {
+    startupTime: number
+    games: Array<Game>
+    rains: Array<Rain>
 }
 
 export type Game = {
@@ -63,7 +46,8 @@ export type Rain = {
     time: number;
 }
 
-export type Profile = {
+export type User = {
     username: string,
     id: number,
+    balance: number
 }
