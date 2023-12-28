@@ -25,6 +25,8 @@ async function connectChatSocket(manager: any) {
     socket.on("rain-state-changed", async (data: any) => {
         if (!data.active) return;
 
+        analyticsData.rains.push({ host: data.host, prize: data.prize, time: new Date().getTime() });
+
         if (data.prize < config.rain.minimum) {
             return Logger.log("RAIN", `Rain detected!\nNot notifying cause it does not meet minimum\nRobux: ${data.prize} R$\nHost: ${data.host}\nTime Remaining: ${data.timeLeft / 60000} minute(s)`);
         }
@@ -36,11 +38,9 @@ async function connectChatSocket(manager: any) {
                     "content": `${config.rain.notifications.webhook.ping_id}\n# Bloxflip Rain Notifier\n**Prize: **${data.prize} R$\n**Host: **${data.host}\n**Time Remaining: **<t:${Math.ceil((new Date().getTime() + data.timeLeft) / 1000)}:R>`,
                 });
             } catch (err) {
-                return Logger.error("BF/RAIN", `Posting to webhook failed.\nError: ${err}`);
+                return Logger.error("WEBHOOK/RAIN", `Posting to webhook failed.\nError: ${err}`);
             }
         }
-
-        analyticsData.rains.push({ host: data.host, prize: data.prize, time: new Date().getTime() });
     });
 }
 

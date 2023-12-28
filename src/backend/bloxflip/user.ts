@@ -42,10 +42,10 @@ async function fetchUserData() {
         if (response.status >= 200 && response.status <= 299) {
             return response.data;
         } else {
-            return Logger.error("BF/USER", `Fetching user data failed.\nUnexpected response:\nCode: ${response.status}\nResponse: ${response.statusText}\nHeaders: ${JSON.stringify(response.headers, null, 4)}`);
+            return Logger.error("API/USER", `Fetching user data failed.\nUnexpected response:\nCode: ${response.status}\nResponse: ${response.statusText}\nHeaders: ${JSON.stringify(response.headers, null, 4)}`);
         }
     } catch (err) {
-        return Logger.error("BF/USER", `Fetching user data failed.\nError: ${err}`, { forceClose: true });
+        return Logger.error("API/USER", `Fetching user data failed.\nError: ${err}`, { forceClose: true });
     }
 }
 
