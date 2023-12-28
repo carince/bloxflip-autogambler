@@ -32,6 +32,7 @@ export type Data = {
     startupTime: number
     games: Array<Game>
     rains: Array<Rain>
+    latency: Array<number>
 }
 
 export type Game = {

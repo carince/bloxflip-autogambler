@@ -2,6 +2,7 @@ import axios from "axios";
 import { config } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
 import { analyticsData } from "@utils/analytics.js";
+import { socketDisconnectReasons } from "@utils/constants.js";
 
 async function connectChatSocket(manager: any) {
     if (!config.rain.enabled) return;
@@ -9,9 +10,17 @@ async function connectChatSocket(manager: any) {
     const socket = manager.socket("/chat");
 
     socket.on("connect", () => {
-        Logger.info("SOCKET/CHAT", "Successfully connected to chat namespace.");
+        Logger.info("SOCKET/CHAT", "Successfully connected to namespace.");
         socket.emit("auth", config.auth);
     }).open();
+
+    socket.on("reconnecting", (attempt: number) => {
+        Logger.warn("SOCKET/CHAT", `Attempting to reconnect to namespace, attempt #${attempt}`)
+    })
+
+    socket.on("disconnect", (reason: keyof typeof socketDisconnectReasons) => {
+        Logger.error("SOCKET/CHAT", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`)
+    })
 
     socket.on("rain-state-changed", async (data: any) => {
         if (!data.active) return;

@@ -4,6 +4,7 @@ import chalk from "chalk";
 import { calculateBet } from "./bet.js";
 import { analyticsData } from "@utils/analytics.js";
 import { user } from "@bf/user.js";
+import { socketDisconnectReasons } from "@utils/constants.js";
 
 interface gameInt {
     bet: number;
@@ -24,10 +25,19 @@ const game: gameInt = {
 async function connectCrashSocket(manager: any) {
     const socket = manager.socket("/crash").open();
 
-    socket.on("connect", () => {
-        Logger.info("SOCKET/CRASH", "Successfully connected to crash namespace.");
+    socket.on("connect", async () => {
+        Logger.info("SOCKET/CRASH", "Successfully connected to namespace.");
         socket.emit("auth", config.auth);
+        await calculateBet();
     });
+
+    socket.on("reconnecting", (attempt: number) => {
+        Logger.warn("SOCKET/CRASH", `Attempting to reconnect to namespace, attempt #${attempt}`)
+    })
+
+    socket.on("disconnect", (reason: keyof typeof socketDisconnectReasons) => {
+        Logger.error("SOCKET/CRASH", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`)
+    })
 
     // Unable to join due to expired/invalid token
     socket.on("notify-error", (data: string) => {
@@ -56,8 +66,6 @@ async function connectCrashSocket(manager: any) {
             "autoCashoutPoint": Math.trunc(config.bet.auto_cashout * 100),
             "betAmount": game.bet
         });
-
-        Logger.info("CRASH", "Game starting...");
     });
 
     // Check if we successfully joined
@@ -75,8 +83,6 @@ async function connectCrashSocket(manager: any) {
         if (!game.joined) {
             Logger.warn("CRASH", "Failed to join game, bet was not placed before game started.");
         }
-
-        Logger.info("CRASH", "Game started.");
         game.started = true;
     });
 
@@ -86,7 +92,6 @@ async function connectCrashSocket(manager: any) {
         game.started = false;
 
         if (!game.joined) {
-            game.bet = await calculateBet();
             return Logger.warn("CRASH", `Ignoring as we haven't joined this round: ${game.crash}x`);
         }
 
@@ -100,7 +105,6 @@ async function connectCrashSocket(manager: any) {
             game.bet = +(game.bet * 2).toFixed(2);
         }
 
-        Logger.info("CRASH", "Game ended.");
         game.joined = false;
     });
 }
