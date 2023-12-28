@@ -66,8 +66,6 @@ async function connectCrashSocket(manager: any) {
             "autoCashoutPoint": Math.trunc(config.bet.auto_cashout * 100),
             "betAmount": game.bet
         });
-
-        Logger.log("ASDLNKJNL:ASD", `${game.bet} R$`)
     });
 
     // Check if we successfully joined
