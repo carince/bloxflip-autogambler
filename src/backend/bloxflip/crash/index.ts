@@ -28,7 +28,7 @@ async function connectCrashSocket(manager: any) {
     socket.on("connect", async () => {
         Logger.info("SOCKET/CRASH", "Successfully connected to namespace.");
         socket.emit("auth", config.auth);
-        await calculateBet();
+        game.bet = await calculateBet();
     });
 
     socket.on("reconnecting", (attempt: number) => {
@@ -66,6 +66,8 @@ async function connectCrashSocket(manager: any) {
             "autoCashoutPoint": Math.trunc(config.bet.auto_cashout * 100),
             "betAmount": game.bet
         });
+
+        Logger.log("ASDLNKJNL:ASD", `${game.bet} R$`)
     });
 
     // Check if we successfully joined
