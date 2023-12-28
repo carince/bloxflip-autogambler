@@ -1,27 +1,35 @@
-import { Game, User, Rain } from "@types";
+import { Game, Rain, Config } from "@types";
 // @ts-ignore
-import io from "../../node_modules/socket.io/dist/socket.io.js";
+import io from "../../node_modules/socket.io-client/dist/socket.io.js";
 
+import { User as UserType, Data as DataType } from "@types";
+import { updateUser } from "./profile.js";
 import { updateCrash } from "./crash.js";
 import { updateBalance } from "./balance.js";
 import { updateRain } from "./rain.js";
-import { updateProfile } from "./profile.js";
+import { updateLatency } from "./latency.js";
 
 let games: Array<Game>;
 let rains: Array<Rain>;
+let config: { bet: Config['bet'], rain: { enabled: boolean, minimum: number } };
 let chart: any;
 
-async function fetchData() {
+async function startSocket() {
     const socket = io("http://localhost:6580", {
         transports: ["websocket"]
     });
 
-    socket.emit("join-analytics");
+    socket.on("initialization", (user: UserType, data: DataType, cfg: { bet: Config['bet'], rain: { enabled: boolean, minimum: number } }) => {
+        config = cfg
+        games = data.games
+        rains = data.rains
 
-    socket.emitWithAck("get-games").then((i: Array<Game>) => {
-        games = i;
-        
-        
+        updateUser(user)
+        updateCrash(games, config.bet.auto_cashout)
+        updateBalance(games)
+        updateRain(rains, cfg.rain)
+        updateLatency(data.latency)
+
         // @ts-ignore
         chart = new Chart(
             document.getElementById("BalGraph"),
@@ -38,34 +46,27 @@ async function fetchData() {
                 }
             }
         );
-
-        updateCrash(i);
-        updateBalance(i);
     });
 
-    socket.emitWithAck("get-rains").then((i: Array<Rain>) => {
-        rains = i;
-        updateRain(i);
-    });
+    socket.on("new-game", (data: Game) => {
+        games.push(data)
 
-    socket.emitWithAck("get-profile").then((i: User) => {
-        updateProfile(i);
-    });
-
-    socket.on("new-game", (i: Game) => {
-        games.push(i);
-        updateCrash(games);
-        updateBalance(games);
-
-        chart.data.labels = Array.from({length: games.length}, (_, i) => i + 1);
-        chart.data.datasets[0].data.push(i.balance);
+        chart.data.labels = Array.from({ length: games.length }, (_, i) => i + 1);
+        chart.data.datasets[0].data.push(data.balance);
         chart.update();
-    });
 
-    socket.on("new-rain", (i: Rain) => {
-        rains.push(i);
-        updateRain(rains);
-    });
+        updateCrash(games, config.bet.auto_cashout);
+        updateBalance(games);
+    })
+
+    socket.on("new-rain", (data: Rain) => {
+        rains.push(data)
+        updateRain(rains, config.rain)
+    })
+
+    socket.on("update-latency", (data: Array<number>) => {
+        updateLatency(data)
+    })
 }
 
-fetchData();
+startSocket();

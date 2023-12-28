@@ -1,6 +1,6 @@
 import { Game } from "@types";
 
-async function updateCrash(games: Array<Game>) {
+async function updateCrash(games: Array<Game>, auto_cashout: number) {
     const joined = document.querySelector(".GamesJoined");
     const won = document.querySelector(".GamesWon");
     const lost = document.querySelector(".GamesLost");
@@ -13,7 +13,7 @@ async function updateCrash(games: Array<Game>) {
         let wins = 0;
         let loss = 0;
         games.map(game => {
-            if (game["crash"] >= 2) {
+            if (game["crash"] >= auto_cashout) {
                 wins++;
             } else {
                 loss++;
@@ -25,16 +25,16 @@ async function updateCrash(games: Array<Game>) {
 
         const lossStreaks: Array<number> = [];
         let currentStreak = 0;
-        games.map(game => {
-            if (game["crash"] < 2) {
+        for (let i = 0; i < games.length; i++) {
+            if (games[i]["crash"] < auto_cashout) {
                 currentStreak++;
             } else {
-                if (currentStreak) {
+                if (currentStreak > 0) {
                     lossStreaks.push(currentStreak);
                 }
                 currentStreak = 0;
             }
-        });
+        }
 
         const max = Math.max(...lossStreaks);
         const maxMultiplier = lossStreaks.filter(num => num == max).length;
@@ -50,7 +50,7 @@ async function updateCrash(games: Array<Game>) {
         const tbody = document.createElement("tbody");
         recentGames.map(game => {
             const tr = document.createElement("tr");
-            tr.className = `bg-[rgba(${game["crash"] < 2 ? "255,0,0" : "0,255,0"},0.1)]`;
+            tr.className = `bg-[rgba(${game["crash"] <= auto_cashout ? "255,0,0" : "0,255,0"},0.25)]`;
             const status = tr.insertCell();
             status.textContent = game["crash"] < 2 ? "Lost" : "Won";
             status.className = "font-bold";

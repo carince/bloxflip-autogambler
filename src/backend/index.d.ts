@@ -18,7 +18,7 @@ export type Config = {
         }
     }
     debugging: {
-        quarterly_reports: boolean;
+        reports: boolean;
         verbose: boolean;
     }
 }

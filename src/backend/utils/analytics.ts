@@ -1,27 +1,58 @@
-import { Data } from "@types";
+import { Data, Game, Rain } from "@types";
 import { config as cfg } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
+import { io } from "@utils/server.js";
 
-const analyticsData: Data = {
-    startupTime: new Date().getTime(),
-    games: [],
-    rains: [],
-    latency: []
-};
+let analytics: AnalyticsClass;
 
-async function startReports() {
-    if (!cfg.debugging.quarterly_reports) return;
-    Logger.info("REPORTS", `Starting quarterly reports...\nCurrent Memory Usage: ${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`)
-    setInterval(() => {sendReport()}, 5 * 60 * 1000);
+class AnalyticsClass {
+    public data: Data
+
+    public async appendGame(game: Game) {
+        this.data.games.push(game)
+        io.emit("new-game", game)
+    }
+
+    public async appendRain(rain: Rain) {
+        this.data.rains.push(rain)
+        io.emit("new-rain", rain)
+    }
+
+    public async appendLatency(latency: number) {
+        const latencyArr = this.data.latency
+        if (latencyArr.length >= 10) {
+            latencyArr.shift();
+        }
+        latencyArr.push(latency)
+        io.emit("update-latency", latencyArr)
+    }
+    
+    private async sendReport() {
+        const timeDifference = new Date().getTime() - this.data.startupTime;
+        const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+    
+        const latency = this.data.latency.reduce((p, c) => p + c, 0) / this.data.latency.length
+        return Logger.info("DEBUG", `AutoCrash Report\nUptime: ${hours} hours, and ${minutes} minutes.\nMemory Usage: ${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB\nAverage Latency: ${latency}ms\nGames Recorded: ${this.data.games.length}\nRains Recorded: ${this.data.rains.length}`);
+    }
+
+    constructor() {
+        Logger.info("ANALYTICS", "Starting analytics...")
+        this.data = {
+            startupTime: new Date().getTime(),
+            games: [],
+            rains: [],
+            latency: []
+        }
+
+        if (!cfg.debugging.reports) return;
+        Logger.info("REPORTS", `Starting reports...`)
+        setInterval(() => { this.sendReport() }, 15 * 60 * 1000);
+    }
 }
 
-async function sendReport() {
-    const timeDifference = new Date().getTime() - analyticsData.startupTime;
-    const hours = Math.floor(timeDifference / (1000 * 60 * 60));
-    const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-
-    const latency = analyticsData.latency.reduce((p, c) => p + c, 0) / analyticsData.latency.length
-    return Logger.log("DEBUG", `Quarterly Reports\nUptime: ${hours} hours, and ${minutes} minutes.\nMemory Usage: ${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB\nAverage Latency: ${latency}ms\nGames Recorded: ${analyticsData.games.length}\nRains Recorded: ${analyticsData.rains.length}`);
+async function startAnalytics() {
+    analytics = new AnalyticsClass()
 }
 
-export { analyticsData, startReports };
+export { startAnalytics, analytics };

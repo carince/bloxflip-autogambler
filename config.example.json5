@@ -19,7 +19,7 @@
     },
     // For debugging purposes only, dont touch if you dont know what you are doing
     "debugging": {
-        "quarterly_reports": true,
+        "reports": true,
         "verbose": true
     }
 }

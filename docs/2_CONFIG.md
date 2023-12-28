@@ -23,6 +23,6 @@
 
     // For debugging purposes only dont touch if you dont know what you are doing
     debugging: {
-        quarterly_reports: Toggle quarterly reports.
+        quarterly_reports: Toggle reports.
         verbose: Toggle info logs.
     }

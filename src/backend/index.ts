@@ -2,7 +2,8 @@ import { Logger } from "@utils/logger.js";
 import { fetchConfig } from "@utils/config.js";
 import { startManager } from "@bf/index.js";
 import { checkAuth } from "@bf/user.js";
-import { startReports } from "@utils/analytics.js";
+import { startAnalytics } from "@utils/analytics.js";
+import { startServer } from "@utils/server.js";
 
 (async (): Promise<void> => {
     Logger.log("STARTUP", "Starting bloxflip-autocrash");
@@ -10,6 +11,8 @@ import { startReports } from "@utils/analytics.js";
 
     await fetchConfig();
     await checkAuth();
-    await startReports();
+    
+    await startServer();
+    await startAnalytics();
     await startManager();
 })();

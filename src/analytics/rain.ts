@@ -1,9 +1,14 @@
 import { Rain } from "@types";
 
-async function updateRain(rains: Array<Rain>) {
+async function updateRain(rains: Array<Rain>, cfg: { enabled: boolean, minimum: number }) {
+    const card = document.querySelector(".RainCard")
     const amount = document.querySelector(".RainsAmount");
     const prize = document.querySelector(".RainsPrize");
     const recent = document.querySelector(".RainsRecent");
+
+    if (!cfg.enabled) {
+        card!.className = `${card!.className} pointer-events-none opacity-25`
+    }
 
     amount!.textContent = `${rains.length}`;
 
@@ -23,6 +28,7 @@ async function updateRain(rains: Array<Rain>) {
     const tbody = document.createElement("tbody");
     recentRains.map(rain => {
         const tr = document.createElement("tr");
+        tr.className = `bg-[rgba(${rain["prize"] >= cfg.minimum ? "255,0,0" : "0,255,0"},0.25)]`;
         const host = tr.insertCell();
         host.textContent = rain.host;
         host.className = "font-bold";

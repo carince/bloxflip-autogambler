@@ -2,7 +2,7 @@ import { config } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
 import chalk from "chalk";
 import { calculateBet } from "./bet.js";
-import { analyticsData } from "@utils/analytics.js";
+import { analytics } from "@utils/analytics.js";
 import { user } from "@bf/user.js";
 import { socketDisconnectReasons } from "@utils/constants.js";
 
@@ -75,7 +75,6 @@ async function connectCrashSocket(manager: any) {
         }
 
         game.joined = true;
-        Logger.info("CRASH", "Joined game successfully");
     });
 
     // Game starting
@@ -110,14 +109,15 @@ async function connectCrashSocket(manager: any) {
 }
 
 async function logGame() {
-    analyticsData.games.push({ balance: user.balance, bet: game.bet, crash: game.crash });
+    analytics.appendGame({ balance: user.balance, bet: game.bet, crash: game.crash })
+
     if (game.crash >= config.bet.auto_cashout) {
-        const message = `Status: Won \nCrash Point: ${game.crash}x \nBet: ${game.bet} R$, Balance: ${user.balance} R$\nCount: #${analyticsData.games.length}`;
-        const seperator = "-".repeat(getLongestLine(message) - 6);
+        const message = `Game #${analytics.data.games.length}\nStatus: Won \nCrash Point: ${game.crash}x \nBet: ${game.bet} R$, Balance: ${user.balance} R$`;
+        const seperator = "-".repeat(getLongestLine(message) - 7);
 
         console.log(`${chalk.black.bgGreenBright(" GAME ")} ${chalk.greenBright(`${seperator}\n${message}`)}`);
     } else {
-        const message = `Status: Loss - #${game.lossStreak} \nCrash Point: ${game.crash}x \nBet: ${game.bet} R$, Balance: ${user.balance} R$\nCount: #${analyticsData.games.length}`;
+        const message = `Game #${analytics.data.games.length}\nStatus: Loss - #${game.lossStreak} \nCrash Point: ${game.crash}x \nBet: ${game.bet} R$, Balance: ${user.balance} R$`;
         const seperator = "-".repeat(getLongestLine(message) - 7);
 
         console.log(`${chalk.bgRedBright(" GAME ")} ${chalk.redBright(`${seperator}\n${message}`)}`);

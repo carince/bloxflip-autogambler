@@ -1,8 +1,4 @@
 {
-    "ts-node": {
-        "swc": true,
-        "esm": true
-    },
     "compilerOptions": {
         "strict": true,
         "outDir": "./dist",
@@ -27,14 +23,13 @@
         "allowJs": true,
         "paths": {
             "@utils/*": ["backend/utils/*"],
-            "@server/*": ["backend/server/*"],
             "@bf/*": ["backend/bloxflip/*"],
             "@types": ["backend/index.d.ts"]
             
         }
     },
     "include": [
-        "src/**/*"
+        "./src/**/*"
     ],
     "exclude": [
         "/.github",

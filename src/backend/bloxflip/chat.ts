@@ -1,7 +1,7 @@
 import axios from "axios";
 import { config } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
-import { analyticsData } from "@utils/analytics.js";
+import { analytics } from "@utils/analytics.js";
 import { socketDisconnectReasons } from "@utils/constants.js";
 
 async function connectChatSocket(manager: any) {
@@ -25,7 +25,7 @@ async function connectChatSocket(manager: any) {
     socket.on("rain-state-changed", async (data: any) => {
         if (!data.active) return;
 
-        analyticsData.rains.push({ host: data.host, prize: data.prize, time: new Date().getTime() });
+        analytics.appendRain({ host: data.host, prize: data.prize, time: new Date().getTime() })
 
         if (data.prize < config.rain.minimum) {
             return Logger.log("RAIN", `Rain detected!\nNot notifying cause it does not meet minimum\nRobux: ${data.prize} R$\nHost: ${data.host}\nTime Remaining: ${data.timeLeft / 60000} minute(s)`);
