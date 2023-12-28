@@ -11,7 +11,7 @@ const analyticsData: Data = {
 
 async function startReports() {
     if (!cfg.debugging.quarterly_reports) return;
-    Logger.info("REPORTS", `Starting quarterly reports...\nCurrent Memory Usage: ${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}`)
+    Logger.info("REPORTS", `Starting quarterly reports...\nCurrent Memory Usage: ${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`)
     setInterval(() => {sendReport()}, 5 * 60 * 1000);
 }
 

@@ -12,7 +12,7 @@ async function connectWalletSocket(manager: any) {
     });
 
     socket.on("reconnecting", (attempt: number) => {
-        Logger.warn("SOCKET/WALLET", `Attempting to reconnect to namespace, #${attempt}`)
+        Logger.warn("SOCKET/WALLET", `Attempting to reconnect to namespace, attempt #${attempt}`)
     })
 
     socket.on("disconnect", (reason: keyof typeof socketDisconnectReasons) => {
