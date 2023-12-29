@@ -40,8 +40,8 @@ async function startManager() {
     });
 
     manager.on("pong", (ms: number) => {
-        analytics.appendLatency(ms)
-    })
+        analytics.appendLatency(ms);
+    });
 }
 
 export { startManager };

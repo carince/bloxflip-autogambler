@@ -10,4 +10,4 @@ export const socketDisconnectReasons = {
     "ping timeout": "Server did not respond within ping range.",
     "transport close": "Connection was closed.",
     "transport error": "Connection encountered an error."
-}
+};

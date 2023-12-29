@@ -12,12 +12,12 @@ async function connectWalletSocket(manager: any) {
     });
 
     socket.on("reconnecting", (attempt: number) => {
-        Logger.warn("SOCKET/WALLET", `Attempting to reconnect to namespace, attempt #${attempt}`)
-    })
+        Logger.warn("SOCKET/WALLET", `Attempting to reconnect to namespace, attempt #${attempt}`);
+    });
 
     socket.on("disconnect", (reason: keyof typeof socketDisconnectReasons) => {
-        Logger.error("SOCKET/WALLET", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`)
-    })
+        Logger.error("SOCKET/WALLET", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`);
+    });
 
     socket.on("update-wallet", (data: any) => {
         user.balance = +(user.balance + data).toFixed(2);

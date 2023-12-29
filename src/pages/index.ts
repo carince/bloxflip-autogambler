@@ -11,7 +11,7 @@ import { updateLatency } from "./latency.js";
 
 let games: Array<Game>;
 let rains: Array<Rain>;
-let config: { bet: Config['bet'], rain: { enabled: boolean, minimum: number } };
+let config: { bet: Config["bet"], rain: { enabled: boolean, minimum: number } };
 let chart: any;
 
 async function startSocket() {
@@ -19,16 +19,16 @@ async function startSocket() {
         transports: ["websocket"]
     });
 
-    socket.on("initialization", (user: UserType, data: DataType, cfg: { bet: Config['bet'], rain: { enabled: boolean, minimum: number } }) => {
-        config = cfg
-        games = data.games
-        rains = data.rains
+    socket.on("initialization", (user: UserType, data: DataType, cfg: { bet: Config["bet"], rain: { enabled: boolean, minimum: number } }) => {
+        config = cfg;
+        games = data.games;
+        rains = data.rains;
 
-        updateUser(user)
-        updateCrash(games, config.bet.auto_cashout)
-        updateBalance(games)
-        updateRain(rains, cfg.rain)
-        updateLatency(data.latency)
+        updateUser(user);
+        updateCrash(games, config.bet.auto_cashout);
+        updateBalance(games);
+        updateRain(rains, cfg.rain);
+        updateLatency(data.latency);
 
         // @ts-ignore
         chart = new Chart(
@@ -49,7 +49,7 @@ async function startSocket() {
     });
 
     socket.on("new-game", (data: Game) => {
-        games.push(data)
+        games.push(data);
 
         chart.data.labels = Array.from({ length: games.length }, (_, i) => i + 1);
         chart.data.datasets[0].data.push(data.balance);
@@ -57,16 +57,16 @@ async function startSocket() {
 
         updateCrash(games, config.bet.auto_cashout);
         updateBalance(games);
-    })
+    });
 
     socket.on("new-rain", (data: Rain) => {
-        rains.push(data)
-        updateRain(rains, config.rain)
-    })
+        rains.push(data);
+        updateRain(rains, config.rain);
+    });
 
     socket.on("update-latency", (data: Array<number>) => {
-        updateLatency(data)
-    })
+        updateLatency(data);
+    });
 }
 
 startSocket();

@@ -1,13 +1,13 @@
 import { Rain } from "@types";
 
 async function updateRain(rains: Array<Rain>, cfg: { enabled: boolean, minimum: number }) {
-    const card = document.querySelector(".RainCard")
+    const card = document.querySelector(".RainCard");
     const amount = document.querySelector(".RainsAmount");
     const prize = document.querySelector(".RainsPrize");
     const recent = document.querySelector(".RainsRecent");
 
     if (!cfg.enabled) {
-        card!.className = `${card!.className} pointer-events-none opacity-25`
+        card!.className = `${card!.className} pointer-events-none opacity-25`;
     }
 
     amount!.textContent = `${rains.length}`;

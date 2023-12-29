@@ -1,8 +1,8 @@
 
 // @ts-ignore
-import Server from "socket.io"
+import Server from "socket.io";
 import express from "express";
-import http from "http"
+import http from "http";
 
 import { user } from "@bf/user.js";
 import { analytics } from "@utils/analytics.js";
@@ -17,21 +17,21 @@ let io: any;
 async function startServer() {
     const app = express();
     const server = http.createServer(app);
-    io = new Server(server)
+    io = new Server(server);
 
     app.use(express.json());
-    app.use("/public", express.static(join(__dirname, "pages", "public")))
+    app.use("/public", express.static(join(__dirname, "pages", "public")));
 
     server.listen(6580, "0.0.0.0", () => {
         Logger.info("SERVER", "Successfully started analytics server, listening on port 6580.");
-    })
+    });
 
     app.get("/", (req, res) => {
         res.sendFile(join(__dirname, "pages", "index.html"));
-    })
+    });
 
     io.on("connection", (socket: any) => {
-        Logger.info("SERVER/WS", `${socket.id} connected.`)
+        Logger.info("SERVER/WS", `${socket.id} connected.`);
         socket.emit(
             "initialization",
             user,
@@ -43,8 +43,8 @@ async function startServer() {
                     minimum: config.rain.minimum
                 }
             }
-        )
-    })
+        );
+    });
 }
 
-export { startServer, io }
+export { startServer, io };

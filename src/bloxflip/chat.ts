@@ -15,17 +15,17 @@ async function connectChatSocket(manager: any) {
     }).open();
 
     socket.on("reconnecting", (attempt: number) => {
-        Logger.warn("SOCKET/CHAT", `Attempting to reconnect to namespace, attempt #${attempt}`)
-    })
+        Logger.warn("SOCKET/CHAT", `Attempting to reconnect to namespace, attempt #${attempt}`);
+    });
 
     socket.on("disconnect", (reason: keyof typeof socketDisconnectReasons) => {
-        Logger.error("SOCKET/CHAT", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`)
-    })
+        Logger.error("SOCKET/CHAT", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`);
+    });
 
     socket.on("rain-state-changed", async (data: any) => {
         if (!data.active) return;
 
-        analytics.appendRain({ host: data.host, prize: data.prize, time: new Date().getTime() })
+        analytics.appendRain({ host: data.host, prize: data.prize, time: new Date().getTime() });
 
         if (data.prize < config.rain.minimum) {
             return Logger.log("RAIN", `Rain detected!\nNot notifying cause it does not meet minimum\nRobux: ${data.prize} R$\nHost: ${data.host}\nTime Remaining: ${data.timeLeft / 60000} minute(s)`);

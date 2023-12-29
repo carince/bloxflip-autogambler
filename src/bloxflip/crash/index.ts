@@ -32,12 +32,12 @@ async function connectCrashSocket(manager: any) {
     });
 
     socket.on("reconnecting", (attempt: number) => {
-        Logger.warn("SOCKET/CRASH", `Attempting to reconnect to namespace, attempt #${attempt}`)
-    })
+        Logger.warn("SOCKET/CRASH", `Attempting to reconnect to namespace, attempt #${attempt}`);
+    });
 
     socket.on("disconnect", (reason: keyof typeof socketDisconnectReasons) => {
-        Logger.error("SOCKET/CRASH", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`)
-    })
+        Logger.error("SOCKET/CRASH", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`);
+    });
 
     // Unable to join due to expired/invalid token
     socket.on("notify-error", (data: string) => {
@@ -109,7 +109,7 @@ async function connectCrashSocket(manager: any) {
 }
 
 async function logGame() {
-    analytics.appendGame({ balance: user.balance, bet: game.bet, crash: game.crash })
+    analytics.appendGame({ balance: user.balance, bet: game.bet, crash: game.crash });
 
     if (game.crash >= config.bet.auto_cashout) {
         const message = `Game #${analytics.data.games.length}\nStatus: Won \nCrash Point: ${game.crash}x \nBet: ${game.bet} R$, Balance: ${user.balance} R$`;
