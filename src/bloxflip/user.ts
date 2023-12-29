@@ -7,7 +7,7 @@ import { User } from "@types";
 
 let user: User;
 
-async function checkAuth() {
+async function updateUser() {
     const data: any = await fetchUserData();
     if (!data.success) return Logger.error("BF/USER", "Invalid auth token.");
 
@@ -18,15 +18,16 @@ async function checkAuth() {
         return Logger.error("USER", "Tries in config is too high causing the bet to be 0", { forceClose: true });
     }
 
-    Logger.log("USER",
-        `${chalk.bold("Successfully logged in!")}\nUsername: ${data!.user.robloxUsername}\nID: ${data!.user.robloxId}\nBalance: ${wallet} R$`
-    );
-
     user = {
         username: data!.user.robloxUsername,
         id: data!.user.robloxId,
         balance: wallet
     };
+
+
+    Logger.log("USER",
+        `${chalk.bold("Successfully logged in!")}\nUsername: ${user.username}\nID: ${user.id}\nBalance: ${wallet} R$`
+    );
 }
 
 async function fetchUserData() {
@@ -42,11 +43,11 @@ async function fetchUserData() {
         if (response.status >= 200 && response.status <= 299) {
             return response.data;
         } else {
-            return Logger.error("API/USER", `Fetching user data failed.\nUnexpected response:\nCode: ${response.status}\nResponse: ${response.statusText}\nHeaders: ${JSON.stringify(response.headers, null, 4)}`);
+            return Logger.error("API/USER", `Fetching user data failed.\nUnexpected response:\nCode: ${response.status}\nResponse: ${response.statusText}\nHeaders: ${JSON.stringify(response.headers, null, 4)}`, { forceClose: true });
         }
     } catch (err) {
         return Logger.error("API/USER", `Fetching user data failed.\nError: ${err}`, { forceClose: true });
     }
 }
 
-export { checkAuth, fetchUserData, user };
+export { updateUser, fetchUserData, user };
