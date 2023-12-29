@@ -28,7 +28,7 @@ async function updateRain(rains: Array<Rain>, cfg: { enabled: boolean, minimum: 
     const tbody = document.createElement("tbody");
     recentRains.map(rain => {
         const tr = document.createElement("tr");
-        tr.className = `bg-[rgba(${rain["prize"] >= cfg.minimum ? "255,0,0" : "0,255,0"},0.25)]`;
+        tr.className = `bg-[rgba(${rain["prize"] <= cfg.minimum ? "255,0,0" : "0,255,0"},0.25)]`;
         const host = tr.insertCell();
         host.textContent = rain.host;
         host.className = "font-bold";
