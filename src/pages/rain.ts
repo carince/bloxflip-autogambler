@@ -2,12 +2,14 @@ import { Rain } from "@types";
 
 async function updateRain(rains: Array<Rain>, cfg: { enabled: boolean, minimum: number }) {
     const card = document.querySelector(".RainCard");
+    const title = document.querySelector(".RainTitle");
     const amount = document.querySelector(".RainsAmount");
     const prize = document.querySelector(".RainsPrize");
     const recent = document.querySelector(".RainsRecent");
 
     if (!cfg.enabled) {
         card!.className = `${card!.className} pointer-events-none opacity-25`;
+        title!.textContent = `Rain (disabled by config)`
     }
 
     amount!.textContent = `${rains.length}`;
