@@ -32,7 +32,7 @@ class AnalyticsClass {
         const hours = Math.floor(timeDifference / (1000 * 60 * 60));
         const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
     
-        const latency = this.data.latency.reduce((p, c) => p + c, 0) / this.data.latency.length;
+        const latency = (this.data.latency.reduce((p, c) => p + c, 0) / this.data.latency.length).toFixed(2);
         return Logger.info("DEBUG", `AutoCrash Report\nUptime: ${hours} hours, and ${minutes} minutes.\nMemory Usage: ${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB\nAverage Latency: ${latency}ms\nGames Recorded: ${this.data.games.length}\nRains Recorded: ${this.data.rains.length}`);
     }
 
