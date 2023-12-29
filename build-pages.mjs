@@ -52,7 +52,7 @@ if (exists("./src/analytics/public")) {
 console.log("Building Analytics...");
 try {
     const analytics = await rollup({
-        input: "./src/analytics/index.ts",
+        input: "./src/pages/index.ts",
         onwarn: () => { return; },
         plugins
     });

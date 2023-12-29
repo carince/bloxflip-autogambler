@@ -22,9 +22,9 @@
         "isolatedModules": true,
         "allowJs": true,
         "paths": {
-            "@utils/*": ["backend/utils/*"],
-            "@bf/*": ["backend/bloxflip/*"],
-            "@types": ["backend/index.d.ts"]
+            "@utils/*": ["utils/*"],
+            "@bf/*": ["bloxflip/*"],
+            "@types": ["index.d.ts"]
             
         }
     },

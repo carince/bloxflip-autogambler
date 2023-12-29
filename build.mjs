@@ -41,11 +41,11 @@ await mkdir("./dist/pages");
 await mkdir("./dist/pages/public");
 
 // Copy static files for analytics page.
-await copyFile("./src/analytics/index.html", "./dist/pages/index.html");
+await copyFile("./src/pages/index.html", "./dist/pages/index.html");
 
-if (exists("./src/analytics/public")) {
-    for (const file of await readdir("./src/analytics/public")) {
-        copyFile(`./src/analytics/public/${file}`, `./dist/pages/public/${file}`);
+if (exists("./src/pages/public")) {
+    for (const file of await readdir("./src/pages/public")) {
+        copyFile(`./src/pages/public/${file}`, `./dist/pages/public/${file}`);
     }
 }
 
@@ -53,7 +53,7 @@ if (exists("./src/analytics/public")) {
 console.log("Building Backend...");
 try {
     const backend = await rollup({
-        input: "./src/backend/index.ts",
+        input: "./src/index.ts",
         onwarn: () => { return; },
         plugins
     });
@@ -76,7 +76,7 @@ console.log("Building Analytics...");
 try {
     plugins.unshift(cjs())
     const analytics = await rollup({
-        input: "./src/analytics/index.ts",
+        input: "./src/pages/index.ts",
         onwarn: () => { return; },
         plugins
     });
