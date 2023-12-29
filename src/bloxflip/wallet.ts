@@ -1,6 +1,6 @@
 import { config } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
-import { fetchUserData, updateUser, user } from "@bf/user.js";
+import { fetchUserData, user } from "@bf/user.js";
 import { socketDisconnectReasons } from "@utils/constants.js";
 
 async function connectWalletSocket(manager: any) {
