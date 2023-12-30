@@ -14,10 +14,6 @@ async function connectChatSocket(manager: any) {
         socket.emit("auth", config.auth);
     }).open();
 
-    socket.on("reconnecting", (attempt: number) => {
-        Logger.warn("SOCKET/CHAT", `Attempting to reconnect to namespace, attempt #${attempt}`);
-    });
-
     socket.on("disconnect", (reason: keyof typeof socketDisconnectReasons) => {
         Logger.error("SOCKET/CHAT", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`);
     });

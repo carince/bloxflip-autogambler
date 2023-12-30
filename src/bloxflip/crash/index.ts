@@ -31,13 +31,14 @@ async function connectCrashSocket(manager: any) {
         game.bet = await calculateBet();
     });
 
-    socket.on("reconnecting", (attempt: number) => {
-        Logger.warn("SOCKET/CRASH", `Attempting to reconnect to namespace, attempt #${attempt}`);
-    });
-
     socket.on("disconnect", (reason: keyof typeof socketDisconnectReasons) => {
+        analytics.appendLatency(-1)
         Logger.error("SOCKET/CRASH", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`);
     });
+
+    socket.on("pong", (ms: number) => {
+        analytics.appendLatency(ms)
+    })
 
     // Unable to join due to expired/invalid token
     socket.on("notify-error", (data: string) => {

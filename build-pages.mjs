@@ -40,11 +40,10 @@ await mkdir("./dist/pages");
 await mkdir("./dist/pages/public");
 
 // Copy static files for analytics page.
-await copyFile("./src/analytics/index.html", "./dist/pages/index.html");
-
-if (exists("./src/analytics/public")) {
-    for (const file of await readdir("./src/analytics/public")) {
-        copyFile(`./src/analytics/public/${file}`, `./dist/pages/public/${file}`);
+await copyFile("./src/pages/index.html", "./dist/pages/index.html");
+if (exists("./src/pages/public")) {
+    for (const file of await readdir("./src/pages/public")) {
+        copyFile(`./src/pages/public/${file}`, `./dist/pages/public/${file}`);
     }
 }
 

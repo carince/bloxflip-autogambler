@@ -5,7 +5,6 @@ import { Logger } from "@utils/logger.js";
 import { connectChatSocket } from "@bf/chat.js";
 import { connectWalletSocket } from "./wallet.js";
 import { connectCrashSocket } from "./crash/index.js";
-import { analytics } from "@utils/analytics.js";
 
 async function startManager() {
     const manager = new Manager("https://ws.bloxflip.com", {
@@ -37,10 +36,6 @@ async function startManager() {
             await connectWalletSocket(manager);
             await connectCrashSocket(manager);
         }
-    });
-
-    manager.on("pong", (ms: number) => {
-        analytics.appendLatency(ms);
     });
 }
 

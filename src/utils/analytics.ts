@@ -21,9 +21,9 @@ class AnalyticsClass {
     public async appendLatency(latency: number) {
         const latencyArr = this.data.latency;
         if (latencyArr.length >= 10) {
-            latencyArr.shift();
+            latencyArr.pop();
         }
-        latencyArr.push(latency);
+        latencyArr.unshift(latency);
         io.emit("update-latency", latencyArr);
     }
     
