@@ -15,7 +15,7 @@ let config: { bet: Config["bet"], rain: { enabled: boolean, minimum: number } };
 let chart: any;
 
 async function startSocket() {
-    const socket = io("http://localhost:6580", {
+    const socket = io({
         transports: ["websocket"]
     });
 
