@@ -7,7 +7,7 @@ async function connectWalletSocket(manager: any) {
     const socket = manager.socket("/wallet").open();
 
     socket.on("connect", async () => {
-        const res = await fetchUserData()
+        const res = await fetchUserData();
         const wallet = +(+res!.user.wallet.toFixed(2) + +res!.user.bonusWallet.toFixed(2)).toFixed(2);
         user.balance = wallet;
 

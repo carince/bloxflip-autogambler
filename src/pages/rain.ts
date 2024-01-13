@@ -9,8 +9,8 @@ async function updateRain(rains: Array<Rain>, cfg: { enabled: boolean, minimum: 
 
     if (!cfg.enabled) {
         card!.className = `${card!.className} pointer-events-none opacity-25`;
-        title!.textContent = `Rain (disabled by config)`
-        return
+        title!.textContent = "Rain (disabled by config)";
+        return;
     }
 
     amount!.textContent = `${rains.length}`;

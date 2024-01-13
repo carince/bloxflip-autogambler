@@ -32,13 +32,13 @@ async function connectCrashSocket(manager: any) {
     });
 
     socket.on("disconnect", (reason: keyof typeof socketDisconnectReasons) => {
-        analytics.appendLatency(-1)
+        analytics.appendLatency(-1);
         Logger.error("SOCKET/CRASH", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`);
     });
 
     socket.on("pong", (ms: number) => {
-        analytics.appendLatency(ms)
-    })
+        analytics.appendLatency(ms);
+    });
 
     // Unable to join due to expired/invalid token
     socket.on("notify-error", (data: string) => {
