@@ -102,7 +102,7 @@ async function connectCrashSocket(manager: any) {
         } else {
             game.lossStreak = game.lossStreak + 1;
             logGame();
-            game.bet = +(game.bet * config.bet.auto_cashout).toFixed(2);
+            game.bet = +(game.bet * 2).toFixed(2);
         }
 
         game.joined = false;
