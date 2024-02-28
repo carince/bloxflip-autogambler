@@ -17,14 +17,9 @@
             }
         }
     },
-    "updater": {
-        "check": false,
-        "auto_update": false
-    },
     // For debugging purposes only, dont touch if you dont know what you are doing
     "debugging": {
-        "headless": true,
-        "verbose": true,
-        "launch_options": ["--start-maximized", "--single-process"]
+        "reports": true,
+        "verbose": true
     }
 }
