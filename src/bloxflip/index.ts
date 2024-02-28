@@ -3,8 +3,10 @@ import { USER_AGENT } from "@utils/constants.js";
 import { Manager } from "socket.io-client";
 import { Logger } from "@utils/logger.js";
 import { connectChatSocket } from "@bf/chat.js";
-import { connectWalletSocket } from "./wallet.js";
-import { connectCrashSocket } from "./crash/index.js";
+import { connectWalletSocket } from "@bf/wallet.js";
+import { connectCrashSocket } from "@bf/crash/index.js";
+import { connectRouletteSocket } from "@bf/roulette/index.js";
+import { config } from "@utils/config.js";
 
 async function startManager() {
     const manager = new Manager("https://ws.bloxflip.com", {
@@ -32,9 +34,13 @@ async function startManager() {
             Logger.error("BF/MANAGER", `Error connecting to WebSocket: \n${err}`);
         } else {
             Logger.info("BF/MANAGER", "Connected to Bloxflip WebSocket.");
-            await connectChatSocket(manager);
+            if (config.rain.enabled) { await connectChatSocket(manager) };
             await connectWalletSocket(manager);
-            await connectCrashSocket(manager);
+            if (config.bet.game === "crash") {
+                await connectCrashSocket(manager);
+            } else {
+                await connectRouletteSocket(manager);
+            }
         }
     });
 }

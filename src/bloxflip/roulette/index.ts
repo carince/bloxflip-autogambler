@@ -11,29 +11,29 @@ interface gameInt {
     joined: boolean;
     started: boolean;
     lossStreak: number;
-    crash: number;
+    color: "yellow" | "purple" | "red";
 }
 
 const game: gameInt = {
     bet: 0,
     joined: false,
     started: false,
-    crash: 0,
+    color: "purple",
     lossStreak: 0,
 };
 
-async function connectCrashSocket(manager: any) {
-    const socket = manager.socket("/crash").open();
+async function connectRouletteSocket(manager: any) {
+    const socket = manager.socket("/rouletteV2").open();
 
     socket.on("connect", async () => {
-        Logger.info("SOCKET/CRASH", "Successfully connected to namespace.");
+        Logger.info("SOCKET/ROULETTE", "Successfully connected to namespace.");
         socket.emit("auth", config.auth);
         game.bet = await calculateBet();
     });
 
     socket.on("disconnect", (reason: keyof typeof socketDisconnectReasons) => {
         analytics.appendLatency(-1);
-        Logger.error("SOCKET/CRASH", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`);
+        Logger.error("SOCKET/ROULETTE", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`);
     });
 
     socket.on("pong", (ms: number) => {
@@ -43,13 +43,13 @@ async function connectCrashSocket(manager: any) {
     // Unable to join due to expired/invalid token
     socket.on("notify-error", (data: string) => {
         if (data === "Your session has expired, please refresh your page!") {
-            return Logger.error("CRASH", "Token is either expired or invalid, try taking your auth token again after relogging into Bloxflip", { forceClose: true });
+            return Logger.error("ROULETTE", "Token is either expired or invalid, try taking your auth token again after relogging into Bloxflip", { forceClose: true });
         }
     });
 
     // Game Intermission before it starts
-    socket.on("game-starting", () => {
-        if (game.bet === 0) return;
+    socket.on("new-round", () => {
+        if (game.bet < 1) return;
 
         if (game.started) {
             return Logger.warn("BET", "Cannot place bet, game has already started.");
@@ -60,19 +60,19 @@ async function connectCrashSocket(manager: any) {
         }
 
         if (game.bet > user.balance) {
-            Logger.error("CRASH", `WIPED. \nBet: ${game.bet} \nBalance: ${user.balance} \nLoss Streak: ${game.lossStreak}`, { forceClose: true });
+            Logger.error("ROULETTE", `WIPED. \nBet: ${game.bet} \nBalance: ${user.balance} \nLoss Streak: ${game.lossStreak}`, { forceClose: true });
         }
 
         socket.emit("join-game", {
-            "autoCashoutPoint": Math.trunc(config.bet.crash_auto_cashout * 100),
-            "betAmount": game.bet
+            "color": config.bet.roulette_color,
+            "betAmount": +(game.bet).toFixed(0)
         });
     });
 
     // Check if we successfully joined
     socket.on("game-join-success", () => {
         if (game.joined) {
-            return Logger.warn("CRASH", "Why did we try to join again when we are already in? (my code is shit)");
+            return Logger.warn("ROULETTE", "Why did we try to join again when we are already in? (my code is shit)");
         }
 
         game.joined = true;
@@ -81,21 +81,21 @@ async function connectCrashSocket(manager: any) {
     // Game starting
     socket.on("eos-commit", () => {
         if (!game.joined) {
-            Logger.warn("CRASH", "Failed to join game, bet was not placed before game started.");
+            Logger.warn("ROULETTE", "Failed to join game, bet was not placed before game started.");
         }
         game.started = true;
     });
 
     // Game end
-    socket.on("game-end", async (data: { crashPoint: number }) => {
-        game.crash = data.crashPoint;
+    socket.on("game-rolled", async (data: { winningColor: "yellow" | "purple" | "red" }) => {
+        game.color = data.winningColor;
         game.started = false;
 
         if (!game.joined) {
-            return Logger.warn("CRASH", `Ignoring as we haven't joined this round: ${game.crash}x`);
+            return Logger.warn("ROULETTE", `Ignoring as we haven't joined this round: ${game.color}x`);
         }
 
-        if (game.crash >= config.bet.crash_auto_cashout) {
+        if (game.color === config.bet.roulette_color) {
             game.lossStreak = 0;
             logGame();
             game.bet = await calculateBet();
@@ -110,15 +110,15 @@ async function connectCrashSocket(manager: any) {
 }
 
 async function logGame() {
-    analytics.appendGame({ balance: user.balance, bet: game.bet, crash: game.crash });
+    // analytics.appendGame({ balance: user.balance, bet: game.bet, crash: game.color });
 
-    if (game.crash >= config.bet.crash_auto_cashout) {
-        const message = `Game #${analytics.data.games.length}\nStatus: Won \nCrash Point: ${game.crash}x \nBet: ${game.bet} R$, Balance: ${user.balance} R$`;
+    if (game.color === config.bet.roulette_color) {
+        const message = `Game #${analytics.data.games.length}\nStatus: Won \nColor: ${game.color} \nBet: ${game.bet} R$, Balance: ${user.balance} R$`;
         const seperator = "-".repeat(getLongestLine(message) - 7);
 
         console.log(`${chalk.black.bgGreenBright(" GAME ")} ${chalk.greenBright(`${seperator}\n${message}`)}`);
     } else {
-        const message = `Game #${analytics.data.games.length}\nStatus: Loss - #${game.lossStreak} \nCrash Point: ${game.crash}x \nBet: ${game.bet} R$, Balance: ${user.balance} R$`;
+        const message = `Game #${analytics.data.games.length}\nStatus: Loss - #${game.lossStreak} \nColor: ${game.color} \nBet: ${game.bet} R$, Balance: ${user.balance} R$`;
         const seperator = "-".repeat(getLongestLine(message) - 7);
 
         console.log(`${chalk.bgRedBright(" GAME ")} ${chalk.redBright(`${seperator}\n${message}`)}`);
@@ -130,4 +130,4 @@ function getLongestLine(string: string): number {
     return Math.max(...(lines.map(line => line.length)));
 }
 
-export { connectCrashSocket };
+export { connectRouletteSocket };
