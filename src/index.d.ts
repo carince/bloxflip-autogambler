@@ -1,9 +1,11 @@
 export type Config = {
     auth: string;
     bet: {
+        game: "crash" | "roulette";
         tries: number;
         starting_bet: number;
-        auto_cashout: number;
+        crash_auto_cashout: number;
+        roulette_color: "yellow" | "purple" | "red";
     }
     rain: {
         enabled: boolean;

@@ -1,9 +1,11 @@
 {
     "auth": "",
     "bet": {
+        "game": "",
         "tries": 12,
         "starting_bet": 0,
-        "auto_cashout": 2
+        "crash_auto_cashout": 2,
+        "roulette_color": ""
     },
     "rain": {
         "enabled": true,

@@ -5,8 +5,6 @@ import { analytics } from "@utils/analytics.js";
 import { socketDisconnectReasons } from "@utils/constants.js";
 
 async function connectChatSocket(manager: any) {
-    if (!config.rain.enabled) return;
-
     const socket = manager.socket("/chat");
 
     socket.on("connect", () => {

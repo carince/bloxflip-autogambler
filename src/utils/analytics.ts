@@ -8,9 +8,9 @@ let analytics: AnalyticsClass;
 class AnalyticsClass {
     public data: Data;
 
-    public async appendGame(game: Game) {
-        this.data.games.push(game);
-        io.emit("new-game", game);
+    public async appendGame(data: Game) {
+        this.data.games.push(data);
+        io.emit("new-game", data);
     }
 
     public async appendRain(rain: Rain) {
