@@ -1,4 +1,4 @@
-import { Data, Game, Rain } from "@types";
+import { Game, Data, Rain } from "@types";
 import { config as cfg } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
 import { io } from "@utils/server.js";
@@ -47,7 +47,7 @@ class AnalyticsClass {
 
         if (!cfg.debugging.reports) return;
         Logger.info("REPORTS", "Starting reports...");
-        setInterval(() => { this.sendReport(); }, 15 * 60 * 1000);
+        setInterval(() => { this.sendReport(); }, 30 * 60 * 1000);
     }
 }
 

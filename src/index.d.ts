@@ -1,10 +1,10 @@
-export type Config = {
+export interface Config {
     auth: string;
     bet: {
         game: "crash" | "roulette";
         tries: number;
         starting_bet: number;
-        crash_auto_cashout: number;
+        crash_autocashout: number;
         roulette_color: "yellow" | "purple" | "red";
     }
     rain: {
@@ -25,31 +25,33 @@ export type Config = {
     }
 }
 
-export type LoggerOptions = {
+export interface LoggerOptions {
     customColor?: number;
     seperator?: boolean;
 }
 
-export type Data = {
+export interface Data {
     startupTime: number
-    games: Array<Game>
+    games: Array<CrashGame | RouletteGame>
     rains: Array<Rain>
     latency: Array<number>
 }
 
-export type Game = {
-    crash: number;
+
+export interface Game {
     bet: number;
     balance: number;
+    crash?: number;
+    color?: "red" | "purple" | "yellow";
 }
 
-export type Rain = {
+export interface Rain {
     prize: number;
     host: string;
     time: number;
 }
 
-export type User = {
+export interface User {
     username: string,
     id: number,
     balance: number

@@ -63,6 +63,7 @@ async function connectRouletteSocket(manager: any) {
             Logger.error("ROULETTE", `WIPED. \nBet: ${game.bet} \nBalance: ${user.balance} \nLoss Streak: ${game.lossStreak}`, { forceClose: true });
         }
 
+        game.joined = true;
         socket.emit("join-game", {
             "color": config.bet.roulette_color,
             "betAmount": +(game.bet).toFixed(0)
@@ -92,7 +93,7 @@ async function connectRouletteSocket(manager: any) {
         game.started = false;
 
         if (!game.joined) {
-            return Logger.warn("ROULETTE", `Ignoring as we haven't joined this round: ${game.color}x`);
+            return Logger.warn("ROULETTE", `Ignoring as we haven't joined this round: ${game.color}`);
         }
 
         if (game.color === config.bet.roulette_color) {
@@ -110,7 +111,7 @@ async function connectRouletteSocket(manager: any) {
 }
 
 async function logGame() {
-    // analytics.appendGame({ balance: user.balance, bet: game.bet, crash: game.color });
+    analytics.appendGame({ balance: user.balance, bet: game.bet, color: game.color });
 
     if (game.color === config.bet.roulette_color) {
         const message = `Game #${analytics.data.games.length}\nStatus: Won \nColor: ${game.color} \nBet: ${game.bet} R$, Balance: ${user.balance} R$`;
