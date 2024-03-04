@@ -3,7 +3,7 @@ import { config } from "@utils/config.js";
 
 async function calculateBet() {
     let bet: number;
-    let dividend: number = config.bet.game === "crash" ? config.bet.crash_auto_cashout : 2
+    const dividend: number = config.bet.game === "crash" ? config.bet.crash_autocashout : 2;
     if (config.bet.starting_bet) {
         bet = config.bet.starting_bet;
     } else {

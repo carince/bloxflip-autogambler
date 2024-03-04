@@ -1,10 +1,10 @@
-import { Game, Rain, Config } from "@types";
+import { Game, Rain, Config} from "@types";
 // @ts-ignore
 import io from "../../node_modules/socket.io-client/dist/socket.io.js";
 
 import { User as UserType, Data as DataType } from "@types";
 import { updateUser } from "./profile.js";
-import { updateCrash } from "./crash.js";
+import { updateGames } from "./games.js";
 import { updateBalance } from "./balance.js";
 import { updateRain } from "./rain.js";
 import { updateLatency } from "./latency.js";
@@ -25,7 +25,7 @@ async function startSocket() {
         rains = data.rains;
 
         updateUser(user);
-        updateCrash(games, config.bet.auto_cashout);
+        updateGames(games, config.bet.game, config.bet.crash_autocashout, config.bet.roulette_color);
         updateBalance(games);
         updateRain(rains, cfg.rain);
         updateLatency(data.latency);
@@ -55,7 +55,7 @@ async function startSocket() {
         chart.data.datasets[0].data.push(data.balance);
         chart.update();
 
-        updateCrash(games, config.bet.auto_cashout);
+        updateGames(games, config.bet.game, config.bet.crash_autocashout, config.bet.roulette_color);
         updateBalance(games);
     });
 

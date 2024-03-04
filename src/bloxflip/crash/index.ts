@@ -64,7 +64,7 @@ async function connectCrashSocket(manager: any) {
         }
 
         socket.emit("join-game", {
-            "autoCashoutPoint": Math.trunc(config.bet.crash_auto_cashout * 100),
+            "autoCashoutPoint": Math.trunc(config.bet.crash_autocashout * 100),
             "betAmount": game.bet
         });
     });
@@ -95,7 +95,7 @@ async function connectCrashSocket(manager: any) {
             return Logger.warn("CRASH", `Ignoring as we haven't joined this round: ${game.crash}x`);
         }
 
-        if (game.crash >= config.bet.crash_auto_cashout) {
+        if (game.crash >= config.bet.crash_autocashout) {
             game.lossStreak = 0;
             logGame();
             game.bet = await calculateBet();
@@ -112,7 +112,7 @@ async function connectCrashSocket(manager: any) {
 async function logGame() {
     analytics.appendGame({ balance: user.balance, bet: game.bet, crash: game.crash });
 
-    if (game.crash >= config.bet.crash_auto_cashout) {
+    if (game.crash >= config.bet.crash_autocashout) {
         const message = `Game #${analytics.data.games.length}\nStatus: Won \nCrash Point: ${game.crash}x \nBet: ${game.bet} R$, Balance: ${user.balance} R$`;
         const seperator = "-".repeat(getLongestLine(message) - 7);
 

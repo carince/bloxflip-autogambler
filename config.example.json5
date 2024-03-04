@@ -2,10 +2,10 @@
     "auth": "",
     "bet": {
         "game": "",
-        "tries": 12,
+        "tries": 14,
         "starting_bet": 0,
-        "crash_auto_cashout": 2,
-        "roulette_color": ""
+        "crash_autocashout": 2,
+        "roulette_color": "red"
     },
     "rain": {
         "enabled": true,
