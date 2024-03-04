@@ -3,16 +3,11 @@
     auth: Your Bloxflip token
     
     bet: {
-        game: "roulette" or "crash" 
-            Game you want to bet on
-        tries: 
-            How many times your balance will be divided to 2
-        starting_bet: 
-            Custom starting bet tries will be ignored if this is set
-        crash_autocashout: 
-            At what multiplier you want to cashout (only works in crash)
-        roulette_color: "purple", "red", or "yellow"
-            Color to bet on ( only works in )
+        game: "roulette" or "crash" (Game you want to bet on)
+        tries: How many times your balance will be divided to 2
+        starting_bet: Custom starting bet tries will be ignored if this is set
+        crash_autocashout: At what multiplier you want to cashout, only works in crash
+        roulette_color: "purple", "red", or "yellow" (Color to bet on, only works in roulette)
     }
 
     rain: {
