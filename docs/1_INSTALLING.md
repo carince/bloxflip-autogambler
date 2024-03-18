@@ -5,7 +5,7 @@
 # Installation
 - Open your terminal and clone the repository
 ```bash
-git clone https://github.com/carince/bloxflip-autocrash.git
+git clone https://github.com/carince/bloxflip-autogambler.git
 ```
 
 - Open your Browser of choice, Go to [Bloxflip](http://bloxflip.com "Bloxflip") and then run the following code inside of the Dev Tools console. (it should copy onto your clipboard):
