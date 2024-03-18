@@ -95,6 +95,6 @@ try {
 }
 
 if (process.argv.includes("--run")) {
-    console.log("Running bloxflip-autocrash...");
+    console.log("Running bloxflip-autogambler...");
     execSync("node .", { stdio: "inherit" });
 }

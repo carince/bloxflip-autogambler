@@ -1,7 +1,7 @@
 {
-  "name": "bloxflip-autocrash",
-  "version": "2.2.0",
-  "description": "Bloxflip crash automation using the martingale strategy.",
+  "name": "bloxflip-autogambler",
+  "version": "3.0.0",
+  "description": "Bloxflip gambling automation using the martingale strategy.",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
