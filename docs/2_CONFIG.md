@@ -2,6 +2,7 @@
 
     auth: Your Bloxflip token
     
+    
     bet: {
         game: "roulette" or "crash" (Game you want to bet on)
         tries: How many times your balance will be divided to 2
