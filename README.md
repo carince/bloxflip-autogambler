@@ -1,7 +1,7 @@
 <h1 align="center">bloxflip-autogambler</h1>
 <p align="center">Bloxflip gambling automation using the martingale strategy.<br>Earn robux passively while you sit back!</p>
 
-<p align="center"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/carince/bloxflip-autocrash?color=yellow&style=flat-square"> <img alt="GitHub forks" src="https://img.shields.io/github/forks/carince/bloxflip-autocrash?style=flat-square"> <img alt="GitHub issues" src="https://img.shields.io/github/issues/carince/bloxflip-autocrash?style=flat-square"> <img alt="License" src="https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square"></p>
+<p align="center"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/carince/bloxflip-autogambler?color=yellow&style=flat-square"> <img alt="GitHub forks" src="https://img.shields.io/github/forks/carince/bloxflip-autogambler?style=flat-square"> <img alt="GitHub issues" src="https://img.shields.io/github/issues/carince/bloxflip-autogambler?style=flat-square"> <img alt="License" src="https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square"></p>
 
 > **Warning**
 > This automation software is against Bloxflip's [Terms of Service](https://bloxflip.com/terms "Terms of Service"), please use this at your own risk and I am not responsible for any terminated accounts.
