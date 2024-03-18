@@ -74,11 +74,11 @@ try {
 // Analytics Page
 console.log("Building Analytics...");
 try {
-    const x = plugins.unshift(cjs())
+    plugins.unshift(cjs())
     const analytics = await rollup({
         input: "./src/pages/index.ts",
         onwarn: () => { return; },
-        plugins: x
+        plugins
     });
 
     await analytics.write({
