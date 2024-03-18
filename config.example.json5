@@ -1,9 +1,11 @@
 {
     "auth": "",
     "bet": {
-        "tries": 12,
-        "startingBet": 0,
-        "autoCashout": 2
+        "game": "crash",
+        "tries": 14,
+        "starting_bet": 0,
+        "crash_autocashout": 2,
+        "roulette_color": "red"
     },
     "rain": {
         "enabled": true,
@@ -13,17 +15,13 @@
             "webhook": {
                 "enabled": false,
                 "link": "",
-                "ping_id": 0
+                "ping_id": "@everyone // <@USERID>"
             }
         }
     },
-    "updater": {
-        "enabled": false,
-        "autoUpdate": false
-    },
     // For debugging purposes only, dont touch if you dont know what you are doing
     "debugging": {
-        "headless": true,
+        "reports": true,
         "verbose": true
     }
 }

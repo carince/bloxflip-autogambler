@@ -1,18 +1,11 @@
-export type UserApi = {
-    success: boolean
-    user: {
-        wallet: number
-        robloxUsername: string
-        robloxId: number
-    }
-}
-
-export type Config = {
+export interface Config {
     auth: string;
     bet: {
+        game: "crash" | "roulette";
         tries: number;
-        startingBet: number;
-        autoCashout: number;
+        starting_bet: number;
+        crash_autocashout: number;
+        roulette_color: "yellow" | "purple" | "red";
     }
     rain: {
         enabled: boolean;
@@ -25,43 +18,41 @@ export type Config = {
                 ping_id: string;
             }
         }
-    };
-    updater: {
-        enabled: boolean;
-        autoUpdate: boolean
     }
     debugging: {
-        headless: boolean;
+        reports: boolean;
         verbose: boolean;
     }
 }
 
-export type LoggerOptions = {
+export interface LoggerOptions {
     customColor?: number;
     seperator?: boolean;
 }
 
-export type GitHubCommits = {
-    commits: Array<{
-        hash: string
-        author: string
-        message: string
-    }>
+export interface Data {
+    startupTime: number
+    games: Array<CrashGame | RouletteGame>
+    rains: Array<Rain>
+    latency: Array<number>
 }
 
-export type Game = {
-    crash: number;
+
+export interface Game {
     bet: number;
     balance: number;
+    crash?: number;
+    color?: "red" | "purple" | "yellow";
 }
 
-export type Rain = {
+export interface Rain {
     prize: number;
     host: string;
     time: number;
 }
 
-export type Profile = {
+export interface User {
     username: string,
     id: number,
+    balance: number
 }
