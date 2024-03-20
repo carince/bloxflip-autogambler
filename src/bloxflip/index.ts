@@ -7,6 +7,7 @@ import { connectWalletSocket } from "@bf/wallet.js";
 import { connectCrashSocket } from "@bf/crash/index.js";
 import { connectRouletteSocket } from "@bf/roulette/index.js";
 import { config } from "@utils/config.js";
+import { startBrowser } from "@utils/browser.js";
 
 async function startManager() {
     const manager = new Manager("https://ws.bloxflip.com", {
@@ -34,8 +35,14 @@ async function startManager() {
             Logger.error("BF/MANAGER", `Error connecting to WebSocket: \n${err}`);
         } else {
             Logger.info("BF/MANAGER", "Connected to Bloxflip WebSocket.");
-            if (config.rain.enabled) { await connectChatSocket(manager); }
+            if (config.rain.enabled) {
+                await startBrowser()
+                await connectChatSocket(manager);
+            }
             await connectWalletSocket(manager);
+            
+            if (config.debugging.rain_only) return;
+
             if (config.bet.game === "crash") {
                 await connectCrashSocket(manager);
             } else {

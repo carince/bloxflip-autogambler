@@ -3,6 +3,8 @@ import { config } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
 import { analytics } from "@utils/analytics.js";
 import { socketDisconnectReasons } from "@utils/constants.js";
+import { browser } from "@utils/browser.js";
+import { sleep } from "@utils/sleep.js";
 
 async function connectChatSocket(manager: any) {
     const socket = manager.socket("/chat");
@@ -33,6 +35,26 @@ async function connectChatSocket(manager: any) {
                 });
             } catch (err) {
                 return Logger.error("WEBHOOK/RAIN", `Posting to webhook failed.\nError: ${err}`);
+            }
+        }
+
+        if (config.rain.autojoin) {
+            try {
+                const page = await browser.newPage()
+                await page.goto("https://bloxflip.com", { timeout: 0 });
+
+                await page.waitForSelector("aside > div:nth-child(4) > p:nth-child(3)", { visible: true, timeout: 0 })
+                await page.click("aside > div:nth-child(4) > p:nth-child(3)")
+                await page.waitForResponse(res =>
+                    res.url().includes("https://api.hcaptcha.com/checkcaptcha") && res.ok(),
+                    { timeout: 0 }
+                )
+
+                await sleep(10000)
+                await page.close()
+                Logger.info("RAIN/JOIN", "Successfully joined rain.")
+            } catch (err) {
+                Logger.error("RAIN/JOIN", `Error occured joining rain:\n${err}`)
             }
         }
     });

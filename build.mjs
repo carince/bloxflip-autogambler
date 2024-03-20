@@ -1,6 +1,8 @@
-import { copyFile, readdir, mkdir, unlink, lstat, rmdir } from "fs/promises";
+import { copyFile, readdir, mkdir, unlink, lstat, rmdir, writeFile, readFile } from "fs/promises";
 import { existsSync as exists } from "fs";
 import { execSync } from "child_process";
+import json from "json5";
+import { join } from "node:path";
 
 import { rollup } from "rollup";
 import ts from "@rollup/plugin-typescript";
@@ -37,6 +39,7 @@ async function delDirRecursively(path) {
 }
 await delDirRecursively("./dist");
 await mkdir("./dist");
+await mkdir("./dist/nopecha");
 await mkdir("./dist/pages");
 await mkdir("./dist/pages/public");
 
@@ -94,7 +97,20 @@ try {
     process.exit(1);
 }
 
+// NopeCHA Extension config
+const configPath = "./config.json5"
+if (!exists(configPath)) {
+    console.error(`Config was not found. \nExpected config at path: ${configPath}`);
+}
+
+const config = await json.parse(await readFile(configPath, { encoding: "utf-8" }));
+const nopechaPath = join("lib", "nopecha", "manifest.json");
+console.log(nopechaPath)
+const nopechaConfig = await json.parse(await readFile(nopechaPath, { encoding: "utf-8" }));
+nopechaConfig.nopecha.key = config.rain.autojoin.key
+await writeFile(nopechaPath, JSON.stringify(nopechaConfig, null, "\t"))
+
 if (process.argv.includes("--run")) {
     console.log("Running bloxflip-autogambler...");
-    execSync("node .", { stdio: "inherit" });
+    execSync("node .", { stdio: "inherit", windowsHide: true });
 }

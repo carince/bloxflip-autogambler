@@ -6,9 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node build.mjs --run",
-    "start": "node build.mjs --run",
     "lint": "eslint src --fix",
-    "build": "node build.mjs"
     "build": "node build.mjs"
   },
   "keywords": [],
@@ -37,6 +35,9 @@
     "json5": "^2.2.3",
     "node-notifier": "^10.0.1",
     "open": "^9.1.0",
+    "puppeteer": "^22.5.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0"
   }

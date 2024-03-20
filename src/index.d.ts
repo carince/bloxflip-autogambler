@@ -10,6 +10,10 @@ export interface Config {
     rain: {
         enabled: boolean;
         minimum: number;
+        autojoin: {
+            enabled: boolean;
+            key: string;
+        }
         notifications: {
             os_notifs: boolean;
             webhook: {
@@ -22,6 +26,8 @@ export interface Config {
     debugging: {
         reports: boolean;
         verbose: boolean;
+        rain_only: boolean;
+        headless: boolean;
     }
 }
 

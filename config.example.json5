@@ -10,6 +10,10 @@
     "rain": {
         "enabled": true,
         "minimum": 0,
+        "autojoin": {
+            "enabled": false,
+            "key": ""
+        },
         "notifications": {
             "os_notifs": false,
             "webhook": {
@@ -22,6 +26,8 @@
     // For debugging purposes only, dont touch if you dont know what you are doing
     "debugging": {
         "reports": true,
-        "verbose": true
+        "verbose": true,
+        "rain_only": false,
+        "headless": true
     }
 }
