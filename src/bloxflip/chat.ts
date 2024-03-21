@@ -2,7 +2,7 @@ import axios from "axios";
 import { config } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
 import { analytics } from "@utils/analytics.js";
-import { socketDisconnectReasons } from "@utils/constants.js";
+import { USER_AGENT, socketDisconnectReasons } from "@utils/constants.js";
 import { browser } from "@utils/browser.js";
 import { sleep } from "@utils/sleep.js";
 
@@ -41,6 +41,7 @@ async function connectChatSocket(manager: any) {
         if (config.rain.autojoin) {
             try {
                 const page = await browser.newPage()
+                await page.setUserAgent(USER_AGENT);
                 await page.goto("https://bloxflip.com", { timeout: 0 });
 
                 await page.waitForSelector("aside > div:nth-child(4) > p:nth-child(3)", { visible: true, timeout: 0 })

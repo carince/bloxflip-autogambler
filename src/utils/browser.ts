@@ -25,14 +25,14 @@ async function startBrowser(): Promise<void> {
     );
     Logger.info("BROWSER", "Successfully started browser");
 
-    page = (await browser.pages())[0];
+    page = await browser.newPage()
     await page.setUserAgent(USER_AGENT);
     await page.goto("https://bloxflip.com", { timeout: 0 });
     const auth = config.auth;
     await page.evaluate((auth: string) => {
         localStorage.setItem("_DO_NOT_SHARE_BLOXFLIP_TOKEN", auth);
     }, auth);
-    await page.goto("about:blank", { timeout: 0 });
+    await page.close();
 
     Logger.info("BLOXFLIP", "Successfully set up page for Bloxflip");
 }
