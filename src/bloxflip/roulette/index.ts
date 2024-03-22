@@ -63,7 +63,6 @@ async function connectRouletteSocket(manager: any) {
             Logger.error("ROULETTE", `WIPED. \nBet: ${game.bet} \nBalance: ${user.balance} \nLoss Streak: ${game.lossStreak}`, { forceClose: true });
         }
 
-        game.joined = true;
         socket.emit("join-game", {
             "color": config.bet.roulette_color,
             "betAmount": +(game.bet).toFixed(0)

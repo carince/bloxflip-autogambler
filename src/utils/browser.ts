@@ -1,13 +1,12 @@
 import puppeteer from "puppeteer-extra";
 import stealthPlugin from "puppeteer-extra-plugin-stealth";
-import { Browser, Page } from "puppeteer";
+import { Browser } from "puppeteer";
 import { Logger } from "@utils/logger.js";
 import { USER_AGENT, __dirname } from "@utils/constants.js";
 import { config } from "@utils/config.js";
 import { join } from "path"
 
 let browser: Browser;
-let page: Page;
 
 async function startBrowser(): Promise<void> {
     puppeteer.default.use(stealthPlugin());
@@ -25,7 +24,7 @@ async function startBrowser(): Promise<void> {
     );
     Logger.info("BROWSER", "Successfully started browser");
 
-    page = await browser.newPage()
+    const page = await browser.newPage()
     await page.setUserAgent(USER_AGENT);
     await page.goto("https://bloxflip.com", { timeout: 0 });
     const auth = config.auth;
@@ -37,4 +36,4 @@ async function startBrowser(): Promise<void> {
     Logger.info("BLOXFLIP", "Successfully set up page for Bloxflip");
 }
 
-export { startBrowser, page, browser };
+export { startBrowser, browser };
