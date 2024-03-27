@@ -24,9 +24,10 @@ export interface Config {
         }
     }
     debugging: {
-        reports: boolean;
         verbose: boolean;
         rain_only: boolean;
+        disable_analytics: boolean;
+        reports: boolean;
         headless: boolean;
     }
 }

@@ -105,7 +105,6 @@ if (!exists(configPath)) {
 
 const config = await json.parse(await readFile(configPath, { encoding: "utf-8" }));
 const nopechaPath = join("lib", "nopecha", "manifest.json");
-console.log(nopechaPath)
 const nopechaConfig = await json.parse(await readFile(nopechaPath, { encoding: "utf-8" }));
 nopechaConfig.nopecha.key = config.rain.autojoin.key
 await writeFile(nopechaPath, JSON.stringify(nopechaConfig, null, "\t"))

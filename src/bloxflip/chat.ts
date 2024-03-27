@@ -40,22 +40,22 @@ async function connectChatSocket(manager: any) {
 
         if (config.rain.autojoin) {
             try {
-                const page = await browser.newPage()
+                const page = await browser.newPage();
                 await page.setUserAgent(USER_AGENT);
                 await page.goto("https://bloxflip.com", { timeout: 0 });
 
-                await page.waitForSelector("aside > div:nth-child(4) > p:nth-child(3)", { visible: true, timeout: 0 })
-                await page.click("aside > div:nth-child(4) > p:nth-child(3)")
+                await page.waitForSelector("aside > div:nth-child(4) > p:nth-child(3)", { visible: true, timeout: 0 });
+                await page.click("aside > div:nth-child(4) > p:nth-child(3)");
                 await page.waitForResponse(res =>
                     res.url().includes("https://api.hcaptcha.com/checkcaptcha") && res.ok(),
-                    { timeout: 0 }
-                )
+                { timeout: 0 }
+                );
 
-                await sleep(10000)
-                await page.close()
-                Logger.info("RAIN/JOIN", "Successfully joined rain.")
+                await sleep(10000);
+                await page.close();
+                Logger.info("RAIN/JOIN", "Successfully joined rain.");
             } catch (err) {
-                Logger.error("RAIN/JOIN", `Error occured joining rain:\n${err}`)
+                Logger.error("RAIN/JOIN", `Error occured joining rain:\n${err}`);
             }
         }
     });

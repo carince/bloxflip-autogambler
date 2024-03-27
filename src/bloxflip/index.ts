@@ -35,13 +35,18 @@ async function startManager() {
             Logger.error("BF/MANAGER", `Error connecting to WebSocket: \n${err}`);
         } else {
             Logger.info("BF/MANAGER", "Connected to Bloxflip WebSocket.");
+
             if (config.rain.enabled) {
-                await startBrowser()
+                await startBrowser();
                 await connectChatSocket(manager);
             }
+
             await connectWalletSocket(manager);
             
-            if (config.debugging.rain_only) return;
+            if (config.debugging.rain_only) {
+                Logger.warn("BF/MANAGER", "Rain only is enabled, not joining to game namespaces.");
+                return;
+            }
 
             if (config.bet.game === "crash") {
                 await connectCrashSocket(manager);

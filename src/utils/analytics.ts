@@ -1,5 +1,5 @@
 import { Game, Data, Rain } from "@types";
-import { config as cfg } from "@utils/config.js";
+import { config as cfg, config } from "@utils/config.js";
 import { Logger } from "@utils/logger.js";
 import { io } from "@utils/server.js";
 
@@ -10,12 +10,14 @@ class AnalyticsClass {
 
     public async appendGame(data: Game) {
         this.data.games.push(data);
-        io.emit("new-game", data);
+
+        if (!config.debugging.disable_analytics) io.emit("new-game", data);  
     }
 
     public async appendRain(rain: Rain) {
         this.data.rains.push(rain);
-        io.emit("new-rain", rain);
+
+        if (!config.debugging.disable_analytics) io.emit("new-rain", rain);
     }
 
     public async appendLatency(latency: number) {
@@ -24,7 +26,8 @@ class AnalyticsClass {
             latencyArr.pop();
         }
         latencyArr.unshift(latency);
-        io.emit("update-latency", latencyArr);
+
+        if (!config.debugging.disable_analytics) io.emit("update-latency", latencyArr);
     }
     
     private async sendReport() {

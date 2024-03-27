@@ -15,6 +15,8 @@ import { config } from "@utils/config.js";
 let io: any;
 
 async function startServer() {
+    if (config.debugging.disable_analytics) return;
+    
     const app = express();
     const server = http.createServer(app);
     io = new Server(server);

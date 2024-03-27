@@ -25,9 +25,10 @@
     },
     // For debugging purposes only, dont touch if you dont know what you are doing
     "debugging": {
-        "reports": true,
         "verbose": true,
         "rain_only": false,
-        "headless": true
+        "reports": true,
+        "headless": true,
+        "disable_analytics": false
     }
 }
