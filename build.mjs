@@ -109,7 +109,20 @@ const nopechaConfig = await json.parse(await readFile(nopechaPath, { encoding: "
 nopechaConfig.nopecha.key = config.rain.autojoin.key
 await writeFile(nopechaPath, JSON.stringify(nopechaConfig, null, "\t"))
 
+function startBFAG() {
+    try {
+        execSync("node .", { stdio: "inherit", windowsHide: true });
+    } catch (err) {
+        console.log(`bloxflip-autogambler closed! Error:\n${err}`)
+    }
+
+    if (process.argv.includes("--autorestart")) {
+        console.log("Restarting bloxflip-autogambler...")
+        startBFAG()
+    }
+}
+
 if (process.argv.includes("--run")) {
     console.log("Running bloxflip-autogambler...");
-    execSync("node .", { stdio: "inherit", windowsHide: true });
+    startBFAG()
 }
