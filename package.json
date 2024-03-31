@@ -6,9 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node build.mjs --run",
-    "start": "node build.mjs --run",
     "lint": "eslint src --fix",
-    "build": "node build.mjs"
     "build": "node build.mjs"
   },
   "keywords": [],
