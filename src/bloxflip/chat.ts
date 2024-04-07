@@ -5,6 +5,7 @@ import { analytics } from "@utils/analytics.js";
 import { USER_AGENT, socketDisconnectReasons } from "@utils/constants.js";
 import { browser } from "@utils/browser.js";
 import { sleep } from "@utils/sleep.js";
+import notifier from "node-notifier";
 
 async function connectChatSocket(manager: any) {
     const socket = manager.socket("/chat");
@@ -46,9 +47,9 @@ async function connectChatSocket(manager: any) {
 
                 await page.waitForSelector("aside > div:nth-child(4) > p:nth-child(3)", { visible: true, timeout: 0 });
                 await page.click("aside > div:nth-child(4) > p:nth-child(3)");
-                await page.waitForResponse(res =>
+                await page.waitForResponse((res: any) =>
                     res.url().includes("https://api.hcaptcha.com/checkcaptcha") && res.ok(),
-                { timeout: 0 }
+                    { timeout: 0 }
                 );
 
                 await sleep(10000);
@@ -57,6 +58,18 @@ async function connectChatSocket(manager: any) {
             } catch (err) {
                 Logger.error("RAIN/JOIN", `Error occured joining rain:\n${err}`);
             }
+        }
+
+        if (config.rain.notifications.os_notifs) {
+            notifier.notify({
+                title: "Bloxflip Rain Notifier",
+                message: `Robux: ${data.prize} R$ \nHost: ${data.host} \nTime Remaining: ${data.duration / 60000} minutes`,
+                subtitle: "bloxflip-autocrash",
+                sound: true,
+                wait: false
+            }, (_err, response) => {
+                if (response == "activate") open("https://bloxflip.com/");
+            });
         }
     });
 }
