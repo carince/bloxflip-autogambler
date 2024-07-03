@@ -1,16 +1,13 @@
+import { user } from "@bf/user.js";
 import { config } from "@utils/config.js";
-import { Logger } from "@utils/logger.js";
-import { fetchUserData, user } from "@bf/user.js";
 import { socketDisconnectReasons } from "@utils/constants.js";
+import Logger from "@utils/logger.js";
+import formatNum from "@utils/number.js";
 
-async function connectWalletSocket(manager: any) {
+export default async function connect(manager: any) {
     const socket = manager.socket("/wallet").open();
 
     socket.on("connect", async () => {
-        const res = await fetchUserData();
-        const wallet = +(+res!.user.wallet.toFixed(2) + +res!.user.bonusWallet.toFixed(2)).toFixed(2);
-        user.balance = wallet;
-
         Logger.info("SOCKET/WALLET", "Successfully connected to namespace.");
         socket.emit("auth", config.auth);
     });
@@ -20,8 +17,6 @@ async function connectWalletSocket(manager: any) {
     });
 
     socket.on("update-wallet", (data: any) => {
-        user.balance = +(user.balance + data).toFixed(2);
+        user.balance = formatNum(user.balance + data);
     });
 }
-
-export { connectWalletSocket };
