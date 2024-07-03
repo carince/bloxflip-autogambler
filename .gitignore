@@ -2,7 +2,6 @@ node_modules
 logs
 dist
 
-config.json5
-config.json
+config.yaml
 tsconfig.tsbuildinfo
 .vscode
