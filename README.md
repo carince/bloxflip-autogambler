@@ -3,7 +3,8 @@
 
 <p align="center"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/carince/bloxflip-autogambler?color=yellow&style=flat-square"> <img alt="GitHub forks" src="https://img.shields.io/github/forks/carince/bloxflip-autogambler?style=flat-square"> <img alt="GitHub issues" src="https://img.shields.io/github/issues/carince/bloxflip-autogambler?style=flat-square"> <img alt="License" src="https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square"></p>
 
-> **Warning**
+
+> [!WARNING]  
 > This automation software is against Bloxflip's [Terms of Service](https://bloxflip.com/terms "Terms of Service"), please use this at your own risk and I am not responsible for any terminated accounts.
 
 ## 💥 Features 
