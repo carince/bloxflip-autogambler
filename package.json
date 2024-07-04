@@ -17,12 +17,12 @@
   },
   "type": "module",
   "scripts": {
-    "start": "node build.mjs --run",
-    "lint": "eslint src --fix",
-    "build": "node build.mjs"
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "lint": "eslint src --fix"
   },
   "keywords": [],
-  "author": "",
+  "author": "carince",
   "license": "GPL-3.0-only",
   "devDependencies": {
     "@eslint/compat": "^1.1.0",

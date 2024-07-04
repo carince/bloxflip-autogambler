@@ -3,5 +3,4 @@ logs
 dist
 
 config.yaml
-tsconfig.tsbuildinfo
-.vscode
+lib\nopecha\manifest.json

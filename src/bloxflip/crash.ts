@@ -6,6 +6,7 @@ import { socketDisconnectReasons } from "@utils/constants.js";
 import Logger from "@utils/logger.js";
 import { Game } from "@utils/types.js";
 import chalk from "chalk";
+import { Manager } from "socket.io-client";
 
 const game: Game = {
     count: 0,
@@ -34,7 +35,12 @@ async function logGame() {
     }
 }
 
-export default async function connectCrash(manager: any) {
+export default async function connectCrash(manager: Manager) {
+    if (!config.debugging.rain_only) {
+        Logger.warn("CRASH", "Rain only is enabled, wont connect to crash namespace.");
+        return;
+    }
+
     const socket = manager.socket("/crash").open();
 
     socket.on("connect", async () => {

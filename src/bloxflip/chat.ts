@@ -3,9 +3,12 @@ import { config } from "@utils/config.js";
 import { socketDisconnectReasons, USER_AGENT } from "@utils/constants.js";
 import Logger from "@utils/logger.js";
 import sleep from "@utils/sleep.js";
+import { RainStateChangedData } from "@utils/types.js";
 import axios from "axios";
+import { HTTPResponse } from "puppeteer";
+import { Manager } from "socket.io-client";
 
-export default async function connectChat(manager: any) {
+export default async function connectChat(manager: Manager) {
     const socket = manager.socket("/chat");
 
     socket.on("connect", () => {
@@ -17,7 +20,7 @@ export default async function connectChat(manager: any) {
         Logger.error("SOCKET/CHAT", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`);
     });
 
-    socket.on("rain-state-changed", async (data: any) => {
+    socket.on("rain-state-changed", async (data: RainStateChangedData) => {
         if (!data.active) {
             Logger.log("RAIN", "Rain ended!");
             return;
@@ -31,10 +34,10 @@ export default async function connectChat(manager: any) {
         }
 
         Logger.log("RAIN", `Rain detected!\n${logData}`);
-        if (config.rain.notifications.webhook.enabled) {
+        if (config.rain.notifications.enabled) {
             try {
-                axios.post(config.rain.notifications.webhook.link, {
-                    content: `${config.rain.notifications.webhook.ping_id}\n# Bloxflip Rain Notifier\n**Prize: **${data.prize} R$\n**Host: **${data.host}\n**Time Remaining: **<t:${Math.ceil((new Date().getTime() + data.timeLeft) / 1000)}:R>`,
+                axios.post(config.rain.notifications.link, {
+                    content: `${config.rain.notifications.ping_id}\n# Bloxflip Rain Notifier\n**Prize: **${data.prize} R$\n**Host: **${data.host}\n**Time Remaining: **<t:${Math.ceil((new Date().getTime() + data.timeLeft) / 1000)}:R>`,
                 });
             } catch (err) {
                 Logger.error("RAIN/WEBHOOK", `Posting to webhook failed.\nError: ${err}`);
@@ -51,7 +54,7 @@ export default async function connectChat(manager: any) {
                 await page.waitForSelector("aside > div:nth-child(4) > p:nth-child(3)", { visible: true, timeout: 0 });
                 await page.click("aside > div:nth-child(4) > p:nth-child(3)");
                 await page.waitForResponse(
-                    (res: any) => res.url().includes("https://api.hcaptcha.com/checkcaptcha") && res.ok(),
+                    (res: HTTPResponse) => res.url().includes("https://api.hcaptcha.com/checkcaptcha") && res.ok(),
                     { timeout: 0 },
                 );
 

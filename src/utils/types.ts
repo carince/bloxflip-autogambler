@@ -10,22 +10,16 @@ export const configSchema = z.object({
         minimum: z.number(),
         autojoin: z.object({
             enabled: z.boolean(),
-            key: z.string(),
         }),
         notifications: z.object({
-            os_notifs: z.boolean(),
-            webhook: z.object({
-                enabled: z.boolean(),
-                link: z.string(),
-                ping_id: z.string(),
-            }),
+            enabled: z.boolean(),
+            link: z.string(),
+            ping_id: z.string(),
         }),
     }),
     debugging: z.object({
         verbose: z.boolean(),
         rain_only: z.boolean(),
-        disable_analytics: z.boolean(),
-        reports: z.boolean(),
         headless: z.boolean(),
     }),
 });
@@ -73,4 +67,11 @@ export interface UserAPIResponse {
         wallet: number
         bonusWallet: number
     }
+}
+
+export interface RainStateChangedData {
+    active: boolean;
+    prize: number;
+    host: string;
+    timeLeft: number;
 }

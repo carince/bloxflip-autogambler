@@ -4,7 +4,6 @@ import connectWallet from "@bf/wallet.js";
 import { config } from "@utils/config.js";
 import { USER_AGENT } from "@utils/constants.js";
 import Logger from "@utils/logger.js";
-// @ts-ignore
 import { Manager } from "socket.io-client";
 
 export default async function startWebsocket() {
@@ -29,7 +28,7 @@ export default async function startWebsocket() {
             },
         });
 
-        manager.open(async (err: any) => {
+        manager.open(async (err: unknown) => {
             if (err) throw new Error(`Error connecting to WebSocket: \n${err}`);
 
             Logger.info("WS", "Connected to Bloxflip WebSocket.");

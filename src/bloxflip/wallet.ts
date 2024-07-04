@@ -3,8 +3,9 @@ import { config } from "@utils/config.js";
 import { socketDisconnectReasons } from "@utils/constants.js";
 import Logger from "@utils/logger.js";
 import formatNum from "@utils/number.js";
+import { Manager } from "socket.io-client";
 
-export default async function connect(manager: any) {
+export default async function connect(manager: Manager) {
     const socket = manager.socket("/wallet").open();
 
     socket.on("connect", async () => {
@@ -16,7 +17,7 @@ export default async function connect(manager: any) {
         Logger.error("SOCKET/WALLET", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`);
     });
 
-    socket.on("update-wallet", (data: any) => {
+    socket.on("update-wallet", (data: number) => {
         user.balance = formatNum(user.balance + data);
     });
 }
