@@ -5,7 +5,7 @@ import { config, fetchConfig } from "@utils/config.js";
 import Logger from "@utils/logger.js";
 
 (async (): Promise<void> => {
-    Logger.log("STARTUP", "Starting bloxflip-crash");
+    Logger.log("STARTUP", "Starting bloxflip-autocrash");
     Logger.log("SUPPORT", "Support the developers by giving the repo a star! https://github.com/carince/bloxflip-autogambler");
 
     await fetchConfig();

@@ -36,11 +36,6 @@ async function logGame() {
 }
 
 export default async function connectCrash(manager: Manager) {
-    if (!config.debugging.rain_only) {
-        Logger.warn("CRASH", "Rain only is enabled, wont connect to crash namespace.");
-        return;
-    }
-
     const socket = manager.socket("/crash").open();
 
     socket.on("connect", async () => {

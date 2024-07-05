@@ -38,14 +38,17 @@ async function login(): Promise<void> {
             `${chalk.bold("Successfully logged in!")}\nUsername: ${res.user.robloxUsername}\nID: ${res.user.robloxId}\nBalance: ${wallet} R$`,
         );
 
-        const baseBet = frmt(wallet / 2 ** config.tries);
-        if (baseBet === 0) throw new Error("Tries in config is too high causing the bet to be 0");
-
         user = {
             username: res.user.robloxUsername,
             id: res.user.robloxId,
             balance: wallet,
         };
+
+        const baseBet = frmt(wallet / 2 ** config.tries);
+        if (baseBet === 0) {
+            if (config.debugging.rain_only) return;
+            throw new Error("Tries in config is too high causing the bet to be 0");
+        }
     } catch (e) {
         Logger.error("USER", e instanceof Error ? e.message : `Unknown Error.\n${e}`);
         throw e;
