@@ -8,6 +8,8 @@ import axios from "axios";
 import { HTTPResponse } from "puppeteer";
 import { Manager } from "socket.io-client";
 
+const rainButton = "p.chat_chatBannerJoinButton__avNuN";
+
 export default async function connectChat(manager: Manager) {
     const socket = manager.socket("/chat");
 
@@ -50,15 +52,19 @@ export default async function connectChat(manager: Manager) {
                 const page = await browser.newPage();
                 await page.setUserAgent(USER_AGENT);
                 await page.goto("https://bloxflip.com", { timeout: 0 });
+                Logger.info("RAIN/JOIN", "Bloxflip page loaded.");
 
-                await page.waitForSelector("aside > div:nth-child(4) > p:nth-child(3)", { visible: true, timeout: 0 });
-                await page.click("aside > div:nth-child(4) > p:nth-child(3)");
+                await page.waitForSelector(rainButton, { visible: true, timeout: 0 });
+                await page.click(rainButton);
+                Logger.info("RAIN/JOIN", "Join button pressed. Hopefully we pass captcha...");
+
                 await page.waitForResponse(
-                    (res: HTTPResponse) => res.url().includes("https://api.hcaptcha.com/checkcaptcha") && res.ok(),
+                    (res: HTTPResponse) => (res.url().includes("https://api.hcaptcha.com/checkcaptcha") && res.ok()),
                     { timeout: 0 },
                 );
+                Logger.info("RAIN/JOIN", "Captcha passed!");
 
-                await sleep(10000);
+                await sleep(1000);
                 await page.close();
                 Logger.info("RAIN/JOIN", "Successfully joined rain.");
             } catch (err) {
