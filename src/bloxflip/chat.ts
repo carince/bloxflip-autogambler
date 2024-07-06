@@ -67,6 +67,16 @@ export default async function connectChat(manager: Manager) {
                 await sleep(1000);
                 await page.close();
                 Logger.info("RAIN/JOIN", "Successfully joined rain.");
+
+                if (config.rain.notifications.enabled) {
+                    try {
+                        axios.post(config.rain.notifications.link, {
+                            content: "Successfully joined rain!",
+                        });
+                    } catch (err) {
+                        Logger.error("RAIN/WEBHOOK", `Posting to webhook failed.\nError: ${err}`);
+                    }
+                }
             } catch (err) {
                 Logger.error("RAIN/JOIN", `Error occured joining rain:\n${err}`);
             }

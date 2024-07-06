@@ -27,7 +27,7 @@ async function startBrowser(): Promise<void> {
 
         const page = await pup.newPage();
         await page.setUserAgent(USER_AGENT);
-        page.goto("https://bloxflip.com", { timeout: 0 });
+        await page.goto("https://bloxflip.com", { timeout: 0, waitUntil: "domcontentloaded" });
         await page.evaluate((auth: string) => {
             localStorage.setItem("_DO_NOT_SHARE_BLOXFLIP_TOKEN", auth);
         }, config.auth);
