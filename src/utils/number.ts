@@ -1,3 +1,3 @@
 export default function formatNum(num: number) {
-    return +(num).toFixed();
+    return +(num).toFixed(2);
 }
