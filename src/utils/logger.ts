@@ -22,4 +22,8 @@ export default class Logger {
         console.log(chalk.redBright(`${chalk.bold(`[ ⬣ ${label} ]`)} ${message}`));
         if (options?.forceClose) process.exit(1);
     }
+
+    static debug(data: any): void {
+        console.log(chalk.magentaBright(`${chalk.bold("[ DEBUG ]")} ${data}`));
+    }
 }

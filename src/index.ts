@@ -1,7 +1,7 @@
 import startWebsocket from "@bf/index.js";
 import { login } from "@bf/user.js";
 import { startBrowser } from "@utils/browser.js";
-import { config, fetchConfig } from "@utils/config.js";
+import { fetchConfig } from "@utils/config.js";
 import Logger from "@utils/logger.js";
 
 (async (): Promise<void> => {
@@ -10,6 +10,6 @@ import Logger from "@utils/logger.js";
 
     await fetchConfig();
     await login();
-    if (config.rain.autojoin.enabled) await startBrowser();
+    await startBrowser();
     await startWebsocket();
 })();

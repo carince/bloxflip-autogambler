@@ -88,7 +88,7 @@ export default async function connectCrash(manager: Manager) {
     });
 
     // Game starting
-    socket.on("eos-commit", () => {
+    socket.on("game-start", () => {
         if (!game.joined) {
             Logger.warn("CRASH", "Failed to join game, bet was not placed before game started.");
         }
@@ -102,6 +102,7 @@ export default async function connectCrash(manager: Manager) {
 
         if (!game.joined) {
             Logger.warn("CRASH", `Ignoring as we haven't joined this round: ${game.crash}x`);
+            return;
         }
 
         if (game.crash >= config.autocashout) {
