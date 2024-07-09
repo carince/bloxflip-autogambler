@@ -31,7 +31,7 @@ export default async function startWebsocket() {
         manager.open(async (err: unknown) => {
             if (err) throw new Error(`Error connecting to WebSocket: \n${err}`);
 
-            Logger.info("WS", "Connected to Bloxflip WebSocket.");
+            Logger.info("SOCKET", "Connected to Bloxflip.");
             if (config.rain.enabled) { await connectChat(manager); }
 
             if (config.debugging.rain_only) {

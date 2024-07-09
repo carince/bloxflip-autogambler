@@ -9,7 +9,7 @@ import stealthPlugin from "puppeteer-extra-plugin-stealth";
 let browser: Browser;
 
 async function startBrowser(): Promise<void> {
-    if (config.rain.enabled && config.rain.autojoin.enabled) return;
+    if (!config.rain.enabled || !config.rain.autojoin.enabled) return;
 
     try {
         puppeteer.default.use(stealthPlugin());

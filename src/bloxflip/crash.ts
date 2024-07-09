@@ -18,20 +18,20 @@ const game: Game = {
 };
 
 function getLongestLine(string: string): number {
-    const lines = string.split(/\r?\n/);
-    return Math.max(...(lines.map((line) => line.length)));
+    const lines = string.split("\n");
+    return Math.max(...(lines.map((line) => line.trim().length)));
 }
 
 async function logGame() {
     game.count += 1;
     const win = game.crash >= config.autocashout;
     const message = `Game #${game.count}\nStatus: ${win ? "Won" : `Loss - #${game.lossStreak}`} \nCrash Point: ${game.crash}x \nBet: ${game.bet} R$, Balance: ${user.balance} R$`;
-    const seperator = "-".repeat(getLongestLine(message) - 7);
+    const seperator = "—".repeat(getLongestLine(message));
 
     if (win) {
-        console.log(chalk.greenBright(`${chalk.bold("[ GAME ]")} ${seperator}\n${message}`));
+        console.log(chalk.greenBright(`${seperator}\n${message}`));
     } else {
-        console.log(`${chalk.bgRedBright(" GAME ")} ${chalk.redBright(`${seperator}\n${message}`)}`);
+        console.log(chalk.redBright(`${seperator}\n${message}`));
     }
 }
 
