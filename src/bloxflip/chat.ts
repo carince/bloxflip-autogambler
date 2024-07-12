@@ -10,6 +10,17 @@ import { Manager } from "socket.io-client";
 
 const rainButton = "p.chat_chatBannerJoinButton__avNuN";
 
+async function sendWebhook(content: string) {
+    try {
+        if (!config.rain.notifications.enabled) return;
+        axios.post(config.rain.notifications.link, {
+            content,
+        });
+    } catch (err) {
+        Logger.error("RAIN/WEBHOOK", `Posting to webhook failed.\nError: ${err}`);
+    }
+}
+
 export default async function connectChat(manager: Manager) {
     const socket = manager.socket("/chat");
 
@@ -36,47 +47,35 @@ export default async function connectChat(manager: Manager) {
         }
 
         Logger.log("RAIN", `Rain detected!\n${logData}`);
-        if (config.rain.notifications.enabled) {
-            try {
-                axios.post(config.rain.notifications.link, {
-                    content: `${config.rain.notifications.ping_id}\n# Bloxflip Rain Notifier\n**Prize: **${data.prize} R$\n**Host: **${data.host}\n**Time Remaining: **<t:${Math.ceil((new Date().getTime() + data.timeLeft) / 1000)}:R>`,
-                });
-            } catch (err) {
-                Logger.error("RAIN/WEBHOOK", `Posting to webhook failed.\nError: ${err}`);
-                return;
-            }
-        }
+        await sendWebhook(`${config.rain.notifications.ping_id}\n# Bloxflip Rain Notifier\n**Prize: **${data.prize} R$\n**Host: **${data.host}\n**Time Remaining: **<t:${Math.ceil((new Date().getTime() + data.timeLeft) / 1000)}:R>`);
 
         if (config.rain.autojoin) {
+            let joined = false;
             try {
+                setTimeout(() => {
+                    if (!joined) {
+                        Logger.error("RAIN/JOIN", "Rain ended before we were able to join.");
+                    }
+                }, data.timeLeft);
+
                 const page = await browser.newPage();
                 await page.setUserAgent(USER_AGENT);
                 await page.goto("https://bloxflip.com", { timeout: 0 });
-                Logger.info("RAIN/JOIN", "Bloxflip page loaded.");
 
                 await page.waitForSelector(rainButton, { visible: true, timeout: 0 });
                 await page.click(rainButton);
-                Logger.info("RAIN/JOIN", "Join button pressed. Hopefully we pass captcha...");
 
                 await page.waitForResponse(
                     (res: HTTPResponse) => (res.url().includes("https://api.hcaptcha.com/checkcaptcha") && res.ok()),
                     { timeout: 0 },
                 );
-                Logger.info("RAIN/JOIN", "Captcha passed!");
-
                 await sleep(1000);
                 await page.close();
-                Logger.info("RAIN/JOIN", "Successfully joined rain.");
 
-                if (config.rain.notifications.enabled) {
-                    try {
-                        axios.post(config.rain.notifications.link, {
-                            content: "Successfully joined rain!",
-                        });
-                    } catch (err) {
-                        Logger.error("RAIN/WEBHOOK", `Posting to webhook failed.\nError: ${err}`);
-                    }
-                }
+                Logger.info("RAIN/JOIN", "Successfully joined rain.");
+                joined = true;
+
+                await sendWebhook("Successfully joined rain!");
             } catch (err) {
                 Logger.error("RAIN/JOIN", `Error occured joining rain:\n${err}`);
             }
