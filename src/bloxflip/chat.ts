@@ -50,13 +50,8 @@ export default async function connectChat(manager: Manager) {
         await sendWebhook(`${config.rain.notifications.ping_id}\n# Bloxflip Rain Notifier\n**Prize: **${data.prize} R$\n**Host: **${data.host}\n**Time Remaining: **<t:${Math.ceil((new Date().getTime() + data.timeLeft) / 1000)}:R>`);
 
         if (config.rain.autojoin) {
-            let joined = false;
             try {
-                setTimeout(() => {
-                    if (!joined) {
-                        Logger.error("RAIN/JOIN", "Rain ended before we were able to join.");
-                    }
-                }, data.timeLeft);
+                const timeout = new Date().getTime() + data.timeLeft;
 
                 const page = await browser.newPage();
                 await page.setUserAgent(USER_AGENT);
@@ -72,9 +67,8 @@ export default async function connectChat(manager: Manager) {
                 await sleep(1000);
                 await page.close();
 
+                if (new Date().getTime() > timeout) throw new Error("Rain ended before we can join.");
                 Logger.info("RAIN/JOIN", "Successfully joined rain.");
-                joined = true;
-
                 await sendWebhook("Successfully joined rain!");
             } catch (err) {
                 Logger.error("RAIN/JOIN", `Error occured joining rain:\n${err}`);
