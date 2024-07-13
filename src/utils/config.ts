@@ -6,6 +6,9 @@ import { join } from "path";
 import { parse } from "yaml";
 
 let config: Config;
+const cliConfig = {
+    paused: false,
+};
 
 async function fetchConfig(): Promise<void> {
     try {
@@ -29,4 +32,4 @@ async function fetchConfig(): Promise<void> {
     }
 }
 
-export { config, fetchConfig };
+export { cliConfig, config, fetchConfig };

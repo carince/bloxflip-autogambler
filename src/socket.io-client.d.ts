@@ -11,6 +11,11 @@ declare module "socket.io-client" {
         open(): Socket;
         on(eventName: string, callback: (...args: any[]) => void): Socket;
         emit(eventName: string, ...args: any[]): Socket;
+        close(): Socket;
+
+        connected: boolean;
+
+        disconnected: boolean;
     }
 }
 

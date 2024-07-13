@@ -1,6 +1,7 @@
 import startWebsocket from "@bf/index.js";
 import { login } from "@bf/user.js";
 import { startBrowser } from "@utils/browser.js";
+import { startCli } from "@utils/cli.js";
 import { fetchConfig } from "@utils/config.js";
 import Logger from "@utils/logger.js";
 
@@ -12,4 +13,5 @@ import Logger from "@utils/logger.js";
     await login();
     await startBrowser();
     await startWebsocket();
+    await startCli();
 })();

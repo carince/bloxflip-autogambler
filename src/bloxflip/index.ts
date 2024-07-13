@@ -6,9 +6,11 @@ import { USER_AGENT } from "@utils/constants.js";
 import Logger from "@utils/logger.js";
 import { Manager } from "socket.io-client";
 
+let manager: Manager;
+
 export default async function startWebsocket() {
     try {
-        const manager = new Manager("https://ws.bloxflip.com", {
+        manager = new Manager("https://ws.bloxflip.com", {
             autoConnect: false,
             transports: ["websocket"],
             reconnection: true,
@@ -34,15 +36,18 @@ export default async function startWebsocket() {
             Logger.info("SOCKET", "Connected to Bloxflip.");
             if (config.rain.enabled) { await connectChat(manager); }
 
+            await connectWallet(manager);
+
             if (config.debugging.rain_only) {
                 Logger.warn("SOCKET", "Rain only is enabled, won't connect to crash and wallet namespace.");
                 return;
             }
 
-            await connectWallet(manager);
             await connectCrash(manager);
         });
     } catch (e) {
         Logger.error("WS", e instanceof Error ? e.message : `Unknown Error.\n${e}`);
     }
 }
+
+export { manager };

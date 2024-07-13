@@ -6,9 +6,11 @@ import sleep from "@utils/sleep.js";
 import { RainStateChangedData } from "@utils/types.js";
 import axios from "axios";
 import { HTTPResponse } from "puppeteer";
-import { Manager } from "socket.io-client";
+import { Manager, Socket } from "socket.io-client";
 
 const rainButton = "p.chat_chatBannerJoinButton__avNuN";
+
+export let socket: Socket;
 
 async function sendWebhook(content: string) {
     try {
@@ -22,14 +24,14 @@ async function sendWebhook(content: string) {
 }
 
 export default async function connectChat(manager: Manager) {
-    const socket = manager.socket("/chat");
+    socket = manager.socket("/chat");
 
-    socket.on("connect", () => {
+    socket.on("connect", async () => {
         Logger.info("SOCKET/CHAT", "Successfully connected to namespace.");
         socket.emit("auth", config.auth);
     }).open();
 
-    socket.on("disconnect", (reason: keyof typeof socketDisconnectReasons) => {
+    socket.on("disconnect", async (reason: keyof typeof socketDisconnectReasons) => {
         Logger.error("SOCKET/CHAT", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`);
     });
 
