@@ -2,7 +2,6 @@ import { browser } from "@utils/browser.js";
 import { config } from "@utils/config.js";
 import { socketDisconnectReasons, USER_AGENT } from "@utils/constants.js";
 import Logger from "@utils/logger.js";
-import sleep from "@utils/sleep.js";
 import { RainStateChangedData } from "@utils/types.js";
 import axios from "axios";
 import { HTTPResponse } from "puppeteer";
@@ -31,7 +30,7 @@ export default async function connectChat(manager: Manager) {
         socket.emit("auth", config.auth);
     }).open();
 
-    socket.on("disconnect", async (reason: keyof typeof socketDisconnectReasons) => {
+    socket.on("disconnect", async (reason) => {
         Logger.error("SOCKET/CHAT", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`);
     });
 
@@ -66,7 +65,9 @@ export default async function connectChat(manager: Manager) {
                     (res: HTTPResponse) => (res.url().includes("https://api.hcaptcha.com/checkcaptcha") && res.ok()),
                     { timeout: 0 },
                 );
-                await sleep(1000);
+                Logger.debug("HCAPTCHA PASSED!!!!");
+                await page.waitForSelector("::-p-xpath(//*[@id='__next']/div[3][.//text()[contains(., 'The system is now awarding R$')]])", { timeout: (timeout - new Date().getTime()) });
+                Logger.debug("IT FUCKING WORKS!!!!!!");
                 await page.close();
 
                 if (new Date().getTime() > timeout) throw new Error("Rain ended before we can join.");

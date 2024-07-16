@@ -3,6 +3,7 @@ import chalk from "chalk";
 import readline from "readline";
 
 import { rl } from "./cli.js";
+import { config } from "./config.js";
 
 export default class Logger {
     static async log(label: string, message: string): Promise<void> {
@@ -13,6 +14,7 @@ export default class Logger {
     }
 
     static async info(label: string, message: string): Promise<void> {
+        if (!config.debugging.verbose) return;
         readline.clearLine(process.stdout, 0);
         readline.cursorTo(process.stdout, 0);
         console.log(chalk.blueBright(`${chalk.bold(`[ ${label} ]`)} ${message}`));

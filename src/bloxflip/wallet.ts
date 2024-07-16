@@ -15,7 +15,7 @@ export default async function connect(manager: Manager) {
         socket.emit("auth", config.auth);
     });
 
-    socket.on("disconnect", async (reason: keyof typeof socketDisconnectReasons) => {
+    socket.on("disconnect", async (reason) => {
         Logger.error("SOCKET/WALLET", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`);
     });
 
