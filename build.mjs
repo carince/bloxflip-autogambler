@@ -1,4 +1,4 @@
-import { copyFile, readdir, mkdir, unlink, lstat, rmdir } from "fs/promises";
+import { readdir, mkdir, unlink, lstat, rmdir } from "fs/promises";
 import { existsSync as exists } from "fs";
 import { execSync } from "child_process";
 
@@ -37,18 +37,6 @@ async function delDirRecursively(path) {
 await delDirRecursively("./dist");
 
 await mkdir("./dist");
-await mkdir("./dist/pages");
-await mkdir("./dist/pages/public");
-
-// Copy static files for analytics page.
-await copyFile("./src/analytics/index.html", "./dist/pages/index.html");
-await copyFile("./node_modules/socket.io/client-dist/socket.io.js", "./dist/pages/public/socket.io.js");
-
-if (exists("./src/analytics/public")) {
-    for (const file of await readdir("./src/analytics/public")) {
-        copyFile(`./src/analytics/public/${file}`, `./dist/pages/public/${file}`);
-    }
-}
 
 // Backend
 console.log("Building Backend...");
@@ -93,27 +81,6 @@ try {
     console.error(`Failed to build UserScript:\n ${err}`);
 }
 
-// Analytics Page
-console.log("Building Analytics...");
-try {
-    const analytics = await rollup({
-        input: "./src/analytics/index.ts",
-        onwarn: () => { return; },
-        plugins
-    });
-
-    await analytics.write({
-        file: "./dist/pages/public/index.js",
-        format: "cjs",
-        compact: true
-    });
-    await analytics.close();
-
-    console.log("Successfully built Analytics!");
-} catch (err) {
-    console.error(`Failed to build Analytics:\n ${err}`);
-    process.exit(1);
-}
 
 if (process.argv.includes("--run")) {
     console.log("Running bloxflip-autocrash...");

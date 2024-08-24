@@ -3,7 +3,6 @@ import { Logger } from "@utils/logger.js";
 import { startBrowser, page } from "@utils/browser.js";
 import { startServer } from "@server/server.js";
 import { readFileSync, existsSync } from "node:fs";
-import { checkUpdates } from "@utils/updater.js";
 import { sleep } from "@utils/sleep.js";
 import { fetchConfig } from "@utils/config.js";
 
@@ -15,8 +14,7 @@ import { fetchConfig } from "@utils/config.js";
     await startServer();
     await startBrowser();
     await Logger.createLog();
-
-    await checkUpdates();
+    
     await checkAuth();
 
     await sleep(5000);

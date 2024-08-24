@@ -26,7 +26,7 @@ class Logger {
 
     public static async error(label: string, message: string, options?: { forceClose?: boolean }): Promise<void> {
         console.log(`${chalk.bgRedBright(` ⬣ ${label} `)} ${chalk.redBright(message)}`);
-        await sleep(15000)
+        await sleep(15000);
         if (options?.forceClose) process.exit(1);
     }
 

@@ -1,9 +1,4 @@
-import { data } from "@bf/data.js";
 import { config } from "@utils/config.js";
-
-async function sendProfile(callback: (ack: any) => unknown) {
-    callback(data.profile);
-}
 
 let times = 0;
 function sendConfig(callback: (ack: any) => unknown) {
@@ -25,4 +20,4 @@ function sendConfig(callback: (ack: any) => unknown) {
     );
 }
 
-export { sendConfig, sendProfile };
+export { sendConfig };

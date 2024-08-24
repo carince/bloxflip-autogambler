@@ -44,7 +44,7 @@ async function crash(event: MessageEvent) {
             }
 
             if (game.bet > game.balance) {
-                Logger.error("CRASH", `WIPED. \nBet: ${game.bet} \nBalance: ${game.balance} \nLoss Streak: ${game.lossStreak}`, { forceClose: true })
+                Logger.error("CRASH", `WIPED. \nBet: ${game.bet} \nBalance: ${game.balance} \nLoss Streak: ${game.lossStreak}`, { forceClose: true });
             }
 
             bfWsSend(`42/crash,["join-game",{"autoCashoutPoint":${Math.trunc(config.bet.autoCashout * 100)},"betAmount":${game.bet}}]`);
@@ -65,7 +65,7 @@ async function crash(event: MessageEvent) {
     }
 
     // Game starting
-    if (event.data.includes("42/crash,[\"eos-commit\"")) {
+    if (event.data.includes("42/crash,[\"game-start\"")) {
         if (!game.joined) {
             Logger.warn("CRASH", "Failed to join game, bet was not placed before game started.");
         }
@@ -87,7 +87,7 @@ async function crash(event: MessageEvent) {
             Logger.log("CRASH", `Won: ${game.crash}x`, { skipEmit: true });
 
             if (game.count % 10 === 0) {
-                await getUserInfo(true)
+                await getUserInfo(true);
             } else {
                 game.balance = game.balance + (game.bet * config.bet.autoCashout);
                 game.balance = +game.balance.toFixed(2);
