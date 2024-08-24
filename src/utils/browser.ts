@@ -19,7 +19,7 @@ async function startBrowser(): Promise<void> {
                 headless: config.debugging.headless,
                 defaultViewport: { width: 1920, height: 1080 },
                 args: [
-                    "--start-maximized",
+                    "--start-maximized", "--single-process",
                     `--disable-extensions-except=${pathToExtension}`,
                     `--load-extension=${pathToExtension}`,
                 ],
