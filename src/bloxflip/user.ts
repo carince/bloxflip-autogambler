@@ -3,26 +3,23 @@ import { USER_AGENT } from "@utils/constants.js";
 import Logger from "@utils/logger.js";
 import frmt from "@utils/number.js";
 import { User, UserAPIResponse } from "@utils/types.js";
+import axios, { AxiosResponse } from "axios";
 import chalk from "chalk";
 
 let user: User;
 
 async function fetchUserData(): Promise<UserAPIResponse> {
     try {
-        const response = await fetch("https://api.bloxflip.com/user", {
+        const response = await axios.get<UserAPIResponse>("https://api.bloxflip.com/user", {
             headers: {
-                "x-auth-token": config.auth,
+                "X-Auth-Token": config.auth,
+                "User-Agent": USER_AGENT,
             },
-            referrerPolicy: "no-referrer",
-            body: null,
-            method: "GET",
-            mode: "cors",
-            credentials: "omit",
         }).catch((err) => {
-            throw new Error(`Error fetching user data:\n${err}`);
+            throw new Error(`Data: ${JSON.stringify(err.response.data)}\nStatus: ${err.response.status}\nHeaders: ${JSON.stringify(err.response.headers)}`);
         });
 
-        return (await response.json()) as UserAPIResponse;
+        return (response as AxiosResponse).data;
     } catch (e) {
         Logger.error("USER/API", e instanceof Error ? e.message : `Unknown Error.\n${e}`, { forceClose: true });
         throw e;
