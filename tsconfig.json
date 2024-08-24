@@ -1,22 +1,33 @@
 {
+    "ts-node": {
+        "swc": true,
+        "esm": true
+    },
     "compilerOptions": {
         "strict": true,
         "outDir": "./dist",
         "rootDir": "./src",
         "baseUrl": "./src",
-        "module": "NodeNext",
+        "module": "ESNext",
         "target": "ESNext",
-        "moduleResolution": "NodeNext",
         "newLine": "LF",
-        "inlineSourceMap": true,
+        "moduleResolution": "NodeNext",
+        "resolveJsonModule": true,
+        "useUnknownInCatchVariables": true,
+        "allowUnreachableCode": false,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
         "esModuleInterop": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "strictPropertyInitialization": false,
+        "incremental": true,
+        "isolatedModules": true,
+        "allowJs": true,
         "paths": {
-            "@utils/*": [
-                "utils/*"
-            ],
-            "@bf/*": [
-                "bloxflip/*"
-            ]
+            "@utils/*": ["backend/utils/*"],
+            "@api/*": ["backend/api/*"],
+            "@types": ["backend/index.d.ts"]
         }
     },
     "include": [

@@ -1,6 +1,6 @@
 node_modules
-logs
+config.json5
+error.png
 dist
-
-config.yaml
-lib\nopecha\manifest.json
+tsconfig.tsbuildinfo
+.vscode

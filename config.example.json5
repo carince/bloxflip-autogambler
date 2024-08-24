@@ -1,0 +1,42 @@
+{
+    "auth": "",
+    "bet": {
+        "tries": 12,
+        "starting_bet": 0,
+        "auto_cashout": 2
+    },
+    "rain": {
+        "enabled": true,
+        "minimum": 0,
+        "notifications": {
+            "os_notifs": false,
+            "webhook": {
+                "enabled": false,
+                "link": "",
+                "ping_id": "@everyone // <@USERID>"
+            }
+        },
+        "analytics": {
+            "enabled": false,
+            "notifications": {
+                "webhook": false
+            }
+        },
+        "updater": {
+            "enabled": true
+        }
+    },
+    "updater": {
+        "check": false,
+        "auto_update": false
+    },
+    // For debugging purposes only, dont touch if you dont know what you are doing
+    "debugging": {
+        "headless": true,
+        "verbose": true,
+        "launch_options": [
+            "--start-maximized",
+            "--single-process"
+        ]
+    }
+}
