@@ -10,23 +10,14 @@ let manager: Manager;
 
 export default async function startWebsocket() {
     try {
-        manager = new Manager("https://ws.bloxflip.com", {
+        manager = new Manager("wss://ws.bloxflip.com", {
             autoConnect: false,
             transports: ["websocket"],
             reconnection: true,
             reconnectionAttempts: Infinity,
             reconnectionDelay: 1000,
             extraHeaders: {
-                Host: "ws.bloxflip.com",
-                Connection: "Upgrade",
-                Pragma: "no-cache",
-                "Cache-Control": "no-cache",
                 "User-Agent": USER_AGENT,
-                Upgrade: "websocket",
-                Origin: "https://bloxflip.com",
-                "Sec-WebSocket-Version": "13",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Accept-Language": "en-US,en;q=0.9",
             },
         });
 

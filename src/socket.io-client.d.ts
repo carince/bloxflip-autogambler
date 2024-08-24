@@ -1,6 +1,8 @@
 /* eslint-disable max-classes-per-file */
-
 declare module "socket.io-client" {
+
+    import { socketDisconnectReasons } from "@utils/constants.ts";
+
     export class Manager {
         constructor(url: string, options?: ManagerOptions);
         open(callback: (err: unknown) => Promise<void>): Promise<void>;
@@ -10,6 +12,7 @@ declare module "socket.io-client" {
     export class Socket {
         open(): Socket;
         on(eventName: string, callback: (...args: any[]) => void): Socket;
+        on(eventName: "disconnect", callback: (reason: keyof typeof socketDisconnectReasons) => void): Socket;
         emit(eventName: string, ...args: any[]): Socket;
         close(): Socket;
 

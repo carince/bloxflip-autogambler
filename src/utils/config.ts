@@ -24,8 +24,8 @@ async function fetchConfig(): Promise<void> {
 
         if (!result.success) throw new Error(`Invalid configuration: ${JSON.stringify(result.error.errors, null, 2)}`);
 
-        Logger.info("CONFIG", "Successfully fetched config.");
         config = result.data;
+        Logger.info("CONFIG", "Successfully fetched config.");
     } catch (e) {
         Logger.error("CONFIG", e instanceof Error ? e.message : "Unknown Error.", { forceClose: true });
         throw e;

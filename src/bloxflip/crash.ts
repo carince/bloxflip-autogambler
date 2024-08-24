@@ -51,7 +51,7 @@ export default async function connectCrash(manager: Manager) {
         game.bet = await calculateBet();
     });
 
-    socket.on("disconnect", async (reason: keyof typeof socketDisconnectReasons) => {
+    socket.on("disconnect", async (reason) => {
         Logger.error("SOCKET/CRASH", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`);
     });
 
