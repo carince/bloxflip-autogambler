@@ -69,11 +69,10 @@ export default async function connectCrash(manager: Manager) {
             Logger.error("CRASH", `WIPED. \nBet: ${game.bet} \nBalance: ${game.balance} \nLoss Streak: ${game.lossStreak}`, { forceClose: true });
         }
 
-        game.joined = true;
-        // socket.emit("join-game", {
-        //     autoCashoutPoint: Math.trunc(config.autocashout * 100),
-        //     betAmount: game.bet,
-        // });
+        socket.emit("join-game", {
+            autoCashoutPoint: Math.trunc(config.autocashout * 100),
+            betAmount: game.bet,
+        });
     });
 
     // Check if we successfully joined
