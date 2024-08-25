@@ -33,17 +33,13 @@ export default class Logger {
     static async logGame(game: Game) {
         const win = game.crash >= config.autocashout;
         const message = `Game #${game.count}\nStatus: ${win ? "Won" : `Loss - #${game.lossStreak}`} \nCrash Point: ${game.crash}x \nBet: ${game.bet} R$, Balance: ${game.balance} R$`;
-        const seperator = "—".repeat(this.getLongestLine(message));
+        const lines = message.split(/\r?\n/);
+        const seperator = "—".repeat(Math.max(...(lines.map((line) => line.trim().length))));
 
         if (win) {
             console.log(chalk.greenBright(`${seperator}\n${message}`));
         } else {
             console.log(chalk.redBright(`${seperator}\n${message}`));
         }
-    }
-
-    private static getLongestLine(string: string): number {
-        const lines = string.split(/\r?\n/);
-        return Math.max(...(lines.map((line) => line.trim().length)));
     }
 }

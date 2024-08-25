@@ -1,6 +1,6 @@
-import { config } from "@utils/config.js";
 import frmt from "@utils/number.js";
 
+import { config } from "../utils/config.js";
 import { game } from "./crash.js";
 
 export default async function calculateBet() {

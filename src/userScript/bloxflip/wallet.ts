@@ -1,10 +1,10 @@
-import { socketDisconnectReasons } from "@utils/constants.js";
 import frmt from "@utils/number.js";
 import { UserAPIResponse } from "@utils/types.js";
 // eslint-disable-next-line
 import { Manager, Socket } from "socket.io-client/dist/socket.io.dev.js";
 
 import { config } from "../utils/config.js";
+import { socketDisconnectReasons } from "../utils/constants.js";
 import Logger from "../utils/logger.js";
 import { game } from "./crash.js";
 

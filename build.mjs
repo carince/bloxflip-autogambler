@@ -1,5 +1,3 @@
-import { readdir, mkdir, unlink, lstat, rmdir } from "fs/promises";
-import { existsSync as exists } from "fs";
 import { execSync } from "child_process";
 
 import { rollup } from "rollup";
@@ -19,26 +17,6 @@ const plugins = [
     })
 ];
 
-// Clear and make paths
-async function delDirRecursively(path) {
-    if (!exists(path)) return;
-
-    for (const file of await readdir(path)) {
-        const filePath = `${path}/${file}`;
-        if ((await lstat(filePath)).isDirectory()) {
-            await delDirRecursively(filePath);
-        } else {
-            console.log(`Deleting file: ${filePath}`);
-            await unlink(filePath);
-        }
-    }
-
-    console.log(`Deleting folder: ${path}`);
-    await rmdir(path);
-}
-await delDirRecursively("./dist");
-
-await mkdir("./dist");
 
 // Backend
 console.log("Building Backend...");
@@ -74,16 +52,16 @@ try {
             swc(),
             esbuild({
                 minify: false,
-                treeShaking: true,
-                format: "esm"
+                treeShaking: false,
+                format: "esm",
             })
         ]
     });
 
     await userScript.write({
         file: "./dist/userscript.js",
-        format: "cjs",
-        compact: true,
+        format: "esm",
+        compact: true
     });
     await userScript.close();
 

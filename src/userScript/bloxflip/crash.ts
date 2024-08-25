@@ -1,9 +1,9 @@
-import { socketDisconnectReasons } from "@utils/constants.js";
 import frmt from "@utils/number.js";
 // eslint-disable-next-line
 import { Manager, Socket } from "socket.io-client/dist/socket.io.dev.js";
 
 import { config } from "../utils/config.js";
+import { socketDisconnectReasons } from "../utils/constants.js";
 import Logger from "../utils/logger.js";
 import { serverWs } from "../utils/server.js";
 import calculateBet from "./bet.js";
@@ -21,7 +21,9 @@ export const game = {
 let socket: Socket;
 
 function logGame() {
+    game.count += 1;
     serverWs.emit("new-game", {
+        count: game.count,
         crash: game.crash,
         lossStreak: game.lossStreak,
         balance: game.balance,

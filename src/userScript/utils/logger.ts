@@ -3,11 +3,10 @@
 import { serverWs } from "./server.js";
 
 export default class Logger {
-    public static async log(label: string, message: string, options?: { skipEmit: boolean }) {
-        console.log(`%c ${label} %c ${message}`, "font-weight: bold", "color: green");
+    public static async log(label: string, message: string) {
+        console.log(`%c[ ${label} ]%c ${message}`, "font-weight: bold; color: green", "color: green");
 
-        if (options?.skipEmit) return;
-        if (!serverWs || serverWs.connected) return;
+        if (!serverWs || serverWs.disconnected) return;
         serverWs.emit("new-log", {
             type: "log",
             label: `CLIENT > ${label}`,
@@ -15,11 +14,10 @@ export default class Logger {
         });
     }
 
-    public static async info(label: string, message: string, options?: { skipEmit?: boolean }) {
-        console.log(`%c ${label} %c ${message}`, "font-weight: bold", "color: blue");
+    public static async info(label: string, message: string) {
+        console.log(`%c[ ${label} ]%c ${message}`, "font-weight: bold; color: blue", "color: blue");
 
-        if (options?.skipEmit) return;
-        if (!serverWs || serverWs.connected) return;
+        if (!serverWs || serverWs.disconnected) return;
         serverWs.emit("new-log", {
             type: "info",
             label: `CLIENT > ${label}`,
@@ -27,11 +25,10 @@ export default class Logger {
         });
     }
 
-    public static async warn(label: string, message: string, options?: { skipEmit: boolean }) {
-        console.log(`%c ▲ ${label} %c ${message}`, "font-weight: bold", "color: yellow");
+    public static async warn(label: string, message: string) {
+        console.log(`%c[ ▲ ${label} ]%c ${message}`, "font-weight: bold; color: yellow", "color: yellow");
 
-        if (options?.skipEmit) return;
-        if (!serverWs || serverWs.connected) return;
+        if (!serverWs || serverWs.disconnected) return;
         serverWs.emit("new-log", {
             type: "warn",
             label: `CLIENT > ${label}`,
@@ -42,12 +39,11 @@ export default class Logger {
     public static async error(
         label: string,
         message: string,
-        options?: { forceClose?: boolean, skipEmit?: boolean },
+        options?: { forceClose: boolean },
     ) {
-        console.log(`%c ⬣ ${label} %c ${message}`, "font-weight: bold", "color: red");
+        console.log(`%c[ ⬣ ${label} ]%c ${message}`, "font-weight: bold; color: red", "color: red");
 
-        if (options?.skipEmit) return;
-        if (!serverWs || serverWs.connected) return;
+        if (!serverWs || serverWs.disconnected) return;
         serverWs.emit("new-log", {
             type: "error",
             label: `CLIENT > ${label}`,
