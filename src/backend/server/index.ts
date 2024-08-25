@@ -28,6 +28,7 @@ async function startServer() {
 
         socket.on("get-config", (ack: (data: any) => unknown) => { ack(config); });
         socket.on("new-game", Logger.logGame);
+        socket.on("new-rain", handleRain);
         socket.on("new-log", handleLog);
     });
 }

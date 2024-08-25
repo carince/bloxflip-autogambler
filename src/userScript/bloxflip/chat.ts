@@ -11,8 +11,10 @@ async function sendWebhook(content: string) {
     try {
         if (!config.rain.notifications.enabled) return;
         fetch(config.rain.notifications.link, {
-            method: "post",
-            body: content,
+            method: "POST",
+            body: JSON.stringify({
+                content,
+            }),
         });
     } catch (err) {
         Logger.error("RAIN/WEBHOOK", `Posting to webhook failed.\nError: ${err}`);
@@ -45,6 +47,6 @@ export default async function connectChat(manager: Manager) {
         }
 
         Logger.log("RAIN", `Rain detected!\n${logData}`);
-        await sendWebhook(`${config.rain.notifications.ping_id}\n# Bloxflip Rain Notifier\n**Prize: **${data.prize} R$\n**Host: **${data.host}\n**Time Remaining: **<t:${Math.ceil((new Date().getTime() + data.timeLeft) / 1000)}:R>`);
+        await sendWebhook(`${config.rain.notifications.ping_id}\n## Bloxflip Rain Notifier\n**Prize: **${data.prize} R$\n**Host: **${data.host}\n**Time Remaining: **<t:${Math.ceil((new Date().getTime() + data.timeLeft) / 1000)}:R>\n-# [Sent with bloxflip-autogambler](<https://github.com/carince/bloxflip-autogambler>)`);
     });
 }
