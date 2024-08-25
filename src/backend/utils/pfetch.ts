@@ -1,100 +1,36 @@
-import { page } from "@utils/browser.js";
+import { browser } from "@utils/browser.js";
 import { config } from "@utils/config.js";
-import { Logger } from "@utils/logger.js";
-import { sleep } from "@utils/sleep.js";
-import { USER_AGENT } from "@utils/constants.js";
-import { GitHubCommits, UserApi } from "@types";
+import Logger from "@utils/logger.js";
+import { UserAPIResponse } from "@utils/types.js";
 
-async function getBfUser(): Promise<UserApi | void> {
-    const auth = config.auth;
-    for (let i = 1; i < 6; i++) {
-        const res: Record<string, unknown> & { apiError: { code: any, body: any } } = await page.evaluate(async (auth: string) => {
-            let api;
-
-            try {
-                api = await fetch("https://api.bloxflip.com/user", {
-                    method: "get",
-                    headers: {
-                        "x-auth-token": auth
-                    }
-                });
-
-                if (api.ok) {
-                    return api.json();
-                } else {
-                    return { apiError: { code: api?.status, body: await api?.text() }};
-                }
-            } catch (e) {
-                return { apiError: { code: e, body: null }};
-            }
-        }, auth);
-
-        if (res.success) {
-            return res as unknown as UserApi;
-        } else if (res.apiError) {
-            Logger.warn("PFETCH", `Fetching user data failed, trying again... #${i} \nCode: ${res.apiError.code} \nBody: ${res.apiError.body}`);
-            if (i === 2) return Logger.error("PFETCH", `Fetching user data failed. \nCode: ${res.apiError.code} \nBody: ${res.apiError.body}`, { forceClose: true });
-            await sleep(5000);
-        }
-    }
-}
-
-async function sendWh(body: any, link: string) {
-    const res: { apiError: any } | undefined = await page.evaluate(async (link: string, body: any) => {
-        let api;
-
+export default async function fetchUserData(): Promise<UserAPIResponse> {
+    const [page] = await browser.pages();
+    const res = await page.evaluate(async (auth: string) => {
         try {
-            api = await fetch(link, {
-                method: "post",
-                headers: { "Content-Type": "application/json", "Accept": "application/json" },
-                body: JSON.stringify(body)
+            const api = await fetch("https://api.bloxflip.com/user", {
+                method: "get",
+                headers: {
+                    "x-auth-token": auth,
+                },
             });
 
-            if (!api.ok) {
-                return { apiError: api.status };
+            if (api.ok) {
+                return await api.json();
             }
+
+            return { apiError: { code: api?.statusText, body: await api?.text() } };
         } catch (e) {
-            return { apiError: e };
+            return { apiError: { code: JSON.stringify(e), body: "bro" } };
         }
-    }, link, body);
+    }, config.auth);
 
-    if (res?.apiError) {
-        Logger.warn("PFETCH", `Sending webhook failed. \nError: ${res.apiError}`);
+    if (res.apiError) {
+        Logger.error("USER", `Fetching user data failed\nCode: ${res.apiError.code} \nBody: ${res.apiError.body}`, { forceClose: true });
     }
-}
 
-
-async function getGh(branch: string, hash: string): Promise<GitHubCommits | void> {
-    for (let i = 1; i < 6; i++) {
-        const res: { apiError: any } = await page.evaluate(async (branch: string, hash: string, USER_AGENT: string) => {
-            let api;
-
-            try {
-                api = await fetch(`https://api.github.com/repos/carince/bloxflip-autocrash/compare/${hash}...${branch}`, {
-                    method: "get",
-                    headers: {
-                        "User-Agent": USER_AGENT
-                    }
-                });
-
-                if (api.ok) {
-                    return api.json();
-                } else {
-                    return { apiError: api.status };
-                }
-            } catch (e) {
-                return { apiError: e };
-            }
-        }, branch, hash, USER_AGENT);
-
-        if (res.apiError) {
-            Logger.warn("PFETCH", `Fetching GitHub changes failed, trying again... #${i} \nError: ${res.apiError} `);
-            if (i === 2) return Logger.error("PFETCH", `Fetching GitHub changes failed. \nError: ${res.apiError}`, { forceClose: true });
-            await sleep(5000);
-        } else {
-            return res as unknown as GitHubCommits;
-        }
+    if (!res.success) {
+        Logger.error("USER", "Invalid auth token.", { forceClose: true });
     }
-}
 
-export { getBfUser, sendWh, getGh };
+    return res as UserAPIResponse;
+}

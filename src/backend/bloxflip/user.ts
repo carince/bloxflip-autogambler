@@ -1,23 +1,23 @@
-import chalk from "chalk";
-import { Logger } from "@utils/logger.js";
-import { getBfUser } from "@utils/pfetch.js";
 import { config } from "@utils/config.js";
+import Logger from "@utils/logger.js";
+import frmt from "@utils/number.js";
+import fetchUserData from "@utils/pfetch.js";
+import chalk from "chalk";
 
-async function checkAuth(): Promise<void> {
+export default async function login(): Promise<void> {
     Logger.info("USER", "Fetching user information.");
 
-    const bfUser = await getBfUser();
+    const { user } = await fetchUserData();
 
-    const wallet = +(+bfUser!.user.wallet.toFixed(2) + +bfUser!.user.bonusWallet.toFixed(2)).toFixed(2);
-    const baseBet = +(wallet / Math.pow(2, config.bet.tries)).toFixed(2);
+    const wallet = frmt(user.wallet + user.bonusWallet);
+    const baseBet = frmt(wallet / 2 ** config.tries);
 
     if (baseBet === 0) {
         return Logger.error("USER", "Tries in config is too high causing the bet to be 0", { forceClose: true });
     }
 
-    Logger.log("USER",
-        `${chalk.bold("Successfully logged in!")} \nUsername: ${bfUser!.user.robloxUsername} \nID: ${bfUser!.user.robloxId} \nBalance: ${wallet} R$`
+    return Logger.log(
+        "USER",
+        `${chalk.bold("Successfully logged in!")} \nUsername: ${user.robloxUsername} \nID: ${user.robloxId} \nBalance: ${wallet} R$`,
     );
 }
-
-export { checkAuth };

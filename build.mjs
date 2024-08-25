@@ -6,6 +6,8 @@ import { rollup } from "rollup";
 import ts from "@rollup/plugin-typescript";
 import swc from "@rollup/plugin-swc";
 import esbuild from "rollup-plugin-esbuild";
+import cjs from "@rollup/plugin-commonjs";
+import resolve from "@rollup/plugin-node-resolve"
 
 const plugins = [
     ts(),
@@ -64,15 +66,24 @@ try {
 console.log("Building UserScript...");
 try {
     const userScript = await rollup({
-        input: "./src/userScript/index.ts",
-        onwarn: () => { return; },
-        plugins
+        input: "./src/userscript/index.ts",
+        plugins: [
+            resolve(),
+            cjs(),
+            ts(),
+            swc(),
+            esbuild({
+                minify: false,
+                treeShaking: true,
+                format: "esm"
+            })
+        ]
     });
 
     await userScript.write({
         file: "./dist/userscript.js",
         format: "cjs",
-        compact: true
+        compact: true,
     });
     await userScript.close();
 

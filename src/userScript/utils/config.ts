@@ -1,30 +1,20 @@
-import { Logger } from "./logger.js";
-import { serverWs } from "./ws.js";
+import { Config } from "@utils/types.js";
 
-type Config = {
-    auth: string,
-    bet: {
-        tries: number,
-        startingBet: number,
-        autoCashout: number
-    }
-    rain: {
-        enabled: boolean;
-        minimum: number;
-    }
-}
+import Logger from "./logger.js";
+import { serverWs } from "./server.js";
 
 let config: Config;
 
-async function fetchConfig() {
+async function fetchConfig(): Promise<void> {
     try {
-        if (config?.auth) return Logger.info("CONFIG", "Already fetched config, returning...");
-        const fetchedConfig = await serverWs.emitWithAck("get-config");
-        config = fetchedConfig as Config;
-        Logger.info("CONFIG", "Successfully fetched config.");
+        if (config?.auth) return await Logger.info("CONFIG", "Already fetched config, returning...");
+        serverWs.emit("get-config", (data: any) => {
+            config = data as Config;
+        });
+        return await Logger.info("CONFIG", "Successfully fetched config.");
     } catch (err) {
-        Logger.error("CONFIG", `Unable to fetch config from server.\n${err}`, { forceClose: true });
+        return Logger.error("CONFIG", `Unable to fetch config from server.\n${err}`, { forceClose: true });
     }
 }
 
-export { fetchConfig, config };
+export { config, fetchConfig };

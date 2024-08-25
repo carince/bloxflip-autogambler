@@ -1,143 +1,116 @@
-import { bfWs, bfWsSend, connectBfWs, serverWs } from "../utils/ws.js";
-import { calculateBet, getUserInfo } from "./bet.js";
-import { rain } from "./rain.js";
-import { keepAlive } from "../utils/keepAlive.js";
+import { socketDisconnectReasons } from "@utils/constants.js";
+import frmt from "@utils/number.js";
+// eslint-disable-next-line
+import { Manager, Socket } from "socket.io-client/dist/socket.io.dev.js";
+
 import { config } from "../utils/config.js";
-import { Logger } from "../utils/logger.js";
-import { sleep } from "@utils/sleep.js";
+import Logger from "../utils/logger.js";
+import { serverWs } from "../utils/server.js";
+import calculateBet from "./bet.js";
 
-interface gameInt {
-    bet: number;
-    joined: boolean;
-    started: boolean;
-    lossStreak: number;
-    crash: number;
-    balance: number;
-    count: number;
-}
-
-const game: gameInt = {
+export const game = {
+    count: 0,
+    balance: 0,
     bet: 0,
     joined: false,
     started: false,
     crash: 0,
     lossStreak: 0,
-    balance: 0,
-    count: 0
 };
 
-async function crash(event: MessageEvent) {
+let socket: Socket;
+
+function logGame() {
+    serverWs.emit("new-game", {
+        crash: game.crash,
+        lossStreak: game.lossStreak,
+        balance: game.balance,
+        bet: game.bet,
+    });
+}
+
+export default async function connectCrash(manager: Manager) {
+    socket = manager.socket("/crash").open();
+
+    socket.on("connect", async () => {
+        Logger.info("SOCKET/CRASH", "Successfully connected to namespace.");
+        socket.emit("auth", config.auth);
+        game.bet = await calculateBet();
+    });
+
+    socket.on("disconnect", async (reason: keyof typeof socketDisconnectReasons) => {
+        Logger.error("SOCKET/CRASH", `Socket has disconnected, Reason: ${socketDisconnectReasons[reason]}`);
+    });
+
     // Unable to join due to expired/invalid token
-    if (event.data.includes("42/crash,[\"notify-error\",\"Your session has expired, please refresh your page!\"]")) {
-        return Logger.error("CRASH", "Token is either expired or invalid, try taking your auth token again after relogging into Bloxflip", { forceClose: true });
-    }
+    socket.on("notify-error", async (data: string) => {
+        if (data === "Your session has expired, please refresh your page!") {
+            Logger.error("CRASH", "Token is either expired or invalid, try taking your auth token again after relogging into Bloxflip", { forceClose: true });
+        }
+    });
 
     // Game Intermission before it starts
-    if (event.data.includes("42/crash,[\"game-starting\",")) {
-        if (game.bet !== 0) {
-            if (game.started) {
-                return Logger.warn("BET", "Cannot place bet, game has already started.");
-            }
+    socket.on("game-starting", async (): Promise<void> => {
+        if (game.bet === 0) return;
 
-            if (game.joined) {
-                return Logger.warn("BET", "Cannot place bet, already joined the game.");
-            }
-
-            if (game.bet > game.balance) {
-                Logger.error("CRASH", `WIPED. \nBet: ${game.bet} \nBalance: ${game.balance} \nLoss Streak: ${game.lossStreak}`, { forceClose: true });
-            }
-
-            bfWsSend(`42/crash,["join-game",{"autoCashoutPoint":${Math.trunc(config.bet.autoCashout * 100)},"betAmount":${game.bet}}]`);
-            game.balance = game.balance - game.bet;
-            game.balance = +game.balance.toFixed(2);
-            Logger.log("BET", `Balance: ${game.balance}, Bet: ${game.bet}`, { skipEmit: true });
+        if (game.started) {
+            Logger.warn("BET", "Cannot place bet, game has already started.");
+            return;
         }
-    }
 
-    // Check if we successfully joined
-    if (event.data.includes("42/crash,[\"game-join-success\"")) {
         if (game.joined) {
-            return Logger.log("CRASH", "Why did we try to join again when we are already in? (my code is shit)");
+            Logger.warn("BET", "Cannot place bet, already joined the game.");
+            return;
+        }
+
+        if (game.bet > game.balance) {
+            Logger.error("CRASH", `WIPED. \nBet: ${game.bet} \nBalance: ${game.balance} \nLoss Streak: ${game.lossStreak}`, { forceClose: true });
         }
 
         game.joined = true;
-        Logger.log("CRASH", "Joined game successfully", { skipEmit: true });
-    }
+        // socket.emit("join-game", {
+        //     autoCashoutPoint: Math.trunc(config.autocashout * 100),
+        //     betAmount: game.bet,
+        // });
+    });
+
+    // Check if we successfully joined
+    socket.on("game-join-success", async () => {
+        if (game.joined) {
+            Logger.warn("CRASH", "Why did we try to join again when we are already in? (my code is shit)");
+        }
+        game.joined = true;
+    });
 
     // Game starting
-    if (event.data.includes("42/crash,[\"game-start\"")) {
+    socket.on("game-start", async () => {
         if (!game.joined) {
             Logger.warn("CRASH", "Failed to join game, bet was not placed before game started.");
         }
 
         game.started = true;
-    }
+    });
 
     // Game end
-    if (event.data.includes("42/crash,[\"game-end\",")) {
-        game.crash = event.data.match(/(?<="crashPoint":)(.*?)(?=,)/)[0];
+    socket.on("game-end", async (data: { crashPoint: number }) => {
+        game.crash = data.crashPoint;
         game.started = false;
 
         if (!game.joined) {
-            return Logger.warn("CRASH", `Ignoring as we haven't joined this round: ${game.crash}x`);
+            Logger.warn("CRASH", `Ignoring as we haven't joined this round: ${game.crash}x`);
+            return;
         }
 
-        if (game.crash >= config.bet.autoCashout) {
+        if (game.crash >= config.autocashout) {
             game.lossStreak = 0;
-            Logger.log("CRASH", `Won: ${game.crash}x`, { skipEmit: true });
-
-            if (game.count % 10 === 0) {
-                await getUserInfo(true);
-            } else {
-                game.balance = game.balance + (game.bet * config.bet.autoCashout);
-                game.balance = +game.balance.toFixed(2);
-            }
-            
-            sendGame();
-            await calculateBet(true);
+            logGame();
+            game.bet = await calculateBet();
         } else {
-            game.lossStreak = game.lossStreak + 1;
-            Logger.log("CRASH", `Lost: ${game.crash}x - #${game.lossStreak}`, { skipEmit: true });
-            sendGame();
-            await calculateBet(false);
+            game.lossStreak += 1;
+            logGame();
+            game.bet = frmt(game.bet);
         }
 
         game.joined = false;
-        Logger.log("L I N E", "──────────────────────────────────", { skipEmit: true });
-    }
-}
-
-function sendGame() {
-    serverWs.emit("new-game", {
-        crash: game.crash,
-        lossStreak: game.lossStreak,
-        balance: game.balance,
-        bet: game.bet
     });
 }
-
-async function startAutoCrash() {
-    await connectBfWs();
-    const kA = new keepAlive();
-    await getUserInfo();
-
-    bfWs.addEventListener("close", async () => {
-        Logger.warn("WS", "WebSocket closed unexpectedly, attempting reconnect...");
-
-        bfWs.removeEventListener("message", crash);
-        bfWs.removeEventListener("message", rain);
-        kA.stop();
-
-        await sleep(5000);
-        return startAutoCrash();
-    });
-
-    Promise.all([
-        bfWs.addEventListener("message", (event) => crash(event)),
-        bfWs.addEventListener("message", (event) => rain(event)),
-        kA.start()
-    ]);
-}
-
-
-export { startAutoCrash, crash, game };

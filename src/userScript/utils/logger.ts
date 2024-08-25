@@ -1,54 +1,58 @@
-import { serverWs } from "./ws.js";
+/* eslint-disable no-console */
 
-class Logger {
+import { serverWs } from "./server.js";
+
+export default class Logger {
     public static async log(label: string, message: string, options?: { skipEmit: boolean }) {
-        console.log(`%c ${label} %c ${message}`, "background-color: green", "color: green");
+        console.log(`%c ${label} %c ${message}`, "font-weight: bold", "color: green");
 
         if (options?.skipEmit) return;
-        if (!serverWs || !serverWs?.connected) return;
+        if (!serverWs || serverWs.connected) return;
         serverWs.emit("new-log", {
             type: "log",
             label: `CLIENT > ${label}`,
-            message: message,
+            message,
         });
     }
 
     public static async info(label: string, message: string, options?: { skipEmit?: boolean }) {
-        console.log(`%c ${label} %c ${message}`, "background-color: blue", "color: blue");
+        console.log(`%c ${label} %c ${message}`, "font-weight: bold", "color: blue");
 
         if (options?.skipEmit) return;
-        if (!serverWs || !serverWs?.connected) return;
+        if (!serverWs || serverWs.connected) return;
         serverWs.emit("new-log", {
             type: "info",
             label: `CLIENT > ${label}`,
-            message: message,
+            message,
         });
     }
 
     public static async warn(label: string, message: string, options?: { skipEmit: boolean }) {
-        console.log(`%c ▲ ${label} %c ${message}`, "background-color: yellow; color: black", "color: yellow");
+        console.log(`%c ▲ ${label} %c ${message}`, "font-weight: bold", "color: yellow");
 
         if (options?.skipEmit) return;
-        if (!serverWs || !serverWs?.connected) return;
+        if (!serverWs || serverWs.connected) return;
         serverWs.emit("new-log", {
             type: "warn",
             label: `CLIENT > ${label}`,
-            message: message,
+            message,
         });
     }
 
-    public static async error(label: string, message: string, options?: { forceClose?: boolean, skipEmit?: boolean }) {
-        console.log(`%c ⬣ ${label} %c ${message}`, "background-color: red", "color: red");
+    public static async error(
+        label: string,
+        message: string,
+        options?: { forceClose?: boolean, skipEmit?: boolean },
+    ) {
+        console.log(`%c ⬣ ${label} %c ${message}`, "font-weight: bold", "color: red");
 
         if (options?.skipEmit) return;
-        if (!serverWs || !serverWs?.connected) return;
+        if (!serverWs || serverWs.connected) return;
         serverWs.emit("new-log", {
             type: "error",
             label: `CLIENT > ${label}`,
-            message: message,
-            forceClose: options?.forceClose
+            message,
+            forceClose: options?.forceClose,
         });
     }
 }
-
-export { Logger };

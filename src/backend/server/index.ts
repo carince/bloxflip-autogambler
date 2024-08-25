@@ -1,11 +1,10 @@
+import handleLog from "@server/logs.js";
+import { config } from "@utils/config.js";
+import Logger from "@utils/logger.js";
 import express from "express";
 import http from "http";
-import { Server } from "socket.io";
-import { Logger } from "@utils/logger.js";
-
-import { handleRain } from "@server/rain.js";
-import { sendConfig } from "@server/user.js";
-import { logBloxflip, handleLog } from "@server/logs.js";
+// @ts-expect-error
+import Server from "socket.io";
 
 let io: Server;
 
@@ -24,20 +23,13 @@ async function startServer() {
         res.send("Welcome to bloxflip-autocrash! 🎉");
     });
 
-    io.on("connection", (socket) => {
+    io.on("connection", (socket: any) => {
         Logger.info("SERVER", `${socket.id} has connected.`);
 
-        socket.on("get-config", sendConfig);
+        socket.on("get-config", (ack: (data: any) => unknown) => { ack(config); });
         socket.on("new-game", Logger.logGame);
-        socket.on("new-rain", handleRain);
         socket.on("new-log", handleLog);
-
-        socket.on("bloxflip-ws-log", logBloxflip);
-
-        socket.on("join-analytics", () => {
-            socket.join("analytics");
-        });
     });
 }
 
-export { startServer, io as socket };
+export { io as socket, startServer };
