@@ -1,6 +1,7 @@
 // eslint-disable-next-line
 import { Manager, Socket } from "socket.io-client/dist/socket.io.dev.js";
 import { RainStateChangedData } from "@utils/types.js";
+import { serverWs } from "../utils/server.js";
 import { socketDisconnectReasons } from "../utils/constants.js";
 import { config } from "../utils/config.js";
 import Logger from "../utils/logger.js";
@@ -47,6 +48,8 @@ export default async function connectChat(manager: Manager) {
         }
 
         Logger.log("RAIN", `Rain detected!\n${logData}`);
+
+        serverWs.emit("new-rain", data);
         await sendWebhook(`${config.rain.notifications.ping_id}\n## Bloxflip Rain Notifier\n**Prize: **${data.prize} R$\n**Host: **${data.host}\n**Time Remaining: **<t:${Math.ceil((new Date().getTime() + data.timeLeft) / 1000)}:R>\n-# [Sent with bloxflip-autogambler](<https://github.com/carince/bloxflip-autogambler>)`);
     });
 }

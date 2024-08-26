@@ -9,7 +9,7 @@ export default class Logger {
         if (!serverWs || serverWs.disconnected) return;
         serverWs.emit("new-log", {
             type: "log",
-            label: `CLIENT > ${label}`,
+            label,
             message,
         });
     }
@@ -20,7 +20,7 @@ export default class Logger {
         if (!serverWs || serverWs.disconnected) return;
         serverWs.emit("new-log", {
             type: "info",
-            label: `CLIENT > ${label}`,
+            label,
             message,
         });
     }
@@ -31,7 +31,7 @@ export default class Logger {
         if (!serverWs || serverWs.disconnected) return;
         serverWs.emit("new-log", {
             type: "warn",
-            label: `CLIENT > ${label}`,
+            label,
             message,
         });
     }
@@ -46,7 +46,7 @@ export default class Logger {
         if (!serverWs || serverWs.disconnected) return;
         serverWs.emit("new-log", {
             type: "error",
-            label: `CLIENT > ${label}`,
+            label,
             message,
             forceClose: options?.forceClose,
         });

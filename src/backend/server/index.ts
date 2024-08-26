@@ -6,6 +6,8 @@ import http from "http";
 // @ts-expect-error
 import Server from "socket.io";
 
+import handleRain from "./rain.js";
+
 let io: Server;
 
 async function startServer() {
@@ -24,8 +26,6 @@ async function startServer() {
     });
 
     io.on("connection", (socket: any) => {
-        Logger.info("SERVER", `${socket.id} has connected.`);
-
         socket.on("get-config", (ack: (data: any) => unknown) => { ack(config); });
         socket.on("new-game", Logger.logGame);
         socket.on("new-rain", handleRain);

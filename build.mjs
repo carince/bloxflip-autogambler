@@ -1,75 +1,63 @@
 import { execSync } from "child_process";
 
-import { rollup } from "rollup";
-import ts from "@rollup/plugin-typescript";
-import swc from "@rollup/plugin-swc";
-import esbuild from "rollup-plugin-esbuild";
-import cjs from "@rollup/plugin-commonjs";
-import resolve from "@rollup/plugin-node-resolve"
-
-const plugins = [
-    ts(),
-    swc(),
-    esbuild({
-        minify: false,
-        treeShaking: false,
-        format: "esm"
-    })
-];
-
+import * as esbuild from "esbuild"
 
 // Backend
-console.log("Building Backend...");
-try {
-    const backend = await rollup({
-        input: "./src/backend/index.ts",
-        onwarn: () => { return; },
-        plugins
-    });
+function buildBackend() {
+    try {
+        console.log("Building Backend...");
 
-    await backend.write({
-        file: "./dist/index.js",
-        format: "esm",
-        compact: true
-    });
-    await backend.close();
-
-    console.log("Successfully built Backend!");
-} catch (err) {
-    console.error(`Failed to build Backend:\n ${err}`);
-    process.exit(1);
+        esbuild.build({
+            entryPoints: ["src/backend/index.ts"],
+            target: "node22",
+            bundle: true,
+            format: "esm",
+            packages: "external",
+            minify: true,
+            minifyIdentifiers: true,
+            minifySyntax: true,
+            minifyWhitespace: true,
+            treeShaking: true,
+            outfile: "dist/index.js"
+        })
+    
+        console.log("Successfully built Backend!");
+    } catch (err) {
+        console.error(`Failed to build Backend:\n ${err}`);
+        process.exit(1);
+    }
 }
 
 // UserScript 
-console.log("Building UserScript...");
-try {
-    const userScript = await rollup({
-        input: "./src/userscript/index.ts",
-        plugins: [
-            resolve(),
-            cjs(),
-            ts(),
-            swc(),
-            esbuild({
-                minify: false,
-                treeShaking: false,
-                format: "esm",
-            })
-        ]
-    });
+function buildUserscript() {
+    try {
+        console.log("Building Userscript...");
 
-    await userScript.write({
-        file: "./dist/userscript.js",
-        format: "esm",
-        compact: true
-    });
-    await userScript.close();
-
-    console.log("Successfully built UserScript!");
-} catch (err) {
-    console.error(`Failed to build UserScript:\n ${err}`);
+        esbuild.build({
+            entryPoints: ["src/userscript/index.ts"],
+            target: "chrome127",
+            bundle: true,
+            format: "esm",
+            packages: "bundle",
+            minify: true,
+            minifyIdentifiers: true,
+            minifySyntax: true,
+            minifyWhitespace: true,
+            treeShaking: true,
+            outfile: "dist/userscript.js"
+        })
+    
+        console.log("Successfully built Userscript!");
+    } catch (err) {
+        console.error(`Failed to build Userscript:\n ${err}`);
+        process.exit(1);
+    }
 }
 
+await Promise.all([
+    buildBackend(),
+    buildUserscript()
+])
 
 if (process.argv.includes("--run")) {
     console.log("Running bloxflip-autocrash...");
