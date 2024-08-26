@@ -11,11 +11,10 @@ let browser: Browser;
 async function startBrowser(): Promise<void> {
     try {
         puppeteer.default.use(stealthPlugin());
-        const pathToExtension = join(__dirname, "..", "..", "lib", "nopecha");
+        const pathToExtension = join(__dirname, "..", "lib", "nopecha");
         const pup = await puppeteer.default.launch(
             {
                 headless: config.debugging.headless,
-                defaultViewport: { width: 1920, height: 1080 },
                 devtools: true,
                 args: [
                     "--start-maximized",

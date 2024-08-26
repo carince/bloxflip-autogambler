@@ -21,9 +21,11 @@ export default async function handleRain(data: RainStateChangedData) {
         await page.click(rainButton);
 
         await page.waitForResponse(
-            (res: HTTPResponse) => (res.url().includes("https://api.hcaptcha.com/checkcaptcha") && res.ok()),
-            { timeout: 0 },
+            (res: HTTPResponse) => (res.url().includes("api.hcaptcha.com/checkcaptcha") && res.ok()),
+            { timeout: data.timeLeft },
         );
+
+        Logger.debug("we joined");
 
         await page.waitForSelector("::-p-xpath(//*[@id='__next']/div[3][.//text()[contains(., 'The system is now awarding R$')]])", { timeout: (timeout - new Date().getTime()) });
         await page.close();
