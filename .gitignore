@@ -2,6 +2,7 @@ node_modules
 logs
 dist
 
+lib/nopecha/manifest.json
 config.yaml
 *.json5
 *.json
