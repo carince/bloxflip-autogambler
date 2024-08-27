@@ -2,8 +2,8 @@ import { browser } from "@utils/browser.js";
 import { config } from "@utils/config.js";
 import { USER_AGENT } from "@utils/constants.js";
 import Logger from "@utils/logger.js";
+import sleep from "@utils/sleep.js";
 import { RainStateChangedData } from "@utils/types.js";
-import { HTTPResponse } from "puppeteer";
 
 const rainButton = "p.chat_chatBannerJoinButton__avNuN";
 
@@ -20,18 +20,21 @@ export default async function handleRain(data: RainStateChangedData) {
         await page.waitForSelector(rainButton, { visible: true, timeout: 0 });
         await page.click(rainButton);
 
-        await page.waitForResponse(
-            (res: HTTPResponse) => (res.url().includes("api.hcaptcha.com/checkcaptcha") && res.ok()),
-            { timeout: data.timeLeft },
-        );
+        let passed = false;
 
-        Logger.debug("we joined");
+        page.on("response", async (response) => {
+            if (response.url().includes("api.hcaptcha.com/checkcaptcha")) {
+                if (response.request().method().toUpperCase() === "OPTIONS") return;
+                Logger.info("RAIN/JOIN", "Captcha results received");
+                const { pass } = await response.json() as { pass: boolean };
+                Logger.log("RAIN/JOIN", pass ? "Captcha passed!" : "Captcha failed!");
+                if (pass) passed = true;
+            }
+        });
 
-        await page.waitForSelector("::-p-xpath(//*[@id='__next']/div[3][.//text()[contains(., 'The system is now awarding R$')]])", { timeout: (timeout - new Date().getTime()) });
+        await sleep(timeout - new Date().getTime());
+        Logger.log("RAIN/JOIN", passed ? "Successfully joined rain!" : "Unable to join rain, didnt solve captcha in time.");
         await page.close();
-
-        if (new Date().getTime() > timeout) throw new Error("Rain ended before we can join.");
-        Logger.info("RAIN/JOIN", "Successfully joined rain.");
     } catch (err) {
         Logger.error("RAIN/JOIN", `Error occured joining rain:\n${err}`);
     }

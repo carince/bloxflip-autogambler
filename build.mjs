@@ -1,6 +1,6 @@
+/* eslint-disable no-console */
 import { execSync } from "child_process";
-
-import * as esbuild from "esbuild"
+import * as esbuild from "esbuild";
 
 // Backend
 function buildBackend() {
@@ -18,9 +18,9 @@ function buildBackend() {
             minifySyntax: true,
             minifyWhitespace: true,
             treeShaking: true,
-            outfile: "dist/index.js"
-        })
-    
+            outfile: "dist/index.js",
+        });
+
         console.log("Successfully built Backend!");
     } catch (err) {
         console.error(`Failed to build Backend:\n ${err}`);
@@ -28,7 +28,7 @@ function buildBackend() {
     }
 }
 
-// UserScript 
+// UserScript
 function buildUserscript() {
     try {
         console.log("Building Userscript...");
@@ -44,9 +44,9 @@ function buildUserscript() {
             minifySyntax: true,
             minifyWhitespace: true,
             treeShaking: true,
-            outfile: "dist/userscript.js"
-        })
-    
+            outfile: "dist/userscript.js",
+        });
+
         console.log("Successfully built Userscript!");
     } catch (err) {
         console.error(`Failed to build Userscript:\n ${err}`);
@@ -56,10 +56,14 @@ function buildUserscript() {
 
 await Promise.all([
     buildBackend(),
-    buildUserscript()
-])
+    buildUserscript(),
+]);
 
 if (process.argv.includes("--run")) {
-    console.log("Running bloxflip-autocrash...");
-    execSync("node .", { stdio: "inherit" });
+    console.log("Running bloxflip-autogambler...");
+    try {
+        execSync("node .", { stdio: "inherit" });
+    } catch (_x) {
+        console.log("bloxlfip-autogambler closed.");
+    }
 }
