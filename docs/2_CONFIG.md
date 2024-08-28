@@ -1,34 +1,29 @@
 # Config Documentation
 
-    auth: Your Bloxflip token
-    
-    bet: {
-        tries: How many times your balance will be divided to 2
-        starting_bet: Custom starting bet tries will be ignored if this is set
-        auto_cashout: At what multiplier you want to cashout
-    }
+## `auth`
 
-    rain: {
-        enabled: Toggle rain notifications
-        minimum: Minimum robux to notify
-        notifications: {
-            os_notifs: Toggle sending OS notifications
-            webhook: {
-                enabled: Toggle sending webhook embeds
-                link: Discord Webhook link
-                ping_id: User/Role ID to ping.
-            }
-        }
-    }
+- Paste your Bloxflip token here.
 
-    updater: {
-        check: Toggle checking for updates
-        auto_update: Toggle auto updating /* Not yet implemented */
-    }
+## `bet`
 
-    // For debugging purposes only dont touch if you dont know what you are doing
-    debugging: {
-        headless: Toggle chrome headless mode.
-        verbose: Toggle info logs.
-        launch_options: Puppeteer launch options. 
-    }
+- **tries**: Number of times your balance will be divided by 2.
+- **starting_bet**: Custom starting bet; if set, `tries` will be ignored.
+- **autocashout**: Multiplier at which you want to cash out.
+
+## `rain`
+
+- **enabled**: Toggle rain notifications on or off.
+- **minimum**: Minimum Robux amount.
+- **autojoin**:
+  - **enabled**: Toggle auto-joining rain events.
+- **notifications**:
+  - **enabled**: Toggle sending notifications.
+  - **link**: Discord webhook link for notifications.
+  - **ping_id**: User/Role ID to ping in notifications.
+
+## `debugging`
+
+- **verbose**: Toggle verbose logging.
+- **rain_only**: Disable autogambling and only join rains.
+- **headless**: Toggle Chrome headless mode.
+- **chrome_options**: Additional Puppeteer Chrome launch options.

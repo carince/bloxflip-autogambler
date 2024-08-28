@@ -28,7 +28,8 @@
     "include": [
         "src/**/*",
         "tests/**/*",
-        "build.mjs"
+        "build.mjs",
+        "tsconfig.json"
     ],
     "exclude": [
         "/.github",

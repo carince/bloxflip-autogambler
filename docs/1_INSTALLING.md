@@ -1,34 +1,43 @@
 # Prerequisites
-- [NodeJS](https://nodejs.org/en/download/ "NodeJS v16.17.0^")
-- [git](https://git-scm.com/downloads "git")
+You need to have the following programs installed to be able to run bloxflip-autogambler.
+- [Node.js v22+](https://nodejs.org/en/download/ "Download Node.js")
+- [Git](https://git-scm.com/downloads "Download Git")
 
 # Installation
-- Open your terminal and clone the repository
-```bash
-git clone https://github.com/carince/bloxflip-autocrash.git
-```
 
-- Open your Browser of choice, Go to [Bloxflip](http://bloxflip.com "Bloxflip") and then run the following code inside of the Dev Tools console. (it should copy onto your clipboard):
-```js
-copy(localStorage.getItem(`_DO_NOT_SHARE_BLOXFLIP_TOKEN`))
-```
+1. **Clone the Repository**
+   - Open your terminal and run the following command:
+   ```bash
+   git clone https://github.com/carince/bloxflip-autocrash.git
+   ```
 
-- Rename `config.example.json5` to `config.json5`
+2. **Obtain Your Bloxflip Token**
+   - Open your browser and go to [Bloxflip](http://bloxflip.com "Bloxflip").
+   - Run the following code in the Dev Tools console to copy your token to the clipboard:
+   ```js
+   copy(localStorage.getItem('_DO_NOT_SHARE_BLOXFLIP_TOKEN'))
+   ```
 
-- Edit `config.json5` with your desired configuration, documentation on what each entry does: [Config Documentation](./2_CONFIG.md)
+3. **Configure the Bot**
+   - Rename `config.example.json5` to `config.json5`.
+   - Edit `config.json5` with your desired configuration. Refer to the [Config Documentation](./2_CONFIG.md) for details on each entry.
 
-- Install required dependencies:
-```bash
-npm i
-```
+4. **Install Dependencies**
+   - In your terminal, run:
+   ```bash
+   npm i
+   ```
 
-- Run the bot! 🚀
-```bash
-npm start
-```
+5. **Run the Bot** 🚀
+   - Start the bot by running:
+   ```bash
+   npm start
+   ```
 
 ### 🆕 Updating
-You must be in the root folder to be able to pull new commits
-```bash
-git pull
-```
+
+- To update to the latest version, make sure you are in the root folder and run:
+   ```bash
+   git pull
+   npm i
+   ```
