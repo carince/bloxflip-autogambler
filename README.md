@@ -1,23 +1,28 @@
-<h1 align="center">bloxflip-autocrash</h1>
-<p align="center">Bloxflip crash automation using the martingale strategy.<br>Earn robux passively while you sit back!</p>
+<h1 align="center">bloxflip-autogambler</h1>
+<p align="center">Automate your Bloxflip gambling using the Martingale strategy.<br>Earn Robux passively while you relax!</p>
 
-<p align="center"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/carince/bloxflip-autocrash?color=yellow&style=flat-square"> <img alt="GitHub forks" src="https://img.shields.io/github/forks/carince/bloxflip-autocrash?style=flat-square"> <img alt="GitHub issues" src="https://img.shields.io/github/issues/carince/bloxflip-autocrash?style=flat-square"> <img alt="License" src="https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square"></p>
+<p align="center">
+  <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/carince/bloxflip-autogambler?color=yellow&style=flat-square"> 
+  <img alt="GitHub forks" src="https://img.shields.io/github/forks/carince/bloxflip-autogambler?style=flat-square"> 
+  <img alt="GitHub issues" src="https://img.shields.io/github/issues/carince/bloxflip-autogambler?style=flat-square"> 
+  <img alt="License" src="https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square">
+</p>
 
-> **Warning**
-> This automation software is against Bloxflip's [Terms of Service](https://bloxflip.com/terms "Terms of Service"), please use this at your own risk and I am not responsible for any terminated accounts.
+> [!WARNING]
+> This automation tool violates Bloxflip's [Terms of Service](https://bloxflip.com/terms "Terms of Service"). Use it at your own risk. I am not responsible for any terminated accounts.
 
 ## 💥 Features 
-- 🤖 Automated martingale bot
-- ☔ Rain Notifier
-- 📊 Analytics
+- 🤖 Automated Martingale bot for Crash
+- 💵 Automatically join rains
+- ☔ Rain notifications
 - 🏓 Discord Webhook integration
-- 🤑 ITS FREE. (and doesnt steal your token)
+- 🤑 Doesn't steal your token
+- 🙏 Free and Open Source
 
-## [🚀 Installation](docs/1_INSTALLING.md)
+## 🚀 [Installation Guide](docs/1_INSTALLING.md)
 
 ## 💖 Contributing
-If you encounter any issues with the bot, feel free to give feedback on the issues page.
-Feel free to fork the repo and do pull requests to help in maintaining the bot! PR's are always welcome.
+If you encounter issues or have suggestions, check out the [issues page](https://github.com/carince/bloxflip-autogambler/issues). Fork the repo, make pull requests, and contribute to improving the bot—your help is always welcome!
 
 ## ⭐ Support
-Support the project by giving the repository a star!
+Show your support by starring the repository!
