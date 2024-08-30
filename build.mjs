@@ -7,7 +7,7 @@ function buildBackend() {
     try {
         console.log("Building Backend...");
 
-        esbuild.build({
+        esbuild.buildSync({
             entryPoints: ["src/backend/index.ts"],
             target: "node22",
             bundle: true,
@@ -33,7 +33,7 @@ function buildUserscript() {
     try {
         console.log("Building Userscript...");
 
-        esbuild.build({
+        esbuild.buildSync({
             entryPoints: ["src/userscript/index.ts"],
             target: "chrome127",
             bundle: true,
