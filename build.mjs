@@ -39,10 +39,6 @@ function buildUserscript() {
             bundle: true,
             format: "esm",
             packages: "bundle",
-            minify: true,
-            minifyIdentifiers: true,
-            minifySyntax: true,
-            minifyWhitespace: true,
             treeShaking: true,
             outfile: "dist/userscript.js",
         });
