@@ -109,7 +109,7 @@ export default async function connectCrash(manager: Manager) {
         } else {
             game.lossStreak += 1;
             logGame();
-            game.bet = frmt(game.bet);
+            game.bet = frmt(game.bet * 2);
         }
 
         game.joined = false;
