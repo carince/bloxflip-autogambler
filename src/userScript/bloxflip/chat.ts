@@ -11,12 +11,17 @@ export let socket: Socket;
 async function sendWebhook(content: string) {
     try {
         if (!config.rain.notifications.enabled) return;
-        fetch(config.rain.notifications.link, {
+        const response = await fetch(config.rain.notifications.link, {
             method: "POST",
-            body: JSON.stringify({
-                content,
-            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ content }),
         });
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
     } catch (err) {
         Logger.error("RAIN/WEBHOOK", `Posting to webhook failed.\nError: ${err}`);
     }
