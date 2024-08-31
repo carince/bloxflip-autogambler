@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import { Manager } from "socket.io-client/dist/socket.io.dev.js";
+import { Manager } from "socket.io-client/dist/socket.io.js";
 
 import { config } from "../utils/config.js";
 import Logger from "../utils/logger.js";
@@ -11,7 +11,7 @@ export let manager: Manager;
 
 export default async function connectBloxflip() {
     try {
-        manager = new Manager("https://ws.bloxflip.com", {
+        manager = new Manager("wss://ws.bloxflip.com/", {
             autoConnect: false,
             transports: ["websocket"],
             reconnection: true,

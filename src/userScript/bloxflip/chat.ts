@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import { Manager, Socket } from "socket.io-client/dist/socket.io.dev.js";
+import { Manager, Socket } from "socket.io-client/dist/socket.io.js";
 import { RainStateChangedData } from "@utils/types.js";
 import { serverWs } from "../utils/server.js";
 import { socketDisconnectReasons } from "../utils/constants.js";

@@ -1,6 +1,6 @@
 import frmt from "@utils/number.js";
 // eslint-disable-next-line
-import { Manager, Socket } from "socket.io-client/dist/socket.io.dev.js";
+import { Manager, Socket } from "socket.io-client/dist/socket.io.js";
 
 import { config } from "../utils/config.js";
 import { socketDisconnectReasons } from "../utils/constants.js";
@@ -37,6 +37,7 @@ export default async function connectCrash(manager: Manager) {
     socket.on("connect", async () => {
         Logger.info("SOCKET/CRASH", "Successfully connected to namespace.");
         socket.emit("auth", config.auth);
+        if (game.lossStreak) return;
         game.bet = await calculateBet();
     });
 
@@ -69,10 +70,11 @@ export default async function connectCrash(manager: Manager) {
             Logger.error("CRASH", `WIPED. \nBet: ${game.bet} \nBalance: ${game.balance} \nLoss Streak: ${game.lossStreak}`, { forceClose: true });
         }
 
-        socket.emit("join-game", {
-            autoCashoutPoint: Math.trunc(config.autocashout * 100),
-            betAmount: game.bet,
-        });
+        game.joined = true;
+        // socket.emit("join-game", {
+        //     autoCashoutPoint: Math.trunc(config.autocashout * 100),
+        //     betAmount: game.bet,
+        // });
     });
 
     // Check if we successfully joined

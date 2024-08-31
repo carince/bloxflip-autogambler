@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 
-declare module "socket.io-client/dist/socket.io.dev.js" {
+declare module "socket.io-client/dist/socket.io.js" {
     export default function io(
         uri?: string,
         options?: Partial<ManagerOptions & SocketOptions>
