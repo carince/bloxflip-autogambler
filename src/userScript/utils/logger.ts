@@ -1,57 +1,54 @@
-import { post } from "./api.js";
+/* eslint-disable no-console */
 
-interface loggerOptions {
-    customColor?: number;
-    seperator?: boolean;
-    forceClose?: boolean;
-}
+import { serverWs } from "./server.js";
 
-export class Logger {
-    public static log(label: string, message: string, options?: loggerOptions): void {
-        post("log/log", {
-            logs: {
-                label: label,
-                message: message,
-                options: options
-            }
+export default class Logger {
+    public static async log(label: string, message: string) {
+        console.log(`%c[ ${label} ]%c ${message}`, "font-weight: bold; color: green", "color: green");
+
+        if (!serverWs || serverWs.disconnected) return;
+        serverWs.emit("new-log", {
+            type: "log",
+            label,
+            message,
         });
-
-        console.log(`[${label}] ${message}`);
     }
 
-    public static info(label: string, message: string): void {
-        post("log/info", {
-            logs: {
-                label: label,
-                message: message
-            }
-        });
+    public static async info(label: string, message: string) {
+        console.log(`%c[ ${label} ]%c ${message}`, "font-weight: bold; color: blue", "color: blue");
 
-        console.log(`[${label}] ${message}`);
+        if (!serverWs || serverWs.disconnected) return;
+        serverWs.emit("new-log", {
+            type: "info",
+            label,
+            message,
+        });
     }
 
-    public static warn(label: string, message: string): void {
-        post("log/warn", {
-            logs: {
-                label: label,
-                message: message
-            }
-        });
+    public static async warn(label: string, message: string) {
+        console.log(`%c[ ▲ ${label} ]%c ${message}`, "font-weight: bold; color: yellow", "color: yellow");
 
-        console.warn(`[${label}] ${message}`);
+        if (!serverWs || serverWs.disconnected) return;
+        serverWs.emit("new-log", {
+            type: "warn",
+            label,
+            message,
+        });
     }
 
-    public static error(label: string, message: string, forceClose: boolean): void {
-        post("log/error", {
-            logs: {
-                label: label,
-                message: message,
-                options: {
-                    forceClose: forceClose
-                }
-            }
-        });
+    public static async error(
+        label: string,
+        message: string,
+        options?: { forceClose: boolean },
+    ) {
+        console.log(`%c[ ⬣ ${label} ]%c ${message}`, "font-weight: bold; color: red", "color: red");
 
-        console.error(`[${label}] ${message}`);
+        if (!serverWs || serverWs.disconnected) return;
+        serverWs.emit("new-log", {
+            type: "error",
+            label,
+            message,
+            forceClose: options?.forceClose,
+        });
     }
 }

@@ -1,51 +1,29 @@
 # Config Documentation
 
-    auth: Your Bloxflip token
+## `auth`
 
-    bet: {
-        tries: How many times your balance will be divided to 2
-        starting_bet: Custom starting bet tries will be ignored if this is set
-        auto_cashout: At what multiplier you want to cashout
-    }
+- Paste your Bloxflip token here.
 
-    webhook: {
-        enabled: Toggle webhook
-        link: Your Discord webhook URL
-    }
+## `bet`
 
-    modules: {
-        rain: {
-            enabled: Toggle rain notifications
-            minimum: Minimum robux to notify
-            notifications: {
-                os_notifs: Toggle sending OS notifications
-                webhook {
-                    enabled: Toggle rain notifications in webhook
-                    ping_id: UserID to ping
-                }
-            }
-        }
+- **tries**: Number of times your balance will be divided by 2.
+- **starting_bet**: Custom starting bet; if set, `tries` will be ignored.
+- **autocashout**: Multiplier at which you want to cash out.
 
-        analytics: {
-            enabled: Toggle analytics notifications
-            notifications: {
-                webhook: Toggle analytic notifications in webhook
-            }
-        }
+## `rain`
 
-        updater: {
-            enabled: Toggle checking for updates
-        }
-    }
+- **enabled**: Toggle rain notifications on or off.
+- **minimum**: Minimum Robux amount.
+- **autojoin**:
+  - **enabled**: Toggle auto-joining rain events.
+- **notifications**:
+  - **enabled**: Toggle sending notifications.
+  - **link**: Discord webhook link for notifications.
+  - **ping_id**: User/Role ID to ping in notifications.
 
-    updater: {
-        check: Toggle checking for updates
-        auto_update: Toggle auto updating /* Not yet implemented */
-    }
+## `debugging`
 
-    // For debugging purposes only dont touch if you dont know what you are doing
-    debugging: {
-        headless: Toggle chrome headless mode.
-        verbose: Toggle info logs.
-        launch_options: Puppeteer launch options. 
-    }
+- **verbose**: Toggle verbose logging.
+- **rain_only**: Disable autogambling and only join rains.
+- **headless**: Toggle Chrome headless mode.
+- **chrome_options**: Additional Puppeteer Chrome launch options.

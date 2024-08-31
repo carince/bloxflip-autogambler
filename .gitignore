@@ -2,5 +2,10 @@ node_modules
 config.json5
 error.png
 dist
+
+lib/nopecha/manifest.json
+config.yaml
+*.json5
+*.json
 tsconfig.tsbuildinfo
 .vscode

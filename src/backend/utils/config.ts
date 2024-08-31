@@ -1,33 +1,33 @@
-import json from "json5";
-import { existsSync, readFileSync } from "node:fs";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-import { Logger } from "@utils/logger.js";
-import { sleep } from "@utils/sleep.js";
-import { Config } from "@types";
+import { __dirname } from "@utils/constants.js";
+import Logger from "@utils/logger.js";
+import { Config, configSchema } from "@utils/types.js";
+import { existsSync, readFileSync } from "fs";
+import { join } from "path";
+import { parse } from "yaml";
 
 let config: Config;
 
-async function fetchCfg() {
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
-
+async function fetchConfig(): Promise<void> {
     try {
-        if (!existsSync(join(__dirname, "..", "config.json5"))) return Logger.error("CONFIG", "config.json not found.", { forceClose: true });
-        config = await json.parse(readFileSync(join(__dirname, "..", "config.json5"), "utf-8"));
-        Logger.info("CONFIG", "Fetched config.json.");
+        const configPath = join(__dirname, "..", "config.yaml");
 
-        if (config.auth.length === 0) {
-            Logger.error("TOKEN", "Token is empty, please put a valid token.");
+        if (!existsSync(configPath)) {
+            throw new Error(`Configuration file not found at path: ${configPath}`);
         }
 
-        if (config.bet.tries < 10) {
-            Logger.warn("CONFIG", "It is not recommended to set the tries below 10, exit the script with CTRL+C if you want to make changes.");
-            await sleep(3000);
-        }
-    } catch (err) {
-        Logger.error("CONFIG", "Unabled to read config.json.", { forceClose: true });
+        const file = readFileSync(configPath, "utf8");
+        const parsed = parse(file);
+        const result = await configSchema.spa(parsed);
+
+        if (!result.success) throw new Error(`Invalid configuration: ${JSON.stringify(result.error.errors, null, 2)}`);
+
+        config = result.data;
+
+        Logger.info("CONFIG", "Successfully fetched config.");
+    } catch (e) {
+        Logger.error("CONFIG", e instanceof Error ? e.message : "Unknown Error.", { forceClose: true });
+        throw e;
     }
 }
 
-export { fetchCfg, config };
+export { config, fetchConfig };
