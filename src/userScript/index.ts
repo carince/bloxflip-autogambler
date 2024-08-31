@@ -13,6 +13,6 @@ async function startCrash() {
         await updateWallet();
         await connectBloxflip();
     } catch (err) {
-        Logger.error("BFAC", `Error occured, killing AutoCrash. \n${err}`, true);
+        Logger.error("BFAC", `Error occured, killing AutoCrash. \n${err}`, { forceClose: true });
     }
 } startCrash();

@@ -5,10 +5,9 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.ts -e ts",
-    "start": "rollup -c --configPlugin @rollup/plugin-typescript & node .",
+    "start": "node build.mjs --run",
     "lint": "eslint src --fix",
-    "build": "rollup -c --configPlugin @rollup/plugin-typescript"
+    "build": "node build.mjs"
   },
   "keywords": [
     "bloxflip",

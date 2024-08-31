@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
         "strict": true,
-        "outDir": "./dist",
-        "rootDir": "./src",
-        "baseUrl": "./src",
+        "outDir": "dist",
+        "rootDir": ".",
+        "baseUrl": ".",
         "module": "NodeNext",
         "target": "ESNext",
         "moduleResolution": "NodeNext",
@@ -12,22 +12,22 @@
         "esModuleInterop": true,
         "paths": {
             "@utils/*": [
-                "backend/utils/*"
+                "src/backend/utils/*"
             ],
             "@server/*": [
-                "backend/server/*"
+                "src/backend/server/*"
             ],
             "@bf/*": [
-                "backend/bloxflip/*"
+                "src/backend/bloxflip/*"
             ],
             "@types": [
-                "backend/utils/types.ts"
+                "src/backend/utils/types.ts"
             ]
         }
     },
     "include": [
         "src/**/*",
-        "tests/**/*",
+        "tests/*",
         "build.mjs",
         "tsconfig.json"
     ],

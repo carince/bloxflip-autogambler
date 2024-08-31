@@ -14,7 +14,7 @@ export const game = {
     bet: 0,
     joined: false,
     started: false,
-    crashPoint: 0,
+    crash: 0,
     lossStreak: 0,
 };
 
@@ -86,7 +86,7 @@ export default async function connectCrash(manager: Manager) {
     // Game starting
     socket.on("game-start", async () => {
         if (!game.joined) {
-            console.log("[CRASH] Failed to join game");
+            Logger.warn("CRASH", "Failed to join game, bet was not placed before game started.");
         }
 
         game.started = true;

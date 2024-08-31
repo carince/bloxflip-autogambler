@@ -28,18 +28,7 @@ type Config = {
     };
 };
 
-let config: configInt = {
-    auth: "",
-    bet: {
-        tries: 100,
-        custom: 0,
-        multiplier: 2
-    },
-    rain: {
-        enabled: false,
-        minimum: 0
-    }
-};
+let config: Config;
 
 async function fetchConfig(): Promise<void> {
     try {
