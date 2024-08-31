@@ -25,9 +25,8 @@ export default async function handleRain(data: RainStateChangedData) {
         page.on("response", async (response) => {
             if (response.url().includes("api.hcaptcha.com/checkcaptcha")) {
                 if (response.request().method().toUpperCase() === "OPTIONS") return;
-                Logger.info("RAIN/JOIN", "Captcha results received");
                 const { pass } = await response.json() as { pass: boolean };
-                Logger.log("RAIN/JOIN", pass ? "Captcha passed!" : "Captcha failed!");
+                Logger.info("RAIN/JOIN", pass ? "Captcha passed!" : "Captcha failed!");
                 if (pass) passed = true;
             }
         });
