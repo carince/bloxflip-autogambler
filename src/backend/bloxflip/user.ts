@@ -12,8 +12,10 @@ export default async function login(): Promise<void> {
     const wallet = frmt(user.wallet + user.bonusWallet);
     const baseBet = frmt(wallet / 2 ** config.tries);
 
-    if (baseBet === 0) {
-        return Logger.error("USER", "Tries in config is too high causing the bet to be 0", { forceClose: true });
+    if (!config.debugging.rain_only) {
+        if (baseBet === 0) {
+            return Logger.error("USER", "Tries in config is too high causing the bet to be 0", { forceClose: true });
+        }
     }
 
     return Logger.log(
